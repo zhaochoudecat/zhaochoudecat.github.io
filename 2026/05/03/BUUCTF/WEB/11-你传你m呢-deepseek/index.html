@@ -13,10 +13,12 @@
 <meta property="og:site_name" content="zhaochoudecat">
 <meta property="og:description" content="BUUCTF - 你传你m呢 (文件上传漏洞) Writeup题目背景题目名”是兄弟就来传🐎” &#x2F; “你传你m呢”，考察文件上传漏洞的黑名单绕过、.htaccess 解析规则篡改、MIME 类型伪造，以及 disable_functions 绕过。 目标网址1http:&#x2F;&#x2F;db6e997b-1b79-49dc-b771-3ec16052b7a6.node5.buuoj.cn:81&#x2F;">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/11-%E4%BD%A0%E4%BC%A0%E4%BD%A0m%E5%91%A2-deepseek/file-20260503031433850.png">
 <meta property="article:published_time" content="2026-05-02T18:57:25.387Z">
-<meta property="article:modified_time" content="2026-05-02T18:57:25.388Z">
+<meta property="article:modified_time" content="2026-05-02T19:14:34.575Z">
 <meta property="article:author" content="zhaochoudecat">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhaochoudecat.github.io/assets/11-%E4%BD%A0%E4%BC%A0%E4%BD%A0m%E5%91%A2-deepseek/file-20260503031433850.png">
     
     
         
@@ -137,6 +139,7 @@
     <h1 id="BUUCTF-你传你m呢-文件上传漏洞-Writeup"><a href="#BUUCTF-你传你m呢-文件上传漏洞-Writeup" class="headerlink" title="BUUCTF - 你传你m呢 (文件上传漏洞) Writeup"></a>BUUCTF - 你传你m呢 (文件上传漏洞) Writeup</h1><h2 id="题目背景"><a href="#题目背景" class="headerlink" title="题目背景"></a>题目背景</h2><p>题目名”是兄弟就来传🐎” &#x2F; “你传你m呢”，考察文件上传漏洞的黑名单绕过、<code>.htaccess</code> 解析规则篡改、MIME 类型伪造，以及 <code>disable_functions</code> 绕过。</p>
 <h2 id="目标网址"><a href="#目标网址" class="headerlink" title="目标网址"></a>目标网址</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://db6e997b-1b79-49dc-b771-3ec16052b7a6.node5.buuoj.cn:81/</span><br></pre></td></tr></table></figure>
 
+<p><img src="/assets/11-%E4%BD%A0%E4%BC%A0%E4%BD%A0m%E5%91%A2-deepseek/file-20260503031433850.png"></p>
 <h2 id="解题过程"><a href="#解题过程" class="headerlink" title="解题过程"></a>解题过程</h2><h3 id="1-信息收集-—-访问首页"><a href="#1-信息收集-—-访问首页" class="headerlink" title="1. 信息收集 — 访问首页"></a>1. 信息收集 — 访问首页</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s -i <span class="string">&quot;http://db6e997b-1b79-49dc-b771-3ec16052b7a6.node5.buuoj.cn:81/&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>返回的关键信息：</p>

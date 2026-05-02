@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="CTF WriteUp: [极客大挑战 2019] EasySQL题目信息 题目名称：EasySQL 题目类型：Web (SQL注入) 目标地址：http:&#x2F;&#x2F;4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81&#x2F;  知识点 SQL注入 (SQL Injection)：攻击者在 Web 应用程序中事先定义好的查询语句的结尾上添加额外的 SQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="zhaochoudecat">
-<meta property="og:url" content="https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/index.html">
+<meta property="og:title" content="CTF WriteUp: [极客大挑战 2019] EasySQL">
+<meta property="og:url" content="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/index.html">
 <meta property="og:site_name" content="zhaochoudecat">
 <meta property="og:description" content="CTF WriteUp: [极客大挑战 2019] EasySQL题目信息 题目名称：EasySQL 题目类型：Web (SQL注入) 目标地址：http:&#x2F;&#x2F;4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81&#x2F;  知识点 SQL注入 (SQL Injection)：攻击者在 Web 应用程序中事先定义好的查询语句的结尾上添加额外的 SQL">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-05-02T18:57:25.384Z">
-<meta property="article:modified_time" content="2026-05-02T18:57:25.385Z">
+<meta property="article:published_time" content="2026-05-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-02T19:25:09.570Z">
 <meta property="article:author" content="zhaochoudecat">
 <meta name="twitter:card" content="summary">
     
@@ -36,7 +36,7 @@
         
     
     <!-- title -->
-    <title>zhaochoudecat</title>
+    <title>CTF WriteUp: [极客大挑战 2019] EasySQL</title>
     <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
@@ -84,16 +84,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&text="><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&is_video=false&description="><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=&body=Check out this article: https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&name=&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&text=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&is_video=false&description=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF WriteUp: [极客大挑战 2019] EasySQL&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&name=CTF WriteUp: [极客大挑战 2019] EasySQL&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -110,7 +110,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        
+        CTF WriteUp: [极客大挑战 2019] EasySQL
     </h1>
 
 
@@ -121,7 +121,7 @@
       </span>
       
     <div class="postdate">
-        <time datetime="2026-05-02T18:57:25.384Z" itemprop="datePublished">2026-05-03</time>
+        <time datetime="2026-05-01T16:00:00.000Z" itemprop="datePublished">2026-05-02</time>
     </div>
 
 
@@ -197,16 +197,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&text="><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&is_video=false&description="><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=&body=Check out this article: https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&title="><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/1-easySQL/&name=&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&text=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&is_video=false&description=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF WriteUp: [极客大挑战 2019] EasySQL&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&title=CTF WriteUp: [极客大挑战 2019] EasySQL"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/&name=CTF WriteUp: [极客大挑战 2019] EasySQL&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
