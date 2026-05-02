@@ -6,17 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="CTF WriteUp: [极客大挑战 2019] EasySQL题目信息 题目名称：EasySQL 题目类型：Web (SQL注入) 目标地址：http:&#x2F;&#x2F;4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81&#x2F;  知识点 SQL注入 (SQL Injection)：攻击者在 Web 应用程序中事先定义好的查询语句的结尾上添加额外的 SQL">
+    <meta name="description" content="CTF WriteUp: [极客大挑战 2019] EasySQL题目信息 题目名称：EasySQL 题目类型：Web (SQL注入) 目标地址：http:&#x2F;&#x2F;4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81&#x2F;  知识点 SQL注入 (SQL Injection)：攻击者在 Web 应用程序中事先定义好的查询语句的结尾上添加额外的 SQ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CTF WriteUp: [极客大挑战 2019] EasySQL">
 <meta property="og:url" content="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/index.html">
 <meta property="og:site_name" content="zhaochoudecat">
-<meta property="og:description" content="CTF WriteUp: [极客大挑战 2019] EasySQL题目信息 题目名称：EasySQL 题目类型：Web (SQL注入) 目标地址：http:&#x2F;&#x2F;4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81&#x2F;  知识点 SQL注入 (SQL Injection)：攻击者在 Web 应用程序中事先定义好的查询语句的结尾上添加额外的 SQL">
+<meta property="og:description" content="CTF WriteUp: [极客大挑战 2019] EasySQL题目信息 题目名称：EasySQL 题目类型：Web (SQL注入) 目标地址：http:&#x2F;&#x2F;4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81&#x2F;  知识点 SQL注入 (SQL Injection)：攻击者在 Web 应用程序中事先定义好的查询语句的结尾上添加额外的 SQ">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/file-20260503034103228.png">
 <meta property="article:published_time" content="2026-05-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-05-02T19:25:09.570Z">
+<meta property="article:modified_time" content="2026-05-02T19:47:49.220Z">
 <meta property="article:author" content="zhaochoudecat">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhaochoudecat.github.io/assets/file-20260503034103228.png">
     
     
         
@@ -70,8 +72,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" href="/2026/05/03/BUUCTF/WEB/10-%E4%BD%A0%E4%BC%A0%E4%BD%A0m%E5%91%A2/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        <li><a class="icon" href="/2026/05/02/README/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
         
+        
+        <li><a class="icon" href="/2026/05/02/BUUCTF/WEB/10-%E4%BD%A0%E4%BC%A0%E4%BD%A0m%E5%91%A2/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
         
         <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
         <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
@@ -132,7 +136,8 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h1 id="CTF-WriteUp-极客大挑战-2019-EasySQL"><a href="#CTF-WriteUp-极客大挑战-2019-EasySQL" class="headerlink" title="CTF WriteUp: [极客大挑战 2019] EasySQL"></a>CTF WriteUp: [极客大挑战 2019] EasySQL</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
+    <p><img src="/assets/file-20260503034103228.png"></p>
+<h1 id="CTF-WriteUp-极客大挑战-2019-EasySQL"><a href="#CTF-WriteUp-极客大挑战-2019-EasySQL" class="headerlink" title="CTF WriteUp: [极客大挑战 2019] EasySQL"></a>CTF WriteUp: [极客大挑战 2019] EasySQL</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
 <li><strong>题目名称</strong>：EasySQL</li>
 <li><strong>题目类型</strong>：Web (SQL注入)</li>
 <li><strong>目标地址</strong>：<a target="_blank" rel="noopener" href="http://4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81/">http://4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81/</a></li>
