@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Flag1flag&#123;bc3d6dfe-bc42-45a8-bdff-cea8989b80f7&#125;  知识点 Flask Session 伪造 Flask session 结构：&#123;data&#125;.&#123;timestamp&#125;.&#123;signature&#125;，使用 URL 安全的 base64 编码 Flask 使用 itsdangerous">
+    <meta name="description" content="Flag1flag&#123;bc3d6dfe-bc42-45a8-bdff-cea8989b80f7&#125;  知识点 Flask Session 伪造 Flask session 结构：&#123;payload&#125;.&#123;timestamp&#125;.&#123;signature&#125;，使用 URL 安全的 base64 编码。payload 长度可变；times">
 <meta property="og:type" content="article">
 <meta property="og:title" content="12-admin">
 <meta property="og:url" content="https://zhaochoudecat.github.io/2026/05/03/BUUCTF/WEB/12-admin/index.html">
 <meta property="og:site_name" content="zhaochoudecat">
-<meta property="og:description" content="Flag1flag&#123;bc3d6dfe-bc42-45a8-bdff-cea8989b80f7&#125;  知识点 Flask Session 伪造 Flask session 结构：&#123;data&#125;.&#123;timestamp&#125;.&#123;signature&#125;，使用 URL 安全的 base64 编码 Flask 使用 itsdangerous">
+<meta property="og:description" content="Flag1flag&#123;bc3d6dfe-bc42-45a8-bdff-cea8989b80f7&#125;  知识点 Flask Session 伪造 Flask session 结构：&#123;payload&#125;.&#123;timestamp&#125;.&#123;signature&#125;，使用 URL 安全的 base64 编码。payload 长度可变；times">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-05-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-05-02T20:45:27.996Z">
+<meta property="article:modified_time" content="2026-05-02T21:24:38.471Z">
 <meta property="article:author" content="zhaochoudecat">
 <meta name="twitter:card" content="summary">
     
@@ -70,10 +70,8 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" href="/2026/05/03/%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9-2026-05-03/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
         
-        
-        <li><a class="icon" href="/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/DC7/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
+        <li><a class="icon" href="/2026/05/03/%E9%9D%B6%E6%9C%BA/QQGroup/111/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
         
         <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
         <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
@@ -100,7 +98,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Flag"><span class="toc-number">1.</span> <span class="toc-text">Flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.</span> <span class="toc-text">解题步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.1.</span> <span class="toc-text">1. 信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8F%91%E7%8E%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.2.</span> <span class="toc-text">2. 发现验证码漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E8%B4%A6%E5%8F%B7"><span class="toc-number">3.3.</span> <span class="toc-text">3. 自动注册账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%8E%B7%E5%8F%96%E6%BA%90%E4%BB%A3%E7%A0%81%E4%BF%A1%E6%81%AF"><span class="toc-number">3.4.</span> <span class="toc-text">4. 获取源代码信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%A0%B4%E8%A7%A3-Flask-Secret-Key"><span class="toc-number">3.5.</span> <span class="toc-text">5. 破解 Flask Secret Key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%AA%E9%80%A0-Admin-Session"><span class="toc-number">3.6.</span> <span class="toc-text">6. 伪造 Admin Session</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E8%8E%B7%E5%8F%96-Flag"><span class="toc-number">3.7.</span> <span class="toc-text">7. 获取 Flag</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">漏洞总结</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Flag"><span class="toc-number">1.</span> <span class="toc-text">Flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.</span> <span class="toc-text">解题步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.1.</span> <span class="toc-text">1. 信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8F%91%E7%8E%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.2.</span> <span class="toc-text">2. 发现验证码漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E8%B4%A6%E5%8F%B7"><span class="toc-number">3.3.</span> <span class="toc-text">3. 自动注册账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%8E%B7%E5%8F%96%E6%BA%90%E4%BB%A3%E7%A0%81%E4%BF%A1%E6%81%AF"><span class="toc-number">3.4.</span> <span class="toc-text">4. 获取源代码信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%A0%B4%E8%A7%A3-Flask-Secret-Key"><span class="toc-number">3.5.</span> <span class="toc-text">5. 破解 Flask Secret Key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%AA%E9%80%A0-Admin-Session"><span class="toc-number">3.6.</span> <span class="toc-text">6. 伪造 Admin Session</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E8%8E%B7%E5%8F%96-Flag"><span class="toc-number">3.7.</span> <span class="toc-text">7. 获取 Flag</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">漏洞总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E9%97%AE%E7%AD%94"><span class="toc-number">5.</span> <span class="toc-text">补充问答</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Q1-%E8%A7%A3%E7%A0%81-session-%E7%9A%84%E7%9B%AE%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">5.1.</span> <span class="toc-text">Q1: 解码 session 的目的是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q2-%E4%BD%A0%E8%8E%B7%E5%8F%96%E7%9A%84%E6%98%AF-cookie%EF%BC%8C%E5%92%8C-session-%E6%9C%89%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="toc-number">5.2.</span> <span class="toc-text">Q2: 你获取的是 cookie，和 session 有什么关系？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E2%80%9D%E5%8F%8C%E5%B1%82%E2%80%9D-base64%EF%BC%9F"><span class="toc-number">5.3.</span> <span class="toc-text">Q3: 为什么是”双层” base64？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q4-%E5%AF%86%E7%A0%81%E5%AD%97%E5%85%B8%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8C%85%E5%90%AB-ckj123%EF%BC%9F%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E8%A6%81%E5%8A%A0%E8%BF%99%E4%B8%AA%EF%BC%9F"><span class="toc-number">5.4.</span> <span class="toc-text">Q4: 密码字典为什么包含 ckj123？怎么知道要加这个？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q5-session-secret-key-%E6%98%AF%E5%B9%B2%E5%95%A5%E7%94%A8%E7%9A%84%EF%BC%9F"><span class="toc-number">5.5.</span> <span class="toc-text">Q5: session secret key 是干啥用的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q6-%E4%BC%AA%E9%80%A0-admin-session-%E9%87%8C%E7%9A%84-id-%E6%98%AF%E5%93%AA%E6%9D%A5%E7%9A%84%EF%BC%9F"><span class="toc-number">5.6.</span> <span class="toc-text">Q6: 伪造 admin session 里的 _id 是哪来的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q7-admin-cookie-signer-dumps-forged-session-%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F"><span class="toc-number">5.7.</span> <span class="toc-text">Q7: admin_cookie &#x3D; signer.dumps(forged_session) 是什么意思？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q8-session-cookie-%E4%B8%89%E4%B8%AA%E9%83%A8%E5%88%86%E5%88%86%E5%88%AB%E5%AF%B9%E5%BA%94%E5%93%AA%E4%BA%9B%E5%AD%97%E7%AC%A6%EF%BC%9F"><span class="toc-number">5.8.</span> <span class="toc-text">Q8: session cookie 三个部分分别对应哪些字符？</span></a></li></ol></li></ol>
     </div>
   </span>
 </div>
@@ -138,11 +136,11 @@
 
 <h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><ul>
 <li>Flask Session 伪造</li>
-<li>Flask session 结构：<code>&#123;data&#125;.&#123;timestamp&#125;.&#123;signature&#125;</code>，使用 URL 安全的 base64 编码</li>
+<li>Flask session 结构：<code>&#123;payload&#125;.&#123;timestamp&#125;.&#123;signature&#125;</code>，使用 URL 安全的 base64 编码。payload 长度可变；timestamp 是 base62 编码的 Unix 时间戳（约 6 字符）；signature 固定 27 字符（HMAC-SHA1 输出 20 bytes &#x2F; 160 bits，base64 编码后 27 字符）</li>
 <li>Flask 使用 <code>itsdangerous.URLSafeTimedSerializer</code> + <code>TaggedJSONSerializer</code> 签名 session</li>
 <li><code>flask-unsign</code> 工具：解码和暴力破解 Flask session secret key</li>
 <li>Flask session 压缩：当数据较大时，Flask 会使用 zlib 压缩 session 数据</li>
-<li>验证码值存储在 Flask session 中（双层 base64 编码），而不是服务端</li>
+<li>验证码值存储在 Flask session 中，而不是服务端。读取验证码需要”两层” base64 解码，这不是故意设计的双层加密，而是 Flask 的 <code>TaggedJSONSerializer</code> 序列化机制导致的：验证码在 session 中是 <code>bytes</code> 类型（如 <code>b&#39;wS3T&#39;</code>），<code>TaggedJSONSerializer</code> 会把 bytes 对象序列化为 <code>&#123;&quot; b&quot;: &quot;&lt;base64&gt;&quot;&#125;</code> 的标记 JSON 结构，这是第一层 base64；Flask 再把整个 session JSON 做 URL-safe base64 编码写入 cookie，这是第二层</li>
 <li><code>/change</code> 端点根据 <code>session[&#39;name&#39;]</code> 来确定修改哪个用户的密码（不当授权）</li>
 <li>登录失败时 session 仍会设置 <code>name</code> 字段为尝试的用户名</li>
 </ul>
@@ -182,6 +180,8 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> itsdangerous <span class="keyword">import</span> URLSafeTimedSerializer</span><br><span class="line"><span class="keyword">from</span> flask.json.tag <span class="keyword">import</span> TaggedJSONSerializer</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">SECRET = <span class="string">&#x27;ckj123&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建与 Flask 相同的签名器</span></span><br><span class="line">signer = URLSafeTimedSerializer(</span><br><span class="line">    secret_key=SECRET,</span><br><span class="line">    salt=<span class="string">&#x27;cookie-session&#x27;</span>,</span><br><span class="line">    signer_kwargs=&#123;<span class="string">&#x27;key_derivation&#x27;</span>: <span class="string">&#x27;hmac&#x27;</span>, <span class="string">&#x27;digest_method&#x27;</span>: hashlib.sha1&#125;,</span><br><span class="line">    serializer=TaggedJSONSerializer()</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 伪造 admin session</span></span><br><span class="line">forged_session = &#123;</span><br><span class="line">    <span class="string">&#x27;_fresh&#x27;</span>: <span class="literal">True</span>,</span><br><span class="line">    <span class="string">&#x27;_id&#x27;</span>: <span class="string">&#x27;bd6558b753c802fc17eec078fee34d7d40365dd730f8c9ff7adb4f8658434b0b1cfcc6db52760f68256be4dd2ee11d5f124046d967c5300a4a20919f1ec02d37&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;image&#x27;</span>: <span class="string">&#x27;xxxx&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;admin&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;user_id&#x27;</span>: <span class="string">&#x27;1&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">admin_cookie = signer.dumps(forged_session)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
+<p><strong><code>_id</code> 字段的来源</strong>：<code>_id</code> 字段是从合法 session 中直接复制过来的，而且换了多个不同账号登录后发现每个 session 里的 <code>_id</code> 值完全相同（都是 <code>bd6558b753c802fc17eec078fee34d7d40365dd730f8c9ff7adb4f8658434b0b1cfcc6db52760f68256be4dd2ee11d5f124046d967c5300a4a20919f1ec02d37</code>），说明这个值很可能是硬编码或由固定值算出来的，跟具体用户无关，所以伪造时直接照搬即可。</p>
+<p><strong><code>signer.dumps(forged_session)</code> 做了什么</strong>：<code>dumps()</code> 完成三件事——① 用 <code>TaggedJSONSerializer</code> 把 Python dict 转成 JSON 字符串（bytes 类型用 <code>&#123;&quot; b&quot;: &quot;...&quot;&#125;</code> 标记）；② 如果数据较大用 zlib 压缩；③ 用 secret key <code>ckj123</code> 对数据做 HMAC 签名，拼成 <code>数据.时间戳.签名</code> 的格式。这行代码等于”用偷来的 secret key，按 Flask 原生的方式，捏了一个合法的 admin cookie”，服务器收到后验签通过，就当成了真 session。</p>
 <p><strong>关键点</strong>：必须使用与 Flask 完全一致的签名方式。<code>flask-unsign --sign</code> 命令行工具签名格式不正确（会嵌套 JSON 字符串），需要直接在 Python 中使用 <code>itsdangerous</code> + <code>TaggedJSONSerializer</code> 签名。</p>
 </blockquote>
 <h3 id="7-获取-Flag"><a href="#7-获取-Flag" class="headerlink" title="7. 获取 Flag"></a>7. 获取 Flag</h3><p>使用伪造的 admin session 访问 <code>/index</code>：</p>
@@ -193,6 +193,96 @@
 <li><strong>Session 可控</strong>：攻击者可以伪造任意用户（包括 admin）的 session</li>
 <li><strong>不当授权</strong>：<code>/change</code> 端点仅依赖 <code>session[&#39;name&#39;]</code> 来判断修改哪个用户的密码</li>
 </ol>
+<h2 id="补充问答"><a href="#补充问答" class="headerlink" title="补充问答"></a>补充问答</h2><h3 id="Q1-解码-session-的目的是什么？"><a href="#Q1-解码-session-的目的是什么？" class="headerlink" title="Q1: 解码 session 的目的是什么？"></a>Q1: 解码 session 的目的是什么？</h3><p>目的是<strong>绕过验证码</strong>。<code>/code</code> 返回的是一张图片（GIF），但同时也通过 <code>Set-Cookie</code> 把验证码的值写进了 session 里。解码 session 就能直接读出 4 位验证码，不需要 OCR 识别图片。验证码是”防用户不防攻击者”——它在服务端根本没存，而是放在客户端 cookie 中（经过 <code>TaggedJSONSerializer</code> 序列化 + Flask session 编码）。攻击者拿到 cookie → 解码 → 取出验证码 → 自动注册，完全不需要人工看图。</p>
+<h3 id="Q2-你获取的是-cookie，和-session-有什么关系？"><a href="#Q2-你获取的是-cookie，和-session-有什么关系？" class="headerlink" title="Q2: 你获取的是 cookie，和 session 有什么关系？"></a>Q2: 你获取的是 cookie，和 session 有什么关系？</h3><p>在 Flask 里，<strong>cookie 就是 session</strong>。Flask 默认的 session 机制是 client-side session，和其他框架不同：</p>
+<ul>
+<li><strong>PHP &#x2F; Java 等</strong>：服务端存储 session 数据，cookie 里只放一个 <code>session_id</code>（随机字符串），服务器根据这个 ID 查数据库&#x2F;缓存获取数据</li>
+<li><strong>Flask</strong>：session 数据<strong>全部存在 cookie 里</strong>，服务器不存任何东西。cookie 名叫 <code>session</code>，它的值就是完整的 session 数据（经过 base64 编码 + 签名）</li>
+</ul>
+<p>客户端收到的 <code>Set-Cookie: session=eyJpbWFnZSI6...</code> 这个 cookie，就是完整的 session：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">session=eyJjc3JmX3Rva2VuIjp7IiBiIjoiT1RJNE...   .afZcEA   .C_VOqxA4yDvKv5i_qMJygwSeOBk</span><br><span class="line">        ├────────── payload ──────────────────┘├─时间戳─┘└─────── signature ──────────┘</span><br><span class="line">                  107 字符                           6 字符              27 字符</span><br><span class="line">          (base64 URL-safe, 无填充)          (base62 编码的       (base64 URL-safe, 无填充)</span><br><span class="line">                                               整数, Unix 时间戳)    20 bytes / 160 bits</span><br><span class="line">                                                                   HMAC-SHA1 签名</span><br></pre></td></tr></table></figure>
+
+<p>三个部分以点号 <code>.</code> 分隔：</p>
+<ul>
+<li><strong>Payload（第1部分）</strong>：长度不固定，取决于 session 数据量。示例中 107 字符，解码后为 80 bytes 的 JSON 数据</li>
+<li><strong>Timestamp（第2部分）</strong>：6 字符，base62&#x2F;base64 编码的整数，解码后为 Unix 时间戳</li>
+<li><strong>Signature（第3部分）</strong>：固定 27 字符。HMAC-SHA1 输出 20 bytes（160 bits），URL-safe base64 编码后 &#x3D; ceil(160÷6) &#x3D; 27 字符（无填充）</li>
+</ul>
+<p>解码 payload 就是服务端想”记住”的 session 数据，其中包括了验证码。因为数据全在客户端，Flask 用 secret key 对内容签名来防止用户篡改——但如果 secret key 泄露（比如这道题被破解出 <code>ckj123</code>），攻击者就可以伪造任意 session。</p>
+<h3 id="Q3-为什么是”双层”-base64？"><a href="#Q3-为什么是”双层”-base64？" class="headerlink" title="Q3: 为什么是”双层” base64？"></a>Q3: 为什么是”双层” base64？</h3><p>准确说不是”故意设计成双层”，而是 Flask 的 <code>TaggedJSONSerializer</code> 序列化机制导致的。</p>
+<p>Flask session 里存的 <code>image</code> 值是 <strong>bytes 类型</strong>（<code>b&#39;wS3T&#39;</code>）。<code>TaggedJSONSerializer</code> 在序列化 bytes 对象时，会把它转换成带标记的 JSON 结构：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot; b&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;base64编码后的bytes&gt;&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code> b</code> 是标记（tag），表示这是一个 bytes 对象</li>
+<li>值是被 base64 编码过的原始数据</li>
+</ul>
+<p>流程如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">原始验证码:  b&#x27;wS3T&#x27;                           （Python bytes 对象）</span><br><span class="line">    ↓ TaggedJSONSerializer 序列化</span><br><span class="line">中间结构:   &#123;&quot;image&quot;: &#123;&quot; b&quot;: &quot;d1MzVA==&quot;&#125;&#125;     （tagged JSON，第一层 base64）</span><br><span class="line">    ↓ Flask session 整体 URL-safe base64 编码写入 cookie</span><br><span class="line">最终 cookie: eyJpbWFnZSI6eyIgYiI6...           （第二层 base64）</span><br></pre></td></tr></table></figure>
+
+<p>两层 base64 的来源：</p>
+<ol>
+<li><strong>内层</strong>：<code>TaggedJSONSerializer</code> 把 bytes 编码成 base64 存入 JSON 的 <code> b</code> 字段</li>
+<li><strong>外层</strong>：Flask 把整个 session JSON 做 URL-safe base64 编码写入 cookie</li>
+</ol>
+<p>所以只要反向解两层 base64 就能读出验证码。</p>
+<h3 id="Q4-密码字典为什么包含-ckj123？怎么知道要加这个？"><a href="#Q4-密码字典为什么包含-ckj123？怎么知道要加这个？" class="headerlink" title="Q4: 密码字典为什么包含 ckj123？怎么知道要加这个？"></a>Q4: 密码字典为什么包含 ckj123？怎么知道要加这个？</h3><p>是碰运气猜中的，没有什么先验知识，也不是提前知道答案。构造的字典里放了几十个常见 CTF 弱密码组合：<code>secret</code>、<code>hctf</code>、<code>admin</code>、<code>hctf2018</code>、<code>flask</code>、<code>password</code>、<code>ckj123</code>……<code>ckj123</code> 只是其中一条，格式上就是”字母+123”这种常见弱密码组合。<code>flask-unsign</code> 逐个测试，试到第 33 个时命中了。是字典覆盖到了，不是定向命中。</p>
+<h3 id="Q5-session-secret-key-是干啥用的？"><a href="#Q5-session-secret-key-是干啥用的？" class="headerlink" title="Q5: session secret key 是干啥用的？"></a>Q5: session secret key 是干啥用的？</h3><p>用来<strong>防篡改</strong>的。</p>
+<p>因为 Flask 的 session 数据全部放客户端 cookie，用户能直接看到内容（base64 解码就行）。如果只有数据没有签名，用户随便把 <code>name: user123</code> 改成 <code>name: admin</code> 再 base64 编码回去，服务器就会上当。</p>
+<p>所以 Flask 在 cookie 后面加了个<strong>签名</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.session_data.timestamp.signature</span><br><span class="line">        ↑                       ↑</span><br><span class="line">    明文数据                用 secret key 算出的 HMAC 签名</span><br></pre></td></tr></table></figure>
+
+<p>服务器收到 cookie 后，用 secret key 重新算一遍签名，跟 cookie 里的签名比对：</p>
+<ul>
+<li><strong>一致</strong> → 数据没被改过，信任</li>
+<li><strong>不一致</strong> → 数据被篡改，丢弃</li>
+</ul>
+<p>这就意味着：<strong>secret key 一旦泄露，签名就形同虚设</strong>。攻击者拿到 secret key 后，想构造什么 session 就构造什么签名，服务器完全区分不出来。这道题的漏洞本质就是 secret key 太弱（<code>ckj123</code>），被字典直接爆了。</p>
+<h3 id="Q6-伪造-admin-session-里的-id-是哪来的？"><a href="#Q6-伪造-admin-session-里的-id-是哪来的？" class="headerlink" title="Q6: 伪造 admin session 里的 _id 是哪来的？"></a>Q6: 伪造 admin session 里的 <code>_id</code> 是哪来的？</h3><p>从合法 session 里直接复制过来的。而且有意思的是——换了 5 个不同账号登录，每个 session 里的 <code>_id</code> 都一模一样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ctfuser777:     _id: bd6558b753c802fc17eec078fee...</span><br><span class="line">hacker36259:    _id: bd6558b753c802fc17eec078fee...</span><br><span class="line">attacker69731:  _id: bd6558b753c802fc17eec078fee...</span><br><span class="line">hack16509:      _id: bd6558b753c802fc17eec078fee...</span><br></pre></td></tr></table></figure>
+
+<p>不同用户、不同时间登录，<code>_id</code> 全是同一个 128 位 hex 字符串。说明这个值很可能是硬编码的或者用固定值算出来的，跟用户无关。所以伪造 admin session 时直接照搬，不需要做任何修改。</p>
+<h3 id="Q7-admin-cookie-signer-dumps-forged-session-是什么意思？"><a href="#Q7-admin-cookie-signer-dumps-forged-session-是什么意思？" class="headerlink" title="Q7: admin_cookie = signer.dumps(forged_session) 是什么意思？"></a>Q7: <code>admin_cookie = signer.dumps(forged_session)</code> 是什么意思？</h3><p><code>signer.dumps()</code> 完成三件事：</p>
+<ol>
+<li><strong>序列化</strong>：用 <code>TaggedJSONSerializer</code> 把 Python dict 转成 JSON 字符串（bytes 类型用 <code>&#123;&quot; b&quot;: &quot;...&quot;&#125;</code> 标记）</li>
+<li><strong>压缩</strong>：如果数据较大，用 zlib 压缩</li>
+<li><strong>签名</strong>：用 <code>ckj123</code> 对数据做 HMAC 签名，拼成 <code>数据.时间戳.签名</code> 的格式</li>
+</ol>
+<p>反过来 <code>signer.loads(cookie)</code> 就是验证签名 → 解压 → 反序列化。</p>
+<p>所以这行代码等于 <strong>“用偷来的 secret key，按 Flask 原生的方式，捏了一个合法的 admin cookie”</strong>。服务器收到后验签通过，就把它当成真 session 处理。</p>
+<h3 id="Q8-session-cookie-三个部分分别对应哪些字符？"><a href="#Q8-session-cookie-三个部分分别对应哪些字符？" class="headerlink" title="Q8: session cookie 三个部分分别对应哪些字符？"></a>Q8: session cookie 三个部分分别对应哪些字符？</h3><p>以具体 cookie 为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJpbWFnZSI6eyIgYiI6IlRqZzVkdz09In19.afZi0A.INh_Tm4CdxnzFFTWaN25kdt7i4c</span><br></pre></td></tr></table></figure>
+
+<p>三个部分以 <code>.</code> 分隔：</p>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>值</th>
+<th>长度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Payload</strong></td>
+<td><code>eyJpbWFnZSI6eyIgYiI6IlRqZzVkdz09In19</code></td>
+<td>36 字符</td>
+<td>URL-safe base64 编码的 JSON 数据，解码后为 <code>&#123;&quot;image&quot;:&#123;&quot; b&quot;:&quot;Tjg5dw==&quot;&#125;&#125;</code>。长度不固定，取决于 session 数据量</td>
+</tr>
+<tr>
+<td><strong>Timestamp</strong></td>
+<td><code>afZi0A</code></td>
+<td>6 字符</td>
+<td>base62 编码的 Unix 时间戳整数</td>
+</tr>
+<tr>
+<td><strong>Signature</strong></td>
+<td><code>INh_Tm4CdxnzFFTWaN25kdt7i4c</code></td>
+<td>27 字符</td>
+<td>HMAC-SHA1 签名，原始输出固定 20 bytes（160 bits），URL-safe base64 编码后 &#x3D; ceil(160÷6) &#x3D; 27 字符，无填充</td>
+</tr>
+</tbody></table>
+<p><strong>总结</strong>：payload 长度可变（上例 36 字符，带 csrf_token 时 107 字符），timestamp 一般 6 字符，<strong>signature 固定 27 字符</strong>。</p>
 
   </div>
 </article>
@@ -219,7 +309,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Flag"><span class="toc-number">1.</span> <span class="toc-text">Flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.</span> <span class="toc-text">解题步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.1.</span> <span class="toc-text">1. 信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8F%91%E7%8E%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.2.</span> <span class="toc-text">2. 发现验证码漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E8%B4%A6%E5%8F%B7"><span class="toc-number">3.3.</span> <span class="toc-text">3. 自动注册账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%8E%B7%E5%8F%96%E6%BA%90%E4%BB%A3%E7%A0%81%E4%BF%A1%E6%81%AF"><span class="toc-number">3.4.</span> <span class="toc-text">4. 获取源代码信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%A0%B4%E8%A7%A3-Flask-Secret-Key"><span class="toc-number">3.5.</span> <span class="toc-text">5. 破解 Flask Secret Key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%AA%E9%80%A0-Admin-Session"><span class="toc-number">3.6.</span> <span class="toc-text">6. 伪造 Admin Session</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E8%8E%B7%E5%8F%96-Flag"><span class="toc-number">3.7.</span> <span class="toc-text">7. 获取 Flag</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">漏洞总结</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Flag"><span class="toc-number">1.</span> <span class="toc-text">Flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.</span> <span class="toc-text">解题步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.1.</span> <span class="toc-text">1. 信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8F%91%E7%8E%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.2.</span> <span class="toc-text">2. 发现验证码漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E8%B4%A6%E5%8F%B7"><span class="toc-number">3.3.</span> <span class="toc-text">3. 自动注册账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%8E%B7%E5%8F%96%E6%BA%90%E4%BB%A3%E7%A0%81%E4%BF%A1%E6%81%AF"><span class="toc-number">3.4.</span> <span class="toc-text">4. 获取源代码信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%A0%B4%E8%A7%A3-Flask-Secret-Key"><span class="toc-number">3.5.</span> <span class="toc-text">5. 破解 Flask Secret Key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%AA%E9%80%A0-Admin-Session"><span class="toc-number">3.6.</span> <span class="toc-text">6. 伪造 Admin Session</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E8%8E%B7%E5%8F%96-Flag"><span class="toc-number">3.7.</span> <span class="toc-text">7. 获取 Flag</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">漏洞总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E9%97%AE%E7%AD%94"><span class="toc-number">5.</span> <span class="toc-text">补充问答</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Q1-%E8%A7%A3%E7%A0%81-session-%E7%9A%84%E7%9B%AE%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">5.1.</span> <span class="toc-text">Q1: 解码 session 的目的是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q2-%E4%BD%A0%E8%8E%B7%E5%8F%96%E7%9A%84%E6%98%AF-cookie%EF%BC%8C%E5%92%8C-session-%E6%9C%89%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="toc-number">5.2.</span> <span class="toc-text">Q2: 你获取的是 cookie，和 session 有什么关系？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q3-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E2%80%9D%E5%8F%8C%E5%B1%82%E2%80%9D-base64%EF%BC%9F"><span class="toc-number">5.3.</span> <span class="toc-text">Q3: 为什么是”双层” base64？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q4-%E5%AF%86%E7%A0%81%E5%AD%97%E5%85%B8%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8C%85%E5%90%AB-ckj123%EF%BC%9F%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E8%A6%81%E5%8A%A0%E8%BF%99%E4%B8%AA%EF%BC%9F"><span class="toc-number">5.4.</span> <span class="toc-text">Q4: 密码字典为什么包含 ckj123？怎么知道要加这个？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q5-session-secret-key-%E6%98%AF%E5%B9%B2%E5%95%A5%E7%94%A8%E7%9A%84%EF%BC%9F"><span class="toc-number">5.5.</span> <span class="toc-text">Q5: session secret key 是干啥用的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q6-%E4%BC%AA%E9%80%A0-admin-session-%E9%87%8C%E7%9A%84-id-%E6%98%AF%E5%93%AA%E6%9D%A5%E7%9A%84%EF%BC%9F"><span class="toc-number">5.6.</span> <span class="toc-text">Q6: 伪造 admin session 里的 _id 是哪来的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q7-admin-cookie-signer-dumps-forged-session-%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F"><span class="toc-number">5.7.</span> <span class="toc-text">Q7: admin_cookie &#x3D; signer.dumps(forged_session) 是什么意思？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q8-session-cookie-%E4%B8%89%E4%B8%AA%E9%83%A8%E5%88%86%E5%88%86%E5%88%AB%E5%AF%B9%E5%BA%94%E5%93%AA%E4%BA%9B%E5%AD%97%E7%AC%A6%EF%BC%9F"><span class="toc-number">5.8.</span> <span class="toc-text">Q8: session cookie 三个部分分别对应哪些字符？</span></a></li></ol></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
