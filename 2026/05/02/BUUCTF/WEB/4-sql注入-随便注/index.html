@@ -1,12 +1,28 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN">
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="CTF SQL注入 - 随便注题目信息 题目名称: easy_sql &#x2F; 随便注 题目类型: SQL注入 题目URL: http:&#x2F;&#x2F;3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81&#x2F; FLAG: flag{7acd36c9-1cbb-4e30-8ee5-339726d381d2}  题目描述页面提示：”取材于某次真实环境渗透，">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhaochoudecat.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="CTF SQL注入 - 随便注题目信息 题目名称: easy_sql &#x2F; 随便注 题目类型: SQL注入 题目URL: http:&#x2F;&#x2F;3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81&#x2F; FLAG: flag{7acd36c9-1cbb-4e30-8ee5-339726d381d2}  题目描述页面提示：”取材于某次真实环境渗透，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CTF SQL注入 - 随便注">
 <meta property="og:url" content="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/index.html">
@@ -14,127 +30,226 @@
 <meta property="og:description" content="CTF SQL注入 - 随便注题目信息 题目名称: easy_sql &#x2F; 随便注 题目类型: SQL注入 题目URL: http:&#x2F;&#x2F;3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81&#x2F; FLAG: flag{7acd36c9-1cbb-4e30-8ee5-339726d381d2}  题目描述页面提示：”取材于某次真实环境渗透，">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-05-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-05-02T19:58:35.160Z">
+<meta property="article:modified_time" content="2026-05-03T04:50:37.506Z">
 <meta property="article:author" content="zhaochoudecat">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="sql注入">
 <meta name="twitter:card" content="summary">
-    
-    
-        
-          
-              <link rel="shortcut icon" href="/images/favicon.ico">
-          
-        
-        
-          
-            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-          
-        
-        
-          
-            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-          
-        
-    
-    <!-- title -->
-    <title>CTF SQL注入 - 随便注</title>
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
 
-    <!-- rss -->
-    
-    
-<meta name="generator" content="Hexo 8.1.1"></head>
-
-<body>
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" href="/2026/05/02/BUUCTF/WEB/3-php%E7%BB%95%E8%BF%87-Secret%20File/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
-        
-        
-        <li><a class="icon" href="/2026/05/02/BUUCTF/WEB/5-http/"><i class="fa fa-chevron-right" aria-hidden="true" onmouseover='$("#i-next").toggle();' onmouseout='$("#i-next").toggle();'></i></a></li>
-        
-        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
-        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&text=CTF SQL注入 - 随便注"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&is_video=false&description=CTF SQL注入 - 随便注"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=CTF SQL注入 - 随便注&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&name=CTF SQL注入 - 随便注&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CTF-SQL%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8"><span class="toc-number">1.</span> <span class="toc-text">CTF SQL注入 - 随便注</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.</span> <span class="toc-text">题目信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">解题过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9D%E6%AD%A5%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 初步探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%A1%AE%E8%AE%A4SQL%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 确认SQL注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E6%B5%8B%E8%BF%87%E6%BB%A4%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 检测过滤关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 堆叠查询探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. 查看表结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%9F%A5%E7%9C%8B%E5%8F%AF%E7%96%91%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.6.</span> <span class="toc-text">6. 查看可疑表的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E7%BB%95%E8%BF%87select%E8%BF%87%E6%BB%A4%E8%8E%B7%E5%8F%96flag"><span class="toc-number">1.3.7.</span> <span class="toc-text">7. 绕过select过滤获取flag</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%951%EF%BC%9A%E9%A2%84%E5%A4%84%E7%90%86%E8%AF%AD%E5%8F%A5%EF%BC%88%E5%A4%B1%E8%B4%A5%EF%BC%89"><span class="toc-number">1.3.7.1.</span> <span class="toc-text">尝试1：预处理语句（失败）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%952%EF%BC%9A%E9%87%8D%E5%91%BD%E5%90%8D%E8%A1%A8%EF%BC%88%E5%A4%87%E9%80%89%E6%96%B9%E6%A1%88%EF%BC%89"><span class="toc-number">1.3.7.2.</span> <span class="toc-text">尝试2：重命名表（备选方案）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%953%EF%BC%9Ahandler%E8%AF%AD%E5%8F%A5%EF%BC%88%E6%88%90%E5%8A%9F%EF%BC%81%EF%BC%89"><span class="toc-number">1.3.7.3.</span> <span class="toc-text">尝试3：handler语句（成功！）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">知识点总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%EF%BC%88Stacked-Queries%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 堆叠查询（Stacked Queries）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MySQL-MariaDB-%E7%89%B9%E6%AE%8A%E8%A1%A8%E5%90%8D%E5%A4%84%E7%90%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. MySQL&#x2F;MariaDB 特殊表名处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Handler%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. Handler语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B8%B8%E7%94%A8%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="toc-number">1.4.4.</span> <span class="toc-text">4. 常用绕过技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%A1%A8%E9%87%8D%E5%91%BD%E5%90%8D%E6%94%BB%E5%87%BB"><span class="toc-number">1.4.5.</span> <span class="toc-text">5. 表重命名攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4Payload"><span class="toc-number">1.5.</span> <span class="toc-text">完整Payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%90%AF%E7%A4%BA"><span class="toc-number">1.6.</span> <span class="toc-text">题目启示</span></a></li></ol></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index width mx-auto px2 my4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        CTF SQL注入 - 随便注
-    </h1>
+<link rel="canonical" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/">
 
 
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
 
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">zhaochoudecat</span>
-      </span>
-      
-    <div class="postdate">
-        <time datetime="2026-05-01T16:00:00.000Z" itemprop="datePublished">2026-05-02</time>
-    </div>
-
-
-      
-
-    </div>
-  </header>
+  <title>CTF SQL注入 - 随便注 | zhaochoudecat</title>
   
 
-  <div class="content" itemprop="articleBody">
-    <h1 id="CTF-SQL注入-随便注"><a href="#CTF-SQL注入-随便注" class="headerlink" title="CTF SQL注入 - 随便注"></a>CTF SQL注入 - 随便注</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">zhaochoudecat</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/saber.jpg">
+      <meta itemprop="name" content="zhaochoudecat">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhaochoudecat">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CTF SQL注入 - 随便注
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-05-02 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-02T00:00:00+08:00">2026-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-05-03 12:50:37" itemprop="dateModified" datetime="2026-05-03T12:50:37+08:00">2026-05-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BUUCTF/" itemprop="url" rel="index"><span itemprop="name">BUUCTF</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BUUCTF/WEB/" itemprop="url" rel="index"><span itemprop="name">WEB</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="CTF-SQL注入-随便注"><a href="#CTF-SQL注入-随便注" class="headerlink" title="CTF SQL注入 - 随便注"></a>CTF SQL注入 - 随便注</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
 <li><strong>题目名称</strong>: easy_sql &#x2F; 随便注</li>
 <li><strong>题目类型</strong>: SQL注入</li>
 <li><strong>题目URL</strong>: <a target="_blank" rel="noopener" href="http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/">http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/</a></li>
@@ -254,119 +369,209 @@
 <li><strong>堆叠查询的危险性</strong>：即使某些关键字被过滤，堆叠查询仍可能导致数据泄露</li>
 </ol>
 
-  </div>
-</article>
-
-
-
     </div>
+
     
-      <div id="footer-post-container">
-  <div id="footer-post">
+    
+    
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/sql%E6%B3%A8%E5%85%A5/" rel="tag"># sql注入</a>
+          </div>
+
         
-      </ul>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/05/02/BUUCTF/WEB/6-upload-deepseek/" rel="prev" title="BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp">
+      <i class="fa fa-chevron-left"></i> BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/05/02/BUUCTF/WEB/2-php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-WarmUp/" rel="next" title="CTF - PHP代码审计 WarmUp 题解">
+      CTF - PHP代码审计 WarmUp 题解 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
+      </footer>
+    
+  </article>
+  
+  
+  
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CTF-SQL%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8"><span class="toc-number">1.</span> <span class="toc-text">CTF SQL注入 - 随便注</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.</span> <span class="toc-text">题目信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">解题过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9D%E6%AD%A5%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 初步探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%A1%AE%E8%AE%A4SQL%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 确认SQL注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E6%B5%8B%E8%BF%87%E6%BB%A4%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 检测过滤关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 堆叠查询探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. 查看表结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%9F%A5%E7%9C%8B%E5%8F%AF%E7%96%91%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.6.</span> <span class="toc-text">6. 查看可疑表的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E7%BB%95%E8%BF%87select%E8%BF%87%E6%BB%A4%E8%8E%B7%E5%8F%96flag"><span class="toc-number">1.3.7.</span> <span class="toc-text">7. 绕过select过滤获取flag</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%951%EF%BC%9A%E9%A2%84%E5%A4%84%E7%90%86%E8%AF%AD%E5%8F%A5%EF%BC%88%E5%A4%B1%E8%B4%A5%EF%BC%89"><span class="toc-number">1.3.7.1.</span> <span class="toc-text">尝试1：预处理语句（失败）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%952%EF%BC%9A%E9%87%8D%E5%91%BD%E5%90%8D%E8%A1%A8%EF%BC%88%E5%A4%87%E9%80%89%E6%96%B9%E6%A1%88%EF%BC%89"><span class="toc-number">1.3.7.2.</span> <span class="toc-text">尝试2：重命名表（备选方案）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%953%EF%BC%9Ahandler%E8%AF%AD%E5%8F%A5%EF%BC%88%E6%88%90%E5%8A%9F%EF%BC%81%EF%BC%89"><span class="toc-number">1.3.7.3.</span> <span class="toc-text">尝试3：handler语句（成功！）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">知识点总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%EF%BC%88Stacked-Queries%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 堆叠查询（Stacked Queries）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MySQL-MariaDB-%E7%89%B9%E6%AE%8A%E8%A1%A8%E5%90%8D%E5%A4%84%E7%90%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. MySQL&#x2F;MariaDB 特殊表名处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Handler%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. Handler语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B8%B8%E7%94%A8%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="toc-number">1.4.4.</span> <span class="toc-text">4. 常用绕过技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%A1%A8%E9%87%8D%E5%91%BD%E5%90%8D%E6%94%BB%E5%87%BB"><span class="toc-number">1.4.5.</span> <span class="toc-text">5. 表重命名攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4Payload"><span class="toc-number">1.5.</span> <span class="toc-text">完整Payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%90%AF%E7%A4%BA"><span class="toc-number">1.6.</span> <span class="toc-text">题目启示</span></a></li></ol></li></ol>
-    </div>
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&text=CTF SQL注入 - 随便注"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&is_video=false&description=CTF SQL注入 - 随便注"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=CTF SQL注入 - 随便注&body=Check out this article: https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&title=CTF SQL注入 - 随便注"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/&name=CTF SQL注入 - 随便注&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-</ul>
 
-    </div>
+          </div>
+          
 
-    <div id="actions-footer">
-      <ul>
-        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
-        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
-        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
-        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
-      </ul>
-    </div>
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
   </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CTF-SQL%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8"><span class="nav-number">1.</span> <span class="nav-text">CTF SQL注入 - 随便注</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BF%A1%E6%81%AF"><span class="nav-number">1.1.</span> <span class="nav-text">题目信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.2.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="nav-number">1.3.</span> <span class="nav-text">解题过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%9D%E6%AD%A5%E6%8E%A2%E6%B5%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. 初步探测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%A1%AE%E8%AE%A4SQL%E6%B3%A8%E5%85%A5"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. 确认SQL注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%A3%80%E6%B5%8B%E8%BF%87%E6%BB%A4%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. 检测过滤关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%E6%8E%A2%E6%B5%8B"><span class="nav-number">1.3.4.</span> <span class="nav-text">4. 堆叠查询探测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.5.</span> <span class="nav-text">5. 查看表结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%9F%A5%E7%9C%8B%E5%8F%AF%E7%96%91%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.6.</span> <span class="nav-text">6. 查看可疑表的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E7%BB%95%E8%BF%87select%E8%BF%87%E6%BB%A4%E8%8E%B7%E5%8F%96flag"><span class="nav-number">1.3.7.</span> <span class="nav-text">7. 绕过select过滤获取flag</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%9D%E8%AF%951%EF%BC%9A%E9%A2%84%E5%A4%84%E7%90%86%E8%AF%AD%E5%8F%A5%EF%BC%88%E5%A4%B1%E8%B4%A5%EF%BC%89"><span class="nav-number">1.3.7.1.</span> <span class="nav-text">尝试1：预处理语句（失败）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%9D%E8%AF%952%EF%BC%9A%E9%87%8D%E5%91%BD%E5%90%8D%E8%A1%A8%EF%BC%88%E5%A4%87%E9%80%89%E6%96%B9%E6%A1%88%EF%BC%89"><span class="nav-number">1.3.7.2.</span> <span class="nav-text">尝试2：重命名表（备选方案）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%9D%E8%AF%953%EF%BC%9Ahandler%E8%AF%AD%E5%8F%A5%EF%BC%88%E6%88%90%E5%8A%9F%EF%BC%81%EF%BC%89"><span class="nav-number">1.3.7.3.</span> <span class="nav-text">尝试3：handler语句（成功！）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93"><span class="nav-number">1.4.</span> <span class="nav-text">知识点总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%A0%86%E5%8F%A0%E6%9F%A5%E8%AF%A2%EF%BC%88Stacked-Queries%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">1. 堆叠查询（Stacked Queries）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-MySQL-MariaDB-%E7%89%B9%E6%AE%8A%E8%A1%A8%E5%90%8D%E5%A4%84%E7%90%86"><span class="nav-number">1.4.2.</span> <span class="nav-text">2. MySQL&#x2F;MariaDB 特殊表名处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Handler%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.4.3.</span> <span class="nav-text">3. Handler语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B8%B8%E7%94%A8%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="nav-number">1.4.4.</span> <span class="nav-text">4. 常用绕过技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%A1%A8%E9%87%8D%E5%91%BD%E5%90%8D%E6%94%BB%E5%87%BB"><span class="nav-number">1.4.5.</span> <span class="nav-text">5. 表重命名攻击</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4Payload"><span class="nav-number">1.5.</span> <span class="nav-text">完整Payload</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%90%AF%E7%A4%BA"><span class="nav-number">1.6.</span> <span class="nav-text">题目启示</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zhaochoudecat"
+      src="/images/saber.jpg">
+  <p class="site-author-name" itemprop="name">zhaochoudecat</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
 </div>
 
-    
-    <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy; 2026 zhaochoudecat
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="https://github.com/zhaochoudecat">Projects</a></li>
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
         
-      </ul>
-    </nav>
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhaochoudecat</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
-</footer>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
 
 </body>
 </html>
-<!-- styles -->
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
-
-
-<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
-
-
-<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
-
-
-
-<!-- jquery -->
-
-<script src="/lib/jquery/jquery.min.js"></script>
-
-
-<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
-
-
-<script src="/js/main.js"></script>
-
-<!-- Google Analytics -->
-
-    <script type="text/javascript">
-        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-86660611-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-
-<!-- Disqus Comments -->
-
-
